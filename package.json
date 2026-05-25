@@ -1,6 +1,6 @@
 {
   "name": "gentek",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "private": true,
   "description": "Framework de desarrollo autónomo asistido por IA — fusiona Spec-Driven Development con BMAD Method",
   "workspaces": [
