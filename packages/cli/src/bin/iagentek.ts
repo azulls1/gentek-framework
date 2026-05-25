@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
 import { runInit } from '../commands/init.js';
 import { runCycle } from '../commands/cycle.js';
 import { runStatus } from '../commands/status.js';
@@ -7,12 +10,17 @@ import { runResume } from '../commands/resume.js';
 import { runAgent } from '../commands/agent.js';
 import { logger } from '@iagentek/core';
 
+// Read version from package.json at runtime so it stays in sync with the published package
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const pkgPath = resolve(__dirname, '..', '..', 'package.json');
+const { version } = JSON.parse(readFileSync(pkgPath, 'utf-8')) as { version: string };
+
 const program = new Command();
 
 program
   .name('iagentek')
   .description('Framework de desarrollo autónomo asistido por IA (SDD + BMAD)')
-  .version('0.1.0');
+  .version(version);
 
 program
   .command('init [name]')
