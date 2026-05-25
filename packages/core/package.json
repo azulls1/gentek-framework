@@ -16,12 +16,15 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "LICENSE",
+    "README.md"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
-    "dev": "tsc -p tsconfig.json --watch"
+    "dev": "tsc -p tsconfig.json --watch",
+    "prepublishOnly": "node ../../scripts/sync-license.mjs && npm run build"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.27.0",

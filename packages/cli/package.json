@@ -8,13 +8,16 @@
     "gentek": "./dist/bin/gentek.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "LICENSE",
+    "README.md"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json && node ../../scripts/fix-bin-shebang.mjs",
     "clean": "rimraf dist",
     "dev": "tsc -p tsconfig.json --watch",
-    "start": "node dist/bin/gentek.js"
+    "start": "node dist/bin/gentek.js",
+    "prepublishOnly": "node ../../scripts/sync-license.mjs && npm run build"
   },
   "dependencies": {
     "@gentek/core": "0.1.0",

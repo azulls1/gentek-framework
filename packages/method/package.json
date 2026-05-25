@@ -14,13 +14,16 @@
   },
   "files": [
     "dist",
-    "assets"
+    "assets",
+    "LICENSE",
+    "README.md"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json && npm run copy:assets",
     "copy:assets": "node ../../scripts/copy-assets.mjs",
     "clean": "rimraf dist",
-    "dev": "tsc -p tsconfig.json --watch"
+    "dev": "tsc -p tsconfig.json --watch",
+    "prepublishOnly": "node ../../scripts/sync-license.mjs && npm run build"
   },
   "license": "MIT",
   "author": "azulls1 <azull.samael@gmail.com>",

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Documentación
+    url: https://github.com/azulls1/gentek-framework#readme
+    about: Revisa el README, ARCHITECTURE y CHANGELOG antes de abrir un issue
+  - name: 🔒 Reporte de seguridad
+    url: https://github.com/azulls1/gentek-framework/security/policy
+    about: Para vulnerabilidades, NO abras un issue público — sigue SECURITY.md

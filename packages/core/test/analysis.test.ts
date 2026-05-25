@@ -1,0 +1,92 @@
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { mkdtempSync, writeFileSync, mkdirSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { resolve } from 'node:path';
+import { analyzeCodebase, summarizeAnalysis } from '../src/analysis/codebase.js';
+
+describe('analyzeCodebase', () => {
+  let fixture: string;
+
+  beforeAll(() => {
+    fixture = mkdtempSync(resolve(tmpdir(), 'gentek-analysis-'));
+    // Create a fake node project with React + Express
+    writeFileSync(
+      resolve(fixture, 'package.json'),
+      JSON.stringify({
+        name: 'my-app',
+        dependencies: { react: '^18.0.0', express: '^4.19.0' },
+        devDependencies: { typescript: '^5.0.0' },
+      })
+    );
+    writeFileSync(resolve(fixture, 'README.md'), '# My App\n\nA test fixture for Gentek.');
+    mkdirSync(resolve(fixture, 'src'));
+    writeFileSync(resolve(fixture, 'src', 'index.ts'), 'export const x = 1;');
+    writeFileSync(resolve(fixture, 'src', 'App.tsx'), 'export const App = () => null;');
+    writeFileSync(resolve(fixture, 'src', 'server.js'), 'console.log("hi");');
+    mkdirSync(resolve(fixture, 'test'));
+    writeFileSync(resolve(fixture, 'test', 'app.test.ts'), 'test("x", () => {});');
+  });
+
+  afterAll(() => {
+    rmSync(fixture, { recursive: true, force: true });
+  });
+
+  it('detects languages by extension', () => {
+    const result = analyzeCodebase(fixture);
+    const languages = result.languages.map((l) => l.extension);
+    expect(languages).toContain('.ts');
+    expect(languages).toContain('.tsx');
+    expect(languages).toContain('.js');
+  });
+
+  it('detects node package manager and dependencies', () => {
+    const result = analyzeCodebase(fixture);
+    const node = result.packageManagers.find((p) => p.ecosystem === 'node');
+    expect(node).toBeDefined();
+    expect(node!.declaredDependencies).toEqual(
+      expect.arrayContaining(['react', 'express', 'typescript'])
+    );
+  });
+
+  it('detects React and Express as frameworks', () => {
+    const result = analyzeCodebase(fixture);
+    expect(result.frameworks).toEqual(expect.arrayContaining(['React', 'Express']));
+  });
+
+  it('finds the README', () => {
+    const result = analyzeCodebase(fixture);
+    expect(result.hasReadme).toBe(true);
+    expect(result.readmeExcerpt).toContain('My App');
+  });
+
+  it('counts total files', () => {
+    const result = analyzeCodebase(fixture);
+    expect(result.totalFiles).toBeGreaterThan(0);
+    expect(result.totalSourceFiles).toBeGreaterThan(0);
+  });
+
+  it('summarizeAnalysis returns a non-empty string with key sections', () => {
+    const result = analyzeCodebase(fixture);
+    const summary = summarizeAnalysis(result);
+    expect(summary).toContain('# Análisis del codebase');
+    expect(summary).toContain('## Lenguajes detectados');
+    expect(summary).toContain('## Package managers');
+    expect(summary).toContain('## Frameworks');
+  });
+
+  it('ignores node_modules and .git', () => {
+    const dirty = mkdtempSync(resolve(tmpdir(), 'gentek-dirty-'));
+    mkdirSync(resolve(dirty, 'node_modules'));
+    writeFileSync(resolve(dirty, 'node_modules', 'huge.js'), 'x'.repeat(1000));
+    mkdirSync(resolve(dirty, '.git'));
+    writeFileSync(resolve(dirty, '.git', 'config'), '[core]');
+    writeFileSync(resolve(dirty, 'app.ts'), 'export {};');
+
+    const result = analyzeCodebase(dirty);
+    // node_modules and .git should not appear in topLevelDirs
+    expect(result.topLevelDirs).not.toContain('node_modules');
+    expect(result.topLevelDirs).not.toContain('.git');
+
+    rmSync(dirty, { recursive: true, force: true });
+  });
+});

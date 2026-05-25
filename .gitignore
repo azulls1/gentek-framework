@@ -16,5 +16,8 @@ npm-debug.log*
 .gentek/state.json
 .gentek/.cache/
 
+# LICENSE files copied to packages by sync-license.mjs (source of truth: root LICENSE)
+packages/*/LICENSE
+
 # OS
 Thumbs.db
