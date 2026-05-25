@@ -1,78 +1,79 @@
-# IAgentek — Arquitectura
+# IAgentek — Architecture
 
-> Documento técnico del framework. Para uso del producto ver [README.md](./README.md).
+> Technical document about the framework. For product usage see [README.md](./README.md).
 
-## Visión
+## Vision
 
-IAgentek es un CLI ejecutable por `npx` que orquesta un equipo virtual de agentes IA (BMAD) que producen y consumen artefactos spec-driven (SDD) para ejecutar un ciclo completo de desarrollo de software.
+IAgentek is an `npx`-executable CLI that orchestrates a virtual team of AI agents (BMAD) which produce and consume spec-driven (SDD) artifacts to execute a complete software development cycle.
 
-## Decisiones clave
+## Key decisions
 
-### 1. Distribución vía `npx`
-- **Por qué:** cero instalación previa, patrón conocido (`create-next-app`), funciona en cualquier máquina con Node.
-- **Trade-off:** Node como dependencia; no es viable para entornos sin Node.
+### 1. Distribution via `npx`
+- **Why:** zero prior install, well-known pattern (`create-next-app`), works on any machine with Node.
+- **Trade-off:** Node as a dependency; not viable for environments without Node.
 
-### 2. Monorepo con 3 paquetes
-- **Por qué:** separación clara de responsabilidades. `method` se puede actualizar sin tocar `core`. `core` se puede reutilizar desde otros runners (CI, web UI futura).
-- **Trade-off:** un poco más de overhead de build y versionado.
+### 2. Monorepo with 3 packages
+- **Why:** clear separation of responsibilities. `method` can be updated without touching `core`. `core` can be reused from other runners (CI, future web UI).
+- **Trade-off:** a bit more build and versioning overhead.
 
-### 3. Agentes como markdown puro
-- **Por qué:** los prompts viven en archivos `.md`, no en código TypeScript. Cualquiera (PM, diseñador, IA) los puede leer y editar sin tocar código.
-- **Trade-off:** menos type-safety en los prompts. Compensado con la plantilla SDD que define el output esperado.
+### 3. Agents as pure markdown
+- **Why:** prompts live in `.md` files, not TypeScript code. Anyone (PM, designer, AI) can read and edit them without touching code.
+- **Trade-off:** less type-safety in prompts. Compensated by the SDD template defining the expected output.
 
-### 4. Auto-detección de provider
-- **Por qué:** el usuario casi siempre ya tiene algo (Claude CLI, una API key en env). Detectarlo y proponerlo reduce fricción a ~0.
-- **Trade-off:** necesitamos código de detección por cada provider. Aceptable.
+### 4. Provider auto-detection
+- **Why:** the user almost always already has something (Claude CLI, an env API key). Detecting and proposing it reduces friction to ~0.
+- **Trade-off:** we need detection code per provider. Acceptable.
 
-### 5. Output del agente parseado por bloques ```` ```file:ruta ````
-- **Por qué:** convención simple, soportada por cualquier LLM, sin tool-calling. Funciona con cualquier provider, no nos amarra a Anthropic.
-- **Trade-off:** depende de que el modelo siga la convención. Mitigado por system prompts explícitos en cada agente.
+### 5. Agent output parsed via ```` ```file:path ```` blocks
+- **Why:** simple convention, supported by any LLM, without tool-calling. Works with any provider, doesn't tie us to Anthropic.
+- **Trade-off:** depends on the model following the convention. Mitigated by explicit system prompts in each agent.
 
-### 6. State en `.iagentek/state.json`
-- **Por qué:** simple, inspeccionable, sin DB. Cada proyecto tiene su propio estado.
-- **Trade-off:** no escala a equipos colaborando en tiempo real (no es el caso de uso del MVP).
+### 6. State in `.iagentek/state.json`
+- **Why:** simple, inspectable, no DB. Each project has its own state.
+- **Trade-off:** doesn't scale to teams collaborating in real-time (not the MVP use case).
 
-## Estructura del monorepo
+## Monorepo structure
 
 ```
-FramworkIAgentek/
-├── package.json                 # workspaces npm
-├── tsconfig.base.json           # config TS compartida
+iagentek-framework/
+├── package.json                 # npm workspaces
+├── tsconfig.base.json           # shared TS config
 ├── scripts/
-│   ├── copy-assets.mjs          # post-build de @iagentek/method
-│   └── fix-bin-shebang.mjs      # post-build de @iagentek/cli
+│   ├── copy-assets.mjs          # post-build for @iagentek/method
+│   ├── fix-bin-shebang.mjs      # post-build for @iagentek/cli
+│   └── sync-license.mjs         # distributes root LICENSE to packages
 └── packages/
     ├── method/                  # @iagentek/method
     │   ├── package.json
     │   ├── tsconfig.json
-    │   ├── src/index.ts         # loaders de agents/templates/flows
+    │   ├── src/index.ts         # loaders for agents/templates/flows
     │   └── assets/
-    │       ├── agents/*.md      # prompts BMAD (analyst, pm, architect, ...)
-    │       ├── templates/*.md   # plantillas SDD (spec, plan, ...)
-    │       └── flows/*.yaml     # definiciones de ciclo
+    │       ├── agents/*.md      # BMAD prompts (analyst, pm, architect, ...)
+    │       ├── templates/*.md   # SDD templates (spec, plan, ...)
+    │       └── flows/*.yaml     # cycle definitions
     ├── core/                    # @iagentek/core
     │   ├── package.json
     │   ├── tsconfig.json
     │   └── src/
     │       ├── providers/       # types, anthropic, claude-cli, detect, factory
-    │       ├── config/          # loader yaml + defaults
-    │       ├── flow/            # loader yaml + tipos PhaseDefinition
+    │       ├── config/          # yaml loader + defaults
+    │       ├── flow/            # yaml loader + PhaseDefinition types
     │       ├── state/           # state.json read/write
     │       ├── checkpoints/     # CheckpointManager + handler interface
-    │       ├── orchestrator/    # Orchestrator (corre fases, parsea outputs)
+    │       ├── orchestrator/    # Orchestrator (runs phases, parses outputs)
     │       └── util/logger.ts
     └── cli/                     # @iagentek/cli
         ├── package.json         # bin: { "iagentek": "./dist/bin/iagentek.js" }
         ├── tsconfig.json
         └── src/
-            ├── bin/iagentek.ts    # commander entry
+            ├── bin/iagentek.ts  # commander entry
             └── commands/
                 ├── init.ts
                 ├── cycle.ts
                 └── status.ts
 ```
 
-## Flujo de ejecución de `cycle`
+## `cycle` execution flow
 
 ```mermaid
 flowchart TD
@@ -95,7 +96,7 @@ flowchart TD
     N -->|no| O[Done]
 ```
 
-## Interfaces clave
+## Key interfaces
 
 ### `AIProvider`
 ```ts
@@ -106,7 +107,7 @@ interface AIProvider {
   complete(messages: ChatMessage[], options?: CompletionOptions): Promise<string>;
 }
 ```
-Implementaciones MVP: `AnthropicProvider`, `ClaudeCliProvider`.
+MVP implementations: `AnthropicProvider`, `ClaudeCliProvider`, `OpenAIProvider`, `GeminiProvider`, `DeepSeekProvider`, `OllamaProvider`.
 
 ### `CheckpointHandler`
 ```ts
@@ -115,9 +116,9 @@ type CheckpointHandler = (ctx: CheckpointContext) => Promise<{
   notes?: string;
 }>;
 ```
-La implementación de CLI usa `prompts` para preguntar interactivamente. En el futuro: handler para CI (auto-approve), handler para web UI, etc.
+The CLI implementation uses `prompts` to ask interactively. In the future: CI handler (auto-approve), web UI handler, etc.
 
-### `PhaseDefinition` (en flows/*.yaml)
+### `PhaseDefinition` (in flows/*.yaml)
 ```yaml
 - id: discovery
   name: Discovery & Problem Definition
@@ -127,27 +128,26 @@ La implementación de CLI usa `prompts` para preguntar interactivamente. En el f
   checkpoint:
     id: discovery-approved
     mode: required
-    prompt: "El Analyst generó..."
+    prompt: "The Analyst generated..."
 ```
 
-## Cómo agregar un nuevo agente
-1. Crear `packages/method/assets/agents/<nombre>.md` con el prompt completo.
-2. Añadir el tipo en `packages/method/src/index.ts` (`AgentRole`).
-3. Referenciarlo en un flow YAML como `agent: <nombre>`.
+## How to add a new agent
+1. Create `packages/method/assets/agents/<name>.md` with the full prompt.
+2. Add the type in `packages/method/src/index.ts` (`AgentRole`).
+3. Reference it in a flow YAML as `agent: <name>`.
 
-## Cómo agregar un nuevo provider
-1. Crear `packages/core/src/providers/<nombre>.ts` que implemente `AIProvider`.
-2. Añadirlo al `factory.ts` (`createProvider`).
-3. Añadir su detección en `detect.ts`.
-4. Añadir su env var en `config/loader.ts` (`envVarFor`).
+## How to add a new provider
+1. Create `packages/core/src/providers/<name>.ts` implementing `AIProvider`.
+2. Add it to `factory.ts` (`createProvider`).
+3. Add detection in `detect.ts`.
+4. Add its env var in `config/loader.ts` (`envVarFor`).
 
-## Cómo agregar un nuevo flow
-1. Crear `packages/method/assets/flows/<nombre>.yaml`.
-2. Usar en `iagentek init --flow <nombre>` o cambiar en `config.yaml`.
+## How to add a new flow
+1. Create `packages/method/assets/flows/<name>.yaml`.
+2. Use it via `iagentek init --flow <name>` or change in `config.yaml`.
 
-## Limitaciones conocidas del MVP
-- Solo provider Anthropic + Claude CLI (otros llegan en iteración 2).
-- Solo flow greenfield (brownfield, bugfix, refactor en iteración 2-3).
-- Dev/QA/DevOps son stubs — el ciclo se detiene tras la fase de Architect.
-- No hay retry automático si el modelo no respeta la convención `file:path`.
-- No hay streaming de tokens al usuario (la respuesta llega completa).
+## Known MVP limitations
+- The agent prompts (in `packages/method/assets/agents/`) are written in Spanish — they produce artifacts in whichever language the user requests, but the prompts themselves haven't been translated yet.
+- No automatic retry if the model doesn't respect the `file:path` convention.
+- No token streaming to the user (the full response arrives at once).
+- No real per-story loop in the implementation phase yet.

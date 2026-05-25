@@ -1,49 +1,49 @@
-# Política de seguridad
+# Security policy
 
-## Versiones soportadas
+## Supported versions
 
-Solo la última versión menor publicada en npm recibe parches de seguridad.
+Only the latest published minor version on npm receives security patches.
 
-| Versión | Soportada |
+| Version | Supported |
 |---|---|
 | 0.3.x | ✅ |
 | < 0.3 | ❌ |
 
-## Reportar una vulnerabilidad
+## Reporting a vulnerability
 
-**No abras un issue público para vulnerabilidades de seguridad.**
+**Do not open a public issue for security vulnerabilities.**
 
-Envía un correo a **azull.samael@gmail.com** con:
-- Descripción del problema
-- Pasos para reproducir
-- Impacto estimado (qué se puede comprometer)
-- Versión afectada
-- Si aplica: PoC mínimo
+Send an email to **azull.samael@gmail.com** with:
+- Description of the problem
+- Steps to reproduce
+- Estimated impact (what could be compromised)
+- Affected version
+- If applicable: minimal PoC
 
-### Qué esperar
+### What to expect
 
-- **Acuse de recibo:** en máximo 72 horas.
-- **Evaluación inicial:** en máximo 7 días.
-- **Coordinación de disclosure:** acordamos una ventana para parchear antes de publicar.
+- **Acknowledgement:** within 72 hours.
+- **Initial assessment:** within 7 days.
+- **Disclosure coordination:** we agree on a window to patch before public disclosure.
 
-### Reglas del juego
+### Ground rules
 
-- No explotes la vulnerabilidad más allá de lo necesario para demostrarla.
-- No accedas a datos de terceros.
-- Si encuentras un secreto leaked, no lo uses — repórtalo.
+- Do not exploit the vulnerability beyond what is necessary to demonstrate it.
+- Do not access third-party data.
+- If you find a leaked secret, do not use it — report it.
 
-## Alcance
+## Scope
 
-Esta política cubre:
-- Los 3 paquetes npm: `@iagentek/cli`, `@iagentek/core`, `@iagentek/method`
-- El plugin de Claude Code en `iagentek-plugin/`
-- Scripts del repo (`scripts/`)
+This policy covers:
+- The 3 npm packages: `@iagentek/cli`, `@iagentek/core`, `@iagentek/method`
+- The Claude Code plugin in `iagentek-plugin/`
+- Repo scripts (`scripts/`)
 
-**Fuera de alcance:**
-- Vulnerabilidades en dependencias upstream (repórtalas al proyecto correspondiente; nosotros las actualizamos cuando se publica el parche).
-- Comportamiento mal configurado por el usuario (e.g., subir `.env` al repo).
-- Vulnerabilidades que requieren acceso físico o root local previo.
+**Out of scope:**
+- Vulnerabilities in upstream dependencies (report them to the corresponding project; we update once a patch is published).
+- Behavior misconfigured by the user (e.g., committing `.env` to the repo).
+- Vulnerabilities requiring prior physical or local root access.
 
-## Reconocimientos
+## Acknowledgments
 
-Si tu reporte resulta en un parche, te listamos en el `CHANGELOG.md` salvo que prefieras anonimato.
+If your report results in a patch, we'll list you in the `CHANGELOG.md` unless you prefer to remain anonymous.

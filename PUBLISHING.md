@@ -1,64 +1,64 @@
-# Publicación a npm
+# Publishing to npm
 
-Guía para publicar los 3 paquetes del monorepo IAgentek (`@iagentek/method`, `@iagentek/core`, `@iagentek/cli`) al registry público de npm.
+Guide to publish the 3 packages of the IAgentek monorepo (`@iagentek/method`, `@iagentek/core`, `@iagentek/cli`) to the public npm registry.
 
-## Pre-requisitos
+## Prerequisites
 
-1. **Cuenta en npm** con acceso al scope `@iagentek`. Si el scope no existe, créalo desde [npmjs.com](https://www.npmjs.com/) o publica la primera versión como autor — npm creará el scope automáticamente.
-2. **Token de publicación** (`npm token create`) o `npm login` con 2FA habilitada.
-3. **Build limpio** del monorepo: `npm run build`.
+1. **npm account** with access to the `@iagentek` scope. If the scope doesn't exist, create it from [npmjs.com/org/create](https://www.npmjs.com/org/create) or publish the first version as the user — npm will create the scope automatically.
+2. **Publish token** (`npm token create`) or `npm login` with 2FA enabled.
+3. **Clean build** of the monorepo: `npm run build`.
 
-## Orden obligatorio de publicación
+## Mandatory publish order
 
-Los paquetes tienen dependencias internas. Publicar en este orden:
+Packages have internal dependencies. Publish in this order:
 
 ```bash
-npm publish -w @iagentek/method     # 1º — no depende de nadie
-npm publish -w @iagentek/core       # 2º — depende de @iagentek/method
-npm publish -w @iagentek/cli        # 3º — depende de @iagentek/core + @iagentek/method
+npm publish -w @iagentek/method     # 1st — depends on nothing
+npm publish -w @iagentek/core       # 2nd — depends on @iagentek/method
+npm publish -w @iagentek/cli        # 3rd — depends on @iagentek/core + @iagentek/method
 ```
 
-> ⚠️ Si una versión interna apunta a `"0.3.0"` y aún no publicaste esa versión del dependiente, npm fallará. Bumpea versiones en orden.
+> ⚠️ If an internal version points to `"0.3.1"` and you haven't published that version of the dependency yet, npm will fail. Bump versions in order.
 
-## Pasos completos
+## Complete steps
 
 ```bash
-# 1. Limpia y construye
+# 1. Clean and build
 npm run clean
 npm install
 npm run build
 
-# 2. Login (si no tienes token guardado)
+# 2. Login (if you don't have a saved token)
 npm login
 
-# 3. Verifica qué se va a publicar (dry-run)
+# 3. Verify what will be published (dry-run)
 npm publish --dry-run -w @iagentek/method
 npm publish --dry-run -w @iagentek/core
 npm publish --dry-run -w @iagentek/cli
 
-# 4. Publica en orden
+# 4. Publish in order
 npm publish -w @iagentek/method
 npm publish -w @iagentek/core
 npm publish -w @iagentek/cli
 
-# 5. Verifica
+# 5. Verify
 npm view @iagentek/cli
 npm view @iagentek/core
 npm view @iagentek/method
 ```
 
-## Tag de release en GitHub
+## Release tag on GitHub
 
 ```bash
-git tag -a v0.3.0 -m "Release 0.3.0 — full BMAD pipeline + 6 providers + plugin Claude Code"
-git push origin v0.3.0
+git tag -a v0.3.1 -m "Release 0.3.1 — version fix"
+git push origin v0.3.1
 ```
 
-Luego desde la UI de GitHub crea un Release apuntando al tag con changelog.
+Then from the GitHub UI create a Release pointing to the tag with a changelog.
 
-## Bump de versiones
+## Bumping versions
 
-Para subir todas a una nueva versión simultáneamente:
+To raise all to a new version simultaneously:
 
 ```bash
 npm version 0.4.0 -w @iagentek/method
@@ -66,12 +66,12 @@ npm version 0.4.0 -w @iagentek/core
 npm version 0.4.0 -w @iagentek/cli
 ```
 
-Y actualiza las referencias internas en `dependencies` de cada `package.json`.
+And update the internal references in `dependencies` of each `package.json`.
 
-## Verificación post-publicación
+## Post-publication verification
 
 ```bash
-# Desde un directorio temporal
+# From a temp directory
 mkdir /tmp/iagentek-smoke && cd /tmp/iagentek-smoke
 npx @iagentek/cli init demo --provider claude-cli
 cd demo

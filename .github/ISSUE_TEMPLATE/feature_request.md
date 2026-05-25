@@ -1,30 +1,30 @@
 ---
 name: ✨ Feature request
-about: Propón una nueva capacidad o mejora
+about: Propose a new capability or improvement
 title: "[Feature] "
 labels: enhancement, needs-triage
 assignees: ''
 ---
 
-## El problema
-<!-- ¿Qué problema te frustra hoy? Describe el dolor, no la solución imaginada. -->
+## The problem
+<!-- What problem frustrates you today? Describe the pain, not the imagined solution. -->
 
-## Solución propuesta
-<!-- Cómo te imaginas que se resolvería. Si tienes API/UX en mente, descríbela. -->
+## Proposed solution
+<!-- How you imagine it would be solved. If you have an API/UX in mind, describe it. -->
 
-## Alternativas consideradas
-<!-- Otros approaches que pensaste y por qué los descartaste. -->
+## Alternatives considered
+<!-- Other approaches you thought about and why you discarded them. -->
 
-## ¿A qué parte de IAgentek afecta?
+## Which part of IAgentek does this affect?
 - [ ] CLI (`@iagentek/cli`)
 - [ ] Core / orchestrator (`@iagentek/core`)
-- [ ] Agentes BMAD o plantillas (`@iagentek/method`)
-- [ ] Plugin de Claude Code (`iagentek-plugin/`)
-- [ ] Documentación
-- [ ] Otro: ___
+- [ ] BMAD agents or templates (`@iagentek/method`)
+- [ ] Claude Code plugin (`iagentek-plugin/`)
+- [ ] Documentation
+- [ ] Other: ___
 
-## ¿Rompe SDD/BMAD?
-<!-- Si tu propuesta cambia cómo funcionan los specs como contrato o los roles BMAD, explica por qué vale la pena. -->
+## Does this break SDD/BMAD?
+<!-- If your proposal changes how specs-as-contract or BMAD roles work, explain why it's worth it. -->
 
-## Contexto adicional
-<!-- Capturas, links a discusiones, ejemplos de otros frameworks que lo hacen bien, etc. -->
+## Additional context
+<!-- Screenshots, links to discussions, examples from other frameworks that do this well, etc. -->

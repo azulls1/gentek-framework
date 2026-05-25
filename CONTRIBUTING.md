@@ -1,6 +1,6 @@
 # Contributing to IAgentek
 
-Gracias por considerar contribuir a IAgentek. Esta guía te lleva del clone al PR mergeable en menos de 15 minutos.
+Thanks for considering contributing to IAgentek. This guide takes you from clone to mergeable PR in under 15 minutes.
 
 ## TL;DR
 ```bash
@@ -11,144 +11,144 @@ npm run build
 npm test
 ```
 
-Si los 4 comandos pasan, tu entorno está listo.
+If the 4 commands pass, your environment is ready.
 
 ---
 
-## Setup detallado
+## Detailed setup
 
-### Requisitos
-- **Node.js >= 18.17.0** (probado en 18, 20, 22)
-- **npm >= 9** (incluido con Node moderno)
-- **Git** (cualquier versión reciente)
-- Opcional: **Claude Code CLI** o una API key de algún provider para probar el ciclo end-to-end
+### Requirements
+- **Node.js >= 18.17.0** (tested on 18, 20, 22)
+- **npm >= 9** (bundled with modern Node)
+- **Git** (any recent version)
+- Optional: **Claude Code CLI** or an API key from some provider to test the cycle end-to-end
 
-### Estructura del monorepo
+### Monorepo structure
 ```
 iagentek-framework/
 ├── packages/
-│   ├── method/    # @iagentek/method — agentes BMAD + plantillas SDD + flows (assets markdown)
+│   ├── method/    # @iagentek/method — BMAD agents + SDD templates + flows (markdown assets)
 │   ├── core/      # @iagentek/core — providers, orchestrator, checkpoints, state
-│   └── cli/       # @iagentek/cli — bin/iagentek.js, comandos init/cycle/status/resume/agent
-├── iagentek-plugin/ # Plugin de Claude Code (slash commands + agents nativos)
-├── scripts/       # Scripts de build/publish
+│   └── cli/       # @iagentek/cli — bin/iagentek.js, commands init/cycle/status/resume/agent
+├── iagentek-plugin/ # Claude Code plugin (slash commands + native agents)
+├── scripts/       # Build/publish scripts
 ├── .github/       # CI, issue templates
-└── docs raíz:     # README, ARCHITECTURE, CHANGELOG, PUBLISHING, etc.
+└── root docs:     # README, ARCHITECTURE, CHANGELOG, PUBLISHING, etc.
 ```
 
-### Orden de build (importante)
-Los paquetes tienen dependencias entre sí: `cli → core → method`. El script `npm run build` los compila en el orden correcto. Si compilas manualmente uno por uno, respeta este orden.
+### Build order (important)
+Packages have dependencies among themselves: `cli → core → method`. The `npm run build` script compiles them in the correct order. If you build manually one by one, respect this order.
 
 ---
 
-## Workflow de un cambio
+## Workflow for a change
 
-### 1. Issue primero (recomendado)
-Antes de invertir tiempo en un cambio grande, abre un issue para alinear scope. Cambios pequeños (bugfix, typo, mejora menor) van directo a PR.
+### 1. Issue first (recommended)
+Before investing time on a big change, open an issue to align on scope. Small changes (bugfix, typo, minor improvement) go straight to PR.
 
 ### 2. Branch
 ```bash
 git checkout -b fix/short-descriptive-slug
-# o
+# or
 git checkout -b feat/short-descriptive-slug
 ```
 
-### 3. Código
-- Si añades un agente BMAD: crea el `.md` en `packages/method/assets/agents/` Y añade la entrada en el `AgentRole` type de `packages/method/src/index.ts`.
-- Si añades un provider de IA: implementa `AIProvider` en `packages/core/src/providers/`, regístralo en `factory.ts`, añade detección en `detect.ts`, exporta desde `index.ts`.
-- Si añades un flow: crea el `.yaml` en `packages/method/assets/flows/`. El orchestrator lo carga automáticamente.
+### 3. Code
+- If you add a BMAD agent: create the `.md` in `packages/method/assets/agents/` AND add the entry in the `AgentRole` type at `packages/method/src/index.ts`.
+- If you add an AI provider: implement `AIProvider` in `packages/core/src/providers/`, register it in `factory.ts`, add detection in `detect.ts`, export from `index.ts`.
+- If you add a flow: create the `.yaml` in `packages/method/assets/flows/`. The orchestrator loads it automatically.
 
 ### 4. Tests
-Tests vivien en `packages/<paquete>/test/`. Usa Vitest. Mínimo:
-- Test unitario del nuevo código
-- Si tocas el orchestrator, un test de integración con un mock provider
+Tests live in `packages/<package>/test/`. We use Vitest. Minimum:
+- Unit test for the new code
+- If you touch the orchestrator, an integration test with a mock provider
 
 ```bash
-npm test                  # corre todos los tests
-npm run test:watch        # modo watch
+npm test                  # run all tests
+npm run test:watch        # watch mode
 ```
 
-### 5. Build local
+### 5. Local build
 ```bash
 npm run build
 ```
-Tiene que pasar sin errores antes de mergear (el CI bloquea).
+Must pass without errors before merging (CI blocks otherwise).
 
-### 6. Smoke test del CLI
+### 6. CLI smoke test
 ```bash
 node packages/cli/dist/bin/iagentek.js --help
-node packages/cli/dist/bin/iagentek.js init demo --provider claude-cli --cwd /tmp/gentek-test
+node packages/cli/dist/bin/iagentek.js init demo --provider claude-cli --cwd /tmp/iagentek-test
 ```
 
 ### 7. Commit
-- Mensajes en imperativo presente: "add", "fix", "remove", no "added"/"fixed".
-- Una idea por commit. Si tu PR tiene 7 cambios independientes, 7 commits.
+- Messages in imperative present tense: "add", "fix", "remove", not "added"/"fixed".
+- One idea per commit. If your PR has 7 independent changes, 7 commits.
 
 ### 8. PR
-Sigue el template (`.github/PULL_REQUEST_TEMPLATE.md`). Incluye:
-- Qué cambió y por qué
-- Cómo probarlo
-- Screenshots si aplica
-- Issue que cierra (si aplica)
+Follow the template (`.github/PULL_REQUEST_TEMPLATE.md`). Include:
+- What changed and why
+- How to test it
+- Screenshots if applicable
+- Issue it closes (if any)
 
 ---
 
-## Estilo de código
+## Code style
 
 ### TypeScript
-- `strict: true` ya configurado en `tsconfig.base.json` — sin negociación.
-- Sin `any` salvo con comentario justificando.
-- Prefiere `interface` sobre `type` para shapes de objetos públicos.
-- Imports relativos terminan en `.js` (ESM con NodeNext).
+- `strict: true` already set in `tsconfig.base.json` — non-negotiable.
+- No `any` unless justified with a comment.
+- Prefer `interface` over `type` for public object shapes.
+- Relative imports end in `.js` (ESM with NodeNext).
 
 ### Markdown
-- Línea blanca antes y después de bloques de código.
-- Sin emojis decorativos a menos que el README los pida explícitamente.
-- Headings en oraciones (`## Mi heading`, no `## My Heading`).
+- Blank line before and after code blocks.
+- No decorative emojis unless the README asks for them.
+- Headings in sentence case (`## My heading`, not `## My Heading`).
 
-### Agentes BMAD (prompts en `packages/method/assets/agents/`)
-- Empieza con `# Agent: <Nombre>`.
-- Secciones obligatorias: **Identidad**, **Principios**, **Inputs esperados**, **Tu proceso**, **Outputs**, **Checkpoint**, **Qué NO hacer**.
-- Tono directo y opinionado — el agente es un experto, no un asistente neutral.
+### BMAD agents (prompts in `packages/method/assets/agents/`)
+- Start with `# Agent: <Name>`.
+- Required sections: **Identity**, **Principles**, **Expected inputs**, **Your process**, **Outputs**, **Checkpoint**, **What NOT to do**.
+- Direct, opinionated tone — the agent is an expert, not a neutral assistant.
 
 ---
 
-## Cómo correr el CLI con cambios locales
+## Running the CLI with local changes
 
 ```bash
-# Después de un build
+# After a build
 npm link -w @iagentek/cli
 
-# Ahora `iagentek` está disponible globalmente apuntando a tu copia local
+# Now `iagentek` is globally available pointing to your local copy
 iagentek --version
 iagentek init test-local
 ```
 
-Para deshacer:
+To undo:
 ```bash
 npm unlink -g @iagentek/cli
 ```
 
 ---
 
-## Reportar bugs
+## Reporting bugs
 
-1. Verifica que no exista ya un issue similar.
-2. Usa el template "Bug report" en `.github/ISSUE_TEMPLATE/`.
-3. Incluye versión de Node, OS, salida del comando, qué esperabas vs qué pasó.
+1. Verify there isn't already a similar open issue.
+2. Use the "Bug report" template in `.github/ISSUE_TEMPLATE/`.
+3. Include Node version, OS, command output, what you expected vs what happened.
 
-## Proponer features
+## Proposing features
 
-1. Issue "Feature request" antes de codear.
-2. Describe el problema que resuelve, no la solución que imaginas.
-3. Si afecta a un agente BMAD o flow existente, justifica por qué el cambio no rompe la promesa de SDD (specs como contrato).
+1. Open a "Feature request" issue before coding.
+2. Describe the problem it solves, not the solution you imagine.
+3. If it affects an existing BMAD agent or flow, justify why the change doesn't break the SDD promise (specs as contract).
 
 ---
 
-## Código de conducta
+## Code of conduct
 
-Este proyecto sigue el [Código de Conducta](./CODE_OF_CONDUCT.md). Al contribuir, aceptas honrarlo.
+This project follows the [Code of Conduct](./CODE_OF_CONDUCT.md). By contributing, you agree to honor it.
 
-## Licencia
+## License
 
-Al enviar un PR, aceptas que tu contribución se publica bajo [MIT](./LICENSE).
+By submitting a PR, you agree your contribution is published under [MIT](./LICENSE).

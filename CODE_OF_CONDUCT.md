@@ -1,39 +1,39 @@
-# Código de Conducta
+# Code of Conduct
 
-## Nuestro compromiso
+## Our pledge
 
-En interés de fomentar una comunidad abierta y acogedora, las personas que mantenemos y contribuimos a IAgentek nos comprometemos a hacer de la participación en este proyecto una experiencia libre de acoso para todos, sin importar edad, tamaño corporal, discapacidad, etnia, identidad o expresión de género, nivel de experiencia, nacionalidad, apariencia personal, raza, religión u orientación sexual.
+In the interest of fostering an open and welcoming community, we as maintainers and contributors to IAgentek pledge to make participation in this project a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, gender identity or expression, level of experience, nationality, personal appearance, race, religion, or sexual orientation.
 
-## Nuestros estándares
+## Our standards
 
-**Ejemplos de comportamiento que contribuye a un ambiente positivo:**
-- Usar lenguaje acogedor e inclusivo
-- Respetar puntos de vista y experiencias diferentes
-- Aceptar críticas constructivas con elegancia
-- Enfocarse en lo mejor para la comunidad
-- Mostrar empatía hacia otros miembros
+**Examples of behavior that contribute to a positive environment:**
+- Using welcoming and inclusive language
+- Respecting differing viewpoints and experiences
+- Gracefully accepting constructive criticism
+- Focusing on what is best for the community
+- Showing empathy toward other community members
 
-**Comportamiento inaceptable:**
-- Lenguaje o imágenes sexualizadas y atención sexual no deseada
-- Trolling, insultos, comentarios despectivos, ataques personales o políticos
-- Acoso público o privado
-- Publicar información privada de otros (correo, dirección, etc.) sin consentimiento explícito
-- Otra conducta que razonablemente se consideraría inapropiada en un ámbito profesional
+**Unacceptable behavior:**
+- Sexualized language or imagery and unwelcome sexual attention
+- Trolling, insults, derogatory comments, personal or political attacks
+- Public or private harassment
+- Publishing others' private information (email, address, etc.) without explicit consent
+- Other conduct that could reasonably be considered inappropriate in a professional setting
 
-## Responsabilidades
+## Responsibilities
 
-Quienes mantenemos el proyecto somos responsables de aclarar los estándares de comportamiento aceptable y tomamos acciones correctivas justas y apropiadas en respuesta a cualquier comportamiento inaceptable.
+Project maintainers are responsible for clarifying acceptable behavior standards and we take fair and appropriate corrective action in response to any unacceptable behavior.
 
-Tenemos el derecho y la responsabilidad de eliminar, editar o rechazar comentarios, commits, código, ediciones de wiki, issues y otras contribuciones que no se alineen con este Código de Conducta, o de banear temporal o permanentemente a quien tenga comportamientos inapropiados, amenazadores, ofensivos o dañinos.
+We have the right and the responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that don't align with this Code of Conduct, or to temporarily or permanently ban anyone whose behavior is inappropriate, threatening, offensive, or harmful.
 
-## Alcance
+## Scope
 
-Este Código de Conducta aplica tanto en espacios del proyecto como en espacios públicos cuando un individuo representa al proyecto o su comunidad. Ejemplos: usar correo oficial del proyecto, publicar desde cuenta oficial en redes, actuar como representante en evento online o presencial.
+This Code of Conduct applies both in project spaces and in public spaces when an individual is representing the project or its community. Examples: using an official project email, posting from an official account on social media, or acting as a representative at an online or in-person event.
 
-## Aplicación
+## Enforcement
 
-Reportes de comportamiento abusivo, acoso o cualquier otra inaceptable se pueden enviar a **azull.samael@gmail.com**. Todas las quejas serán revisadas e investigadas y resultarán en una respuesta considerada necesaria y apropiada a las circunstancias. Quienes mantenemos el proyecto estamos obligados a mantener la confidencialidad del reportante.
+Reports of abusive, harassing, or otherwise unacceptable behavior can be sent to **azull.samael@gmail.com**. All complaints will be reviewed and investigated and will result in a response deemed necessary and appropriate to the circumstances. Project maintainers are obligated to maintain the reporter's confidentiality.
 
-## Atribución
+## Attribution
 
-Adaptado del [Contributor Covenant v1.4](https://www.contributor-covenant.org/version/1/4/code-of-conduct.html).
+Adapted from the [Contributor Covenant v1.4](https://www.contributor-covenant.org/version/1/4/code-of-conduct.html).

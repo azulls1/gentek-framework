@@ -1,10 +1,10 @@
 # @iagentek/core
 
-Núcleo del framework **IAgentek**: providers de IA, orchestrator de fases, sistema de checkpoints, state manager y analizador de codebase.
+Core of the **IAgentek** framework: AI providers, phase orchestrator, checkpoint system, state manager, and codebase analyzer.
 
-Si solo quieres usar IAgentek desde la CLI, instala [`@iagentek/cli`](https://www.npmjs.com/package/@iagentek/cli). Este paquete es para integradores que quieren construir runners personalizados (CI, web UI, otro CLI, etc.).
+If you just want to use IAgentek from the CLI, install [`@iagentek/cli`](https://www.npmjs.com/package/@iagentek/cli). This package is for integrators who want to build custom runners (CI, web UI, another CLI, etc.).
 
-## Exports principales
+## Main exports
 ```ts
 import {
   createProvider,
@@ -18,8 +18,8 @@ import {
 } from '@iagentek/core';
 ```
 
-## Providers soportados
+## Supported providers
 `anthropic`, `claude-cli`, `openai`, `gemini`, `deepseek`, `ollama`.
 
-## Docs completas
+## Full docs
 [github.com/azulls1/iagentek-framework](https://github.com/azulls1/iagentek-framework)

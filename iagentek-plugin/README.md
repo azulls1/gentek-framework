@@ -1,44 +1,44 @@
 # IAgentek — Claude Code Plugin
 
-Plugin de Claude Code que expone el método **IAgentek** (Spec-Driven Development + BMAD) como **slash commands** y **agentes** nativos, complementando el CLI `@iagentek/cli`.
+Claude Code plugin that exposes the **IAgentek** method (Spec-Driven Development + BMAD) as **slash commands** and native **agents**, complementing the `@iagentek/cli`.
 
-## Qué incluye
+## What's included
 
 ### Slash commands
 - `/iagentek-init` — Bootstrap (greenfield/brownfield/bugfix/refactor)
-- `/iagentek-cycle` — Ejecuta el ciclo con checkpoints
-- `/iagentek-status` — Estado del proyecto
-- `/iagentek-resume` — Retoma desde el último checkpoint
-- `/iagentek-agent` — Invoca un agente BMAD aislado
+- `/iagentek-cycle` — Run the cycle with checkpoints
+- `/iagentek-status` — Project status
+- `/iagentek-resume` — Resume from the last checkpoint
+- `/iagentek-agent` — Invoke a BMAD agent in isolation
 
-### Agentes invocables (`@iagentek-*`)
-| Agente | Rol |
+### Invocable agents (`@iagentek-*`)
+| Agent | Role |
 |---|---|
-| `iagentek-analyst` | Discovery y definición de problema |
+| `iagentek-analyst` | Discovery and problem definition |
 | `iagentek-pm` | PRD + specs |
-| `iagentek-architect` | Stack, diseño técnico, plans por feature |
-| `iagentek-scrum-master` | Stories + tasks atómicas + DoD |
-| `iagentek-dev` | Implementación con tests |
-| `iagentek-qa` | Validación de ACs + reportes |
+| `iagentek-architect` | Stack, technical design, per-feature plans |
+| `iagentek-scrum-master` | Stories + atomic tasks + DoD |
+| `iagentek-dev` | Implementation with tests |
+| `iagentek-qa` | AC validation + reports |
 | `iagentek-devops` | CI/CD + infra + runbook |
-| `iagentek-debugger` | Bug + causa raíz + postmortem |
-| `iagentek-refactor-architect` | Audit de deuda + migration plan |
+| `iagentek-debugger` | Bug + root cause + postmortem |
+| `iagentek-refactor-architect` | Debt audit + migration plan |
 
-## Instalación en Claude Code
+## Install in Claude Code
 
 ```bash
-# Desde Claude Code, agrega este plugin apuntando al repo y subpath:
+# From Claude Code, add this plugin pointing to the repo and subpath:
 /plugin add github.com/azulls1/iagentek-framework path:iagentek-plugin
 ```
 
-(Sintaxis exacta puede variar según versión de Claude Code — consulta `/plugin --help`.)
+(Exact syntax may vary depending on your Claude Code version — check `/plugin --help`.)
 
-## Requisito previo
-Los slash commands invocan `npx @iagentek/cli` bajo el capó, así que necesitas Node 18+ en tu PATH. Los agentes funcionan independientemente (usan tools nativas de Claude Code).
+## Prerequisite
+The slash commands invoke `npx @iagentek/cli` under the hood, so you need Node 18+ in your PATH. The agents work independently (they use Claude Code's native tools).
 
-## Cómo funciona la doble pista
-- **Slash commands** = ejecutan el CLI completo (con orchestrator, providers, checkpoints, state). Usa esto cuando quieras correr el ciclo end-to-end.
-- **Agentes** = corren dentro de Claude Code usando Read/Write/Edit nativos, sin pasar por el CLI. Usa esto cuando quieras consultar a un rol específico para una tarea puntual.
+## How the two tracks work
+- **Slash commands** = run the full CLI (with orchestrator, providers, checkpoints, state). Use these when you want to run the cycle end-to-end.
+- **Agents** = run inside Claude Code using native Read/Write/Edit, without going through the CLI. Use these when you want to consult a specific role for a one-off task.
 
-## Más info
-- Framework completo: [github.com/azulls1/iagentek-framework](https://github.com/azulls1/iagentek-framework)
+## More info
+- Full framework: [github.com/azulls1/iagentek-framework](https://github.com/azulls1/iagentek-framework)

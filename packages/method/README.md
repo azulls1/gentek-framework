@@ -1,21 +1,23 @@
 # @iagentek/method
 
-Agentes **BMAD** + plantillas **Spec-Driven Development** + definiciones de **flows** para el framework IAgentek.
+**BMAD** agents + **Spec-Driven Development** templates + **flow** definitions for the IAgentek framework.
 
-Distribuye los assets como markdown puro + un pequeño loader TypeScript. Cualquier runner (CLI, plugin, web) puede consumirlos.
+Ships the assets as pure markdown + a small TypeScript loader. Any runner (CLI, plugin, web) can consume them.
 
-## Agentes incluidos
-- `analyst` — discovery y problema
-- `pm` — PRD y specs
-- `architect` — stack y diseño
-- `scrum-master` — stories y tasks
-- `dev` — implementación
-- `qa` — validación
+## Included agents
+- `analyst` — discovery and problem definition
+- `pm` — PRD and specs
+- `architect` — stack and design
+- `scrum-master` — stories and tasks
+- `dev` — implementation
+- `qa` — validation
 - `devops` — CI/CD
-- `debugger` — incidentes y bugs
-- `refactor-architect` — deuda técnica
+- `debugger` — incidents and bugs
+- `refactor-architect` — tech-debt
 
-## Plantillas SDD
+> **Note:** the agent prompts are currently written in Spanish (the project's original language). They produce artifacts in whichever language the user requests. English-localized prompts are on the roadmap.
+
+## SDD templates
 `constitution.md`, `project-brief.md`, `PRD.md`, `spec.md`, `plan.md`, `tasks.md`, `story.md`, `architecture.md`, `current-state.md`.
 
 ## Flows
@@ -34,5 +36,5 @@ import {
 } from '@iagentek/method';
 ```
 
-## Docs completas
+## Full docs
 [github.com/azulls1/iagentek-framework](https://github.com/azulls1/iagentek-framework)

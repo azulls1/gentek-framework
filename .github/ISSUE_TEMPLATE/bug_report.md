@@ -1,43 +1,43 @@
 ---
 name: 🐛 Bug report
-about: Reporta un comportamiento inesperado o un crash
+about: Report unexpected behavior or a crash
 title: "[Bug] "
 labels: bug, needs-triage
 assignees: ''
 ---
 
-## Resumen
-<!-- 1-2 frases describiendo el bug -->
+## Summary
+<!-- 1-2 sentences describing the bug -->
 
-## Pasos para reproducir
-1. Ejecuté `...`
-2. Hice `...`
-3. Vi `...`
+## Steps to reproduce
+1. I ran `...`
+2. I did `...`
+3. I saw `...`
 
-## Comportamiento esperado
-<!-- Qué esperabas que pasara -->
+## Expected behavior
+<!-- What you expected to happen -->
 
-## Comportamiento actual
-<!-- Qué pasó en realidad. Pega salida completa del comando si aplica. -->
+## Actual behavior
+<!-- What actually happened. Paste the full command output if applicable. -->
 
 ```
-[salida del comando]
+[command output]
 ```
 
-## Entorno
-- **Versión de IAgentek:** (output de `npx @iagentek/cli --version`)
-- **Provider usado:** anthropic / claude-cli / openai / ...
-- **Node.js:** (output de `node --version`)
-- **npm:** (output de `npm --version`)
-- **OS:** Windows / macOS / Linux (especifica versión)
+## Environment
+- **IAgentek version:** (output of `npx @iagentek/cli --version`)
+- **Provider used:** anthropic / claude-cli / openai / ...
+- **Node.js:** (output of `node --version`)
+- **npm:** (output of `npm --version`)
+- **OS:** Windows / macOS / Linux (specify version)
 - **Flow:** greenfield / brownfield / bugfix / refactor
 
-## Archivos relevantes (si aplica)
-- Contenido de `.iagentek/config.yaml` (sin secretos)
-- Contenido de `.iagentek/state.json`
-- Transcripts en `.iagentek/.transcripts/` que muestran el fallo
+## Relevant files (if applicable)
+- Contents of `.iagentek/config.yaml` (without secrets)
+- Contents of `.iagentek/state.json`
+- Transcripts in `.iagentek/.transcripts/` showing the failure
 
 ## Checklist
-- [ ] Verifiqué que no hay otro issue abierto con este bug
-- [ ] Reproduje el bug en una versión limpia (sin modificaciones locales)
-- [ ] Eliminé información sensible (API keys, datos privados) del reporte
+- [ ] I verified there isn't another open issue for this bug
+- [ ] I reproduced the bug in a clean version (no local modifications)
+- [ ] I removed sensitive info (API keys, private data) from the report

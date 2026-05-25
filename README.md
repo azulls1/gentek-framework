@@ -1,50 +1,52 @@
 # IAgentek
 
-> Framework de desarrollo autónomo asistido por IA para equipos de programadores.
-> Fusiona **Spec-Driven Development** (specs como source-of-truth) con **BMAD Method** (agentes especializados con roles claros).
+> Autonomous AI-assisted development framework for engineering teams.
+> Merges **Spec-Driven Development** (specs as source of truth) with the **BMAD Method** (specialized agents with clear roles).
 
-Un comando, un ciclo entero. Greenfield, brownfield, bugfix o refactor. Claude por default, cualquier IA por API key. Disponible como **CLI `npx`** o como **plugin de Claude Code**.
+One command, one full cycle. Greenfield, brownfield, bugfix, or refactor. Claude by default, any AI via API key. Available as **`npx` CLI** or as a **Claude Code plugin**.
+
+> 🇪🇸 También disponible en [español](./README.es.md)
 
 ```bash
-npx @iagentek/cli init mi-producto
-cd mi-producto
-npx @iagentek/cli cycle --idea "Quiero un sistema de tickets para soporte que..."
+npx @iagentek/cli init my-product
+cd my-product
+npx @iagentek/cli cycle --idea "I want a ticketing system for support that..."
 ```
 
-O desde Claude Code:
+Or from Claude Code:
 ```
-/iagentek-init mi-producto
+/iagentek-init my-product
 /iagentek-cycle --idea "..."
 ```
 
 ---
 
-## ¿Qué hace?
+## What it does
 
-IAgentek orquesta un equipo virtual de agentes (Analyst → PM → Architect → Scrum Master → Dev → QA → DevOps + Debugger + Refactor Architect) que pasan por un ciclo de desarrollo completo. Cada agente produce artefactos **spec-driven** (constitución, PRD, specs, plans, tasks, stories) que son la fuente de verdad del proyecto. Tú apruebas en checkpoints clave y el ciclo sigue.
+IAgentek orchestrates a virtual team of agents (Analyst → PM → Architect → Scrum Master → Dev → QA → DevOps + Debugger + Refactor Architect) that walk through a complete development cycle. Each agent produces **spec-driven** artifacts (constitution, PRD, specs, plans, tasks, stories) that become the project's source of truth. You approve at key checkpoints and the cycle continues.
 
-**Modos de ejecución:**
-- `autonomous-with-checkpoints` (default) — corre solo, se detiene en momentos clave
-- `fully-autonomous` — end-to-end sin parar
-- `interactive` — pregunta en cada paso
+**Execution modes:**
+- `autonomous-with-checkpoints` (default) — runs on its own, stops at critical moments
+- `fully-autonomous` — end-to-end without stopping
+- `interactive` — asks at every step
 
-**4 ciclos completos:**
-- `greenfield` — producto desde cero (7 fases)
-- `brownfield` — sobre código existente (8 fases, análisis previo automático)
-- `bugfix` — incident response corto (triage → repro → fix → postmortem)
-- `refactor` — reducción de tech-debt por etapas (audit → migration plan → ejecución segura)
+**4 complete cycles:**
+- `greenfield` — product from scratch (7 phases)
+- `brownfield` — on existing codebase (8 phases, automatic preliminary analysis)
+- `bugfix` — short incident response (triage → repro → fix → postmortem)
+- `refactor` — staged tech-debt reduction (audit → migration plan → safe execution)
 
-**6 providers de IA (auto-detectados):**
-| Provider | Cómo se detecta | Default model |
+**6 AI providers (auto-detected):**
+| Provider | How it's detected | Default model |
 |---|---|---|
-| `claude-cli` | comando `claude` en PATH | claude-opus-4-7 |
+| `claude-cli` | `claude` command in PATH | claude-opus-4-7 |
 | `anthropic` | `ANTHROPIC_API_KEY` | claude-opus-4-7 |
 | `openai` | `OPENAI_API_KEY` | gpt-4o |
 | `gemini` | `GEMINI_API_KEY` | gemini-2.0-flash |
 | `deepseek` | `DEEPSEEK_API_KEY` | deepseek-chat |
-| `ollama` | comando `ollama` en PATH | llama3.1 |
+| `ollama` | `ollama` command in PATH | llama3.1 |
 
-**9 agentes BMAD:**
+**9 BMAD agents:**
 Analyst · PM · Architect · Scrum Master · Dev · QA · DevOps · Debugger · Refactor Architect.
 
 ---
@@ -53,102 +55,102 @@ Analyst · PM · Architect · Scrum Master · Dev · QA · DevOps · Debugger ·
 
 ### 1) Bootstrap
 ```bash
-npx @iagentek/cli init mi-producto
+npx @iagentek/cli init my-product
 ```
-Detecta automáticamente el provider disponible. Si necesitas API key y no está en env, te la pide y la guarda en `.env` (con `.gitignore` automático).
+Automatically detects the available provider. If you need an API key and it isn't in env, it asks for it and stores it in `.env` (with automatic `.gitignore`).
 
-### 2) Ejecutar el ciclo
+### 2) Run the cycle
 ```bash
-cd mi-producto
-npx @iagentek/cli cycle --idea "App móvil para reservar canchas de pádel"
+cd my-product
+npx @iagentek/cli cycle --idea "Mobile app to book paddle tennis courts"
 ```
 
-### 3) Comandos disponibles
-| Comando | Qué hace |
+### 3) Available commands
+| Command | What it does |
 |---|---|
-| `init [name]` | Bootstrap `.iagentek/` con config + state |
-| `cycle [--flow X] [--idea "..."]` | Ejecuta el ciclo con checkpoints |
-| `status` | Muestra fases, checkpoints aprobados, próximos pasos |
-| `resume` | Retoma desde la última fase pausada |
-| `agent <role> [--prompt "..."]` | Invoca un agente BMAD aislado |
+| `init [name]` | Bootstrap `.iagentek/` with config + state |
+| `cycle [--flow X] [--idea "..."]` | Run the cycle with checkpoints |
+| `status` | Show phases, approved checkpoints, next steps |
+| `resume` | Resume from the last paused phase |
+| `agent <role> [--prompt "..."]` | Invoke a BMAD agent in isolation |
 
 ---
 
 ## Quick start (Claude Code plugin)
 
-Instala el plugin apuntando a este repo:
+Install the plugin pointing at this repo:
 ```
 /plugin add github.com/azulls1/iagentek-framework path:iagentek-plugin
 ```
 
-Comandos disponibles después de instalar:
-- `/iagentek-init` — bootstrap interactivo
-- `/iagentek-cycle` — ciclo completo
-- `/iagentek-status` — estado actual
-- `/iagentek-resume` — retoma desde checkpoint
-- `/iagentek-agent` — invoca un agente
+Commands available after install:
+- `/iagentek-init` — interactive bootstrap
+- `/iagentek-cycle` — full cycle
+- `/iagentek-status` — current state
+- `/iagentek-resume` — resume from checkpoint
+- `/iagentek-agent` — invoke an agent
 
-Agentes invocables como `@iagentek-analyst`, `@iagentek-pm`, `@iagentek-architect`, etc.
+Agents invocable as `@iagentek-analyst`, `@iagentek-pm`, `@iagentek-architect`, etc.
 
-Ver detalles en [`iagentek-plugin/README.md`](./iagentek-plugin/README.md).
+See details in [`iagentek-plugin/README.md`](./iagentek-plugin/README.md).
 
 ---
 
-## Estructura que se genera en tu proyecto
+## What gets generated in your project
 
 ```
-mi-producto/
+my-product/
 ├── .env                       # API key (gitignored)
 ├── .gitignore
 └── .iagentek/
-    ├── config.yaml            # provider, flow, modo, checkpoints
-    ├── state.json             # tracking de fases (gitignored)
-    ├── constitution.md        # principios no-negociables (SDD)
-    ├── project-brief.md       # output del Analyst
-    ├── current-state.md       # solo en brownfield/bugfix/refactor (auto)
-    ├── PRD.md                 # output del PM
-    ├── architecture.md        # output del Architect
-    ├── sprint-plan.md         # output del Scrum Master
+    ├── config.yaml            # provider, flow, mode, checkpoints
+    ├── state.json             # phase tracking (gitignored)
+    ├── constitution.md        # non-negotiable principles (SDD)
+    ├── project-brief.md       # Analyst output
+    ├── current-state.md       # only in brownfield/bugfix/refactor (auto)
+    ├── PRD.md                 # PM output
+    ├── architecture.md        # Architect output
+    ├── sprint-plan.md         # Scrum Master output
     ├── DoD.md                 # Definition of Done
-    ├── specs/                 # specs SDD por feature
-    ├── plans/                 # plans técnicos por feature
+    ├── specs/                 # SDD specs per feature
+    ├── plans/                 # technical plans per feature
     ├── stories/               # user stories (sprint)
-    ├── tasks/                 # tasks atómicas (1-4h)
-    ├── qa/                    # reportes de QA por story
-    ├── deployment.md          # runbook de DevOps
-    ├── incidents/             # postmortems (solo bugfix)
-    ├── debt-audit.md          # auditoría (solo refactor)
-    ├── refactor-plans/        # planes por etapas (solo refactor)
-    └── .transcripts/          # outputs crudos de cada agente (gitignored)
+    ├── tasks/                 # atomic tasks (1-4h)
+    ├── qa/                    # QA reports per story
+    ├── deployment.md          # DevOps runbook
+    ├── incidents/             # postmortems (bugfix only)
+    ├── debt-audit.md          # audit (refactor only)
+    ├── refactor-plans/        # staged plans (refactor only)
+    └── .transcripts/          # raw agent outputs (gitignored)
 ```
 
 ---
 
-## Fusión SDD + BMAD
+## SDD + BMAD fusion
 
-| Aspecto | Lo que aporta SDD | Lo que aporta BMAD |
+| Aspect | What SDD brings | What BMAD brings |
 |---|---|---|
-| Artefactos | Constitution, spec, plan, tasks | — |
-| Agentes | — | Analyst, PM, Architect, SM, Dev, QA, DevOps |
-| Filosofía | Specs son el contrato | Roles especializados ejecutan |
-| Validación | Acceptance criteria verificables | Checkpoints humanos por fase |
+| Artifacts | Constitution, spec, plan, tasks | — |
+| Agents | — | Analyst, PM, Architect, SM, Dev, QA, DevOps |
+| Philosophy | Specs are the contract | Specialized roles execute |
+| Validation | Verifiable acceptance criteria | Human checkpoints per phase |
 
-**En IAgentek:** los agentes BMAD son los ejecutores; los artefactos SDD son el contrato. Cada agente lee artefactos previos como input y produce los suyos como output. El humano aprueba en checkpoints.
-
----
-
-## Arquitectura del framework
-
-Ver [ARCHITECTURE.md](./ARCHITECTURE.md). Monorepo con 3 paquetes npm + 1 plugin de Claude Code:
-
-- `@iagentek/cli` — CLI ejecutable por `npx`
-- `@iagentek/core` — providers de IA, orchestrator, checkpoints, state, codebase analyzer
-- `@iagentek/method` — agentes BMAD + plantillas SDD + flows (markdown + YAML)
-- `iagentek-plugin/` — plugin de Claude Code complementario (no se publica a npm)
+**In IAgentek:** the BMAD agents are the executors; the SDD artifacts are the contract. Each agent reads prior artifacts as input and produces its own as output. The human approves at checkpoints.
 
 ---
 
-## Desarrollo local
+## Framework architecture
+
+See [ARCHITECTURE.md](./ARCHITECTURE.md). Monorepo with 3 npm packages + 1 Claude Code plugin:
+
+- `@iagentek/cli` — `npx`-executable CLI
+- `@iagentek/core` — AI providers, orchestrator, checkpoints, state, codebase analyzer
+- `@iagentek/method` — BMAD agents + SDD templates + flows (markdown + YAML)
+- `iagentek-plugin/` — complementary Claude Code plugin (not published to npm)
+
+---
+
+## Local development
 
 ```bash
 git clone https://github.com/azulls1/iagentek-framework
@@ -158,32 +160,37 @@ npm run build
 node packages/cli/dist/bin/iagentek.js --help
 ```
 
-## Publicación a npm
-Ver [PUBLISHING.md](./PUBLISHING.md).
+## Publishing to npm
+See [PUBLISHING.md](./PUBLISHING.md).
 
 ---
 
-## Estado y roadmap
+## Status and roadmap
 
-**v0.3.0 (actual — iteración 3):**
-- ✅ 4 ciclos completos (greenfield, brownfield, bugfix, refactor)
-- ✅ 9 agentes BMAD con prompts completos
-- ✅ 6 providers de IA con auto-detección
-- ✅ Plugin de Claude Code (5 slash commands + 9 agents)
-- ✅ Paquetes preparados para publicación a npm
-- ✅ Analizador automático de codebase para brownfield
+**v0.3.1 (current):**
+- ✅ Bug fix: `iagentek --version` shows the real package version
+- ✅ Version is now read dynamically from `package.json` at runtime
+- ✅ 61 tests still pass
 
-**Próximas mejoras (no comprometidas):**
-- Streaming de tokens en tiempo real
-- Web UI para visualizar el ciclo
-- Soporte para más providers (Mistral, Groq, Cohere)
-- Loop real por story en la fase de implementación
-- Cache de respuestas para reducir costos de IA
+**v0.3.0:**
+- ✅ 4 complete cycles (greenfield, brownfield, bugfix, refactor)
+- ✅ 9 BMAD agents with full prompts
+- ✅ 6 AI providers with auto-detection
+- ✅ Claude Code plugin (5 slash commands + 9 agents)
+- ✅ Packages ready for npm publication
+- ✅ Automatic codebase analyzer for brownfield
+
+**Possible future improvements (not committed):**
+- Real-time token streaming
+- Web UI to visualize the cycle
+- Support for more providers (Mistral, Groq, Cohere)
+- Real per-story loop in the implementation phase
+- Response cache to reduce AI costs
 
 ---
 
-## Contribuir
-Pull requests bienvenidos. Issues en [github.com/azulls1/iagentek-framework/issues](https://github.com/azulls1/iagentek-framework/issues).
+## Contributing
+Pull requests welcome. Issues at [github.com/azulls1/iagentek-framework/issues](https://github.com/azulls1/iagentek-framework/issues).
 
-## Licencia
-MIT — ver [LICENSE](./LICENSE).
+## License
+MIT — see [LICENSE](./LICENSE).

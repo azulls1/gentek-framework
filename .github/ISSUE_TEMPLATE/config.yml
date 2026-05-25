@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-  - name: 📖 Documentación
+  - name: 📖 Documentation
     url: https://github.com/azulls1/iagentek-framework#readme
-    about: Revisa el README, ARCHITECTURE y CHANGELOG antes de abrir un issue
-  - name: 🔒 Reporte de seguridad
+    about: Read the README, ARCHITECTURE and CHANGELOG before opening an issue
+  - name: 🔒 Security report
     url: https://github.com/azulls1/iagentek-framework/security/policy
-    about: Para vulnerabilidades, NO abras un issue público — sigue SECURITY.md
+    about: For vulnerabilities, do NOT open a public issue — follow SECURITY.md

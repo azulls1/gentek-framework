@@ -1,41 +1,41 @@
-## Resumen
-<!-- Qué cambia este PR. 1-3 frases. -->
+## Summary
+<!-- What this PR changes. 1-3 sentences. -->
 
-## Motivación
-<!-- Por qué hace falta. Link al issue que cierra si aplica: "Closes #123" -->
+## Motivation
+<!-- Why it's needed. Link to the issue it closes if applicable: "Closes #123" -->
 
-## Cambios
-<!-- Lista bulleted de los cambios concretos -->
+## Changes
+<!-- Bulleted list of the specific changes -->
 -
 -
 
-## Cómo probarlo
-<!-- Pasos exactos para verificar el comportamiento -->
+## How to test
+<!-- Exact steps to verify the behavior -->
 
 ```bash
 npm install
 npm run build
 npm test
-# pasos manuales si aplica
+# manual steps if applicable
 ```
 
-## Tipo de cambio
-- [ ] 🐛 Bug fix (no rompe API)
-- [ ] ✨ Feature nueva (no rompe API)
-- [ ] 💥 Breaking change (rompe API existente)
-- [ ] 📝 Solo docs / comentarios
-- [ ] ♻️ Refactor (sin cambio funcional)
+## Type of change
+- [ ] 🐛 Bug fix (no API break)
+- [ ] ✨ New feature (no API break)
+- [ ] 💥 Breaking change (breaks existing API)
+- [ ] 📝 Docs / comments only
+- [ ] ♻️ Refactor (no functional change)
 - [ ] 🚀 Performance
 - [ ] 🧪 Tests
 - [ ] 🔧 Tooling / CI
 
 ## Checklist
-- [ ] `npm run build` pasa sin errores
-- [ ] `npm test` pasa
-- [ ] Añadí o actualicé tests para cubrir el cambio
-- [ ] Actualicé README/ARCHITECTURE/CHANGELOG si el cambio lo amerita
-- [ ] Si cambié API pública, bumpeé versiones de los paquetes afectados
-- [ ] No introduje secretos (.env, API keys) al repo
+- [ ] `npm run build` passes without errors
+- [ ] `npm test` passes
+- [ ] I added or updated tests covering the change
+- [ ] I updated README/ARCHITECTURE/CHANGELOG if the change warrants it
+- [ ] If I changed a public API, I bumped versions of the affected packages
+- [ ] I did not introduce secrets (.env, API keys) into the repo
 
-## Screenshots / output (si aplica)
-<!-- Pega salida del CLI, capturas de UI, etc. -->
+## Screenshots / output (if applicable)
+<!-- Paste CLI output, UI screenshots, etc. -->
