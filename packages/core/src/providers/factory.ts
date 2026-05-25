@@ -1,6 +1,10 @@
 import type { AIProvider, ProviderId } from './types.js';
 import { AnthropicProvider } from './anthropic.js';
 import { ClaudeCliProvider } from './claude-cli.js';
+import { OpenAIProvider } from './openai.js';
+import { GeminiProvider } from './gemini.js';
+import { DeepSeekProvider } from './deepseek.js';
+import { OllamaProvider } from './ollama.js';
 
 export interface ProviderConfig {
   id: ProviderId;
@@ -15,13 +19,13 @@ export function createProvider(config: ProviderConfig): AIProvider {
     case 'anthropic':
       return new AnthropicProvider(config.apiKey);
     case 'openai':
+      return new OpenAIProvider(config.apiKey);
     case 'gemini':
+      return new GeminiProvider(config.apiKey);
     case 'deepseek':
+      return new DeepSeekProvider(config.apiKey);
     case 'ollama':
-      throw new Error(
-        `Provider "${config.id}" todavía no implementado. ` +
-          `MVP soporta: claude-cli, anthropic. Otros llegan en iteración 2.`
-      );
+      return new OllamaProvider();
     default:
       throw new Error(`Provider desconocido: ${config.id satisfies never}`);
   }

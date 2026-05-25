@@ -56,6 +56,10 @@ export class ConfigManager {
         'discovery-approved': 'required',
         'specs-approved': 'required',
         'architecture-approved': 'required',
+        'planning-approved': 'required',
+        'story-done': 'required',
+        'qa-approved': 'required',
+        'release-approved': 'required',
       },
     };
   }

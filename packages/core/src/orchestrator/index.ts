@@ -6,6 +6,7 @@ import type { GentekConfig } from '../config/loader.js';
 import type { PhaseDefinition, FlowDefinition } from '../flow/loader.js';
 import { StateManager } from '../state/manager.js';
 import { CheckpointManager, type CheckpointHandler } from '../checkpoints/manager.js';
+import { analyzeCodebase, summarizeAnalysis } from '../analysis/codebase.js';
 import { logger } from '../util/logger.js';
 
 export interface OrchestratorOptions {
@@ -88,6 +89,10 @@ export class Orchestrator {
   }
 
   private async runPhase(phase: PhaseDefinition): Promise<string> {
+    if (phase.agent.startsWith('__') && phase.agent.endsWith('__')) {
+      return this.runBuiltinAgent(phase);
+    }
+
     const agent = loadAgent(phase.agent as AgentRole);
 
     const contextSections = buildPhaseContext(
@@ -110,6 +115,25 @@ export class Orchestrator {
     });
 
     return output;
+  }
+
+  private async runBuiltinAgent(phase: PhaseDefinition): Promise<string> {
+    switch (phase.agent) {
+      case '__codebase__': {
+        logger.dim('  🔍 Analizando codebase...');
+        const analysis = analyzeCodebase(this.opts.projectDir);
+        const summary = summarizeAnalysis(analysis);
+        return [
+          summary,
+          '',
+          '```file:.gentek/current-state.md',
+          summary,
+          '```',
+        ].join('\n');
+      }
+      default:
+        throw new Error(`Builtin agent desconocido: ${phase.agent}`);
+    }
   }
 
   private summarize(phase: PhaseDefinition, writtenFiles: string[]): string {
