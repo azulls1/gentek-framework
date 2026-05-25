@@ -6,7 +6,9 @@ import type { AIProvider, ChatMessage, CompletionOptions } from './types.js';
  * Útil cuando el usuario ya tiene Claude Code autenticado y no quiere gestionar
  * una API key adicional.
  *
- * Requiere `claude` en PATH. Llama a `claude -p "<prompt>"` para una respuesta no interactiva.
+ * El prompt se envía por stdin (no como argumento) para evitar que el shell
+ * trunque prompts largos con saltos de línea y caracteres especiales,
+ * especialmente en Windows.
  */
 export class ClaudeCliProvider implements AIProvider {
   readonly id = 'claude-cli' as const;
@@ -30,10 +32,16 @@ function buildPrompt(messages: ChatMessage[], system?: string): string {
 
 function runClaudeCli(prompt: string, model: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    const child = spawn('claude', ['-p', prompt, '--model', model], {
-      stdio: ['ignore', 'pipe', 'pipe'],
-      shell: process.platform === 'win32',
+    // On Windows, `claude` resolves to claude.cmd which requires shell:true to
+    // be spawnable. The prompt goes via stdin (not as an argument), so shell
+    // quoting/truncation is no longer a concern.
+    const isWindows = process.platform === 'win32';
+
+    const child = spawn('claude', ['-p', '--model', model], {
+      stdio: ['pipe', 'pipe', 'pipe'],
+      shell: isWindows,
     });
+
     let stdout = '';
     let stderr = '';
     child.stdout.on('data', (chunk) => (stdout += chunk.toString()));
@@ -43,5 +51,9 @@ function runClaudeCli(prompt: string, model: string): Promise<string> {
       if (code === 0) resolve(stdout.trim());
       else reject(new Error(`claude CLI exited with code ${code}: ${stderr}`));
     });
+
+    // Send the prompt via stdin to avoid shell argument truncation.
+    child.stdin.write(prompt);
+    child.stdin.end();
   });
 }

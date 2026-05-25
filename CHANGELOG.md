@@ -4,6 +4,19 @@ All notable changes to this project are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.2] — 2026-05-25
+
+### Fixed
+- **CRITICAL: `ClaudeCliProvider` was passing prompts as shell arguments**, which the Windows shell truncated when prompts contained newlines or special characters. Every agent received only `#` (the first character of `# System\n...`) and responded with "I see an empty prompt". As a result, no artifacts were ever generated when using the `claude-cli` provider.
+- The provider now sends prompts via stdin (`echo prompt | claude -p`), which works reliably cross-platform.
+- This bug existed in 0.3.0 and 0.3.1. Anyone using `--provider claude-cli` on those versions never got real output.
+
+### Discovered by
+- The first real end-to-end smoke test (none of the 61 unit tests caught it because they used a `MockProvider`).
+- Lesson learned: do not trust unit tests alone — always run at least one real cycle with an LLM before publishing.
+
+---
+
 ## [0.3.1] — 2026-05-25
 
 ### Fixed
