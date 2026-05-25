@@ -1,6 +1,6 @@
-# @gentek/method
+# @iagentek/method
 
-Agentes **BMAD** + plantillas **Spec-Driven Development** + definiciones de **flows** para el framework Gentek.
+Agentes **BMAD** + plantillas **Spec-Driven Development** + definiciones de **flows** para el framework IAgentek.
 
 Distribuye los assets como markdown puro + un pequeño loader TypeScript. Cualquier runner (CLI, plugin, web) puede consumirlos.
 
@@ -31,8 +31,8 @@ import {
   AGENTS_DIR,
   TEMPLATES_DIR,
   FLOWS_DIR,
-} from '@gentek/method';
+} from '@iagentek/method';
 ```
 
 ## Docs completas
-[github.com/azulls1/gentek-framework](https://github.com/azulls1/gentek-framework)
+[github.com/azulls1/iagentek-framework](https://github.com/azulls1/iagentek-framework)

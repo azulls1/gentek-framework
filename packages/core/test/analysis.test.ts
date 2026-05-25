@@ -8,7 +8,7 @@ describe('analyzeCodebase', () => {
   let fixture: string;
 
   beforeAll(() => {
-    fixture = mkdtempSync(resolve(tmpdir(), 'gentek-analysis-'));
+    fixture = mkdtempSync(resolve(tmpdir(), 'iagentek-analysis-'));
     // Create a fake node project with React + Express
     writeFileSync(
       resolve(fixture, 'package.json'),
@@ -18,7 +18,7 @@ describe('analyzeCodebase', () => {
         devDependencies: { typescript: '^5.0.0' },
       })
     );
-    writeFileSync(resolve(fixture, 'README.md'), '# My App\n\nA test fixture for Gentek.');
+    writeFileSync(resolve(fixture, 'README.md'), '# My App\n\nA test fixture for IAgentek.');
     mkdirSync(resolve(fixture, 'src'));
     writeFileSync(resolve(fixture, 'src', 'index.ts'), 'export const x = 1;');
     writeFileSync(resolve(fixture, 'src', 'App.tsx'), 'export const App = () => null;');
@@ -75,7 +75,7 @@ describe('analyzeCodebase', () => {
   });
 
   it('ignores node_modules and .git', () => {
-    const dirty = mkdtempSync(resolve(tmpdir(), 'gentek-dirty-'));
+    const dirty = mkdtempSync(resolve(tmpdir(), 'iagentek-dirty-'));
     mkdirSync(resolve(dirty, 'node_modules'));
     writeFileSync(resolve(dirty, 'node_modules', 'huge.js'), 'x'.repeat(1000));
     mkdirSync(resolve(dirty, '.git'));

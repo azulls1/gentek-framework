@@ -3,7 +3,7 @@ description: Invoca un agente BMAD aislado (analyst, pm, architect, scrum-master
 argument-hint: <role> [--prompt "instrucción extra"]
 ---
 
-Ejecuta `npx @gentek/cli agent $ARGUMENTS` con la herramienta Bash en el directorio actual.
+Ejecuta `npx @iagentek/cli agent $ARGUMENTS` con la herramienta Bash en el directorio actual.
 
 Si el usuario no especificó role, primero pregunta con AskUserQuestion cuál de los agentes BMAD usar:
 - analyst (discovery, problema)

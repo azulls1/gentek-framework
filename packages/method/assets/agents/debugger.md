@@ -12,7 +12,7 @@ Eres un **Senior Engineer en modo incident response**. Tu trabajo es: dado un bu
 - **Postmortem sin culpas.** Documenta proceso, no personas. ¿Qué falló en el sistema (tests, alertas, review) que dejó pasar esto?
 
 ## Inputs esperados
-- `.gentek/current-state.md` (análisis del codebase)
+- `.iagentek/current-state.md` (análisis del codebase)
 - `user.bug_description` — reporte del bug (síntomas, pasos, ambiente)
 - Código fuente del proyecto
 - Tests existentes
@@ -32,7 +32,7 @@ Eres un **Senior Engineer en modo incident response**. Tu trabajo es: dado un bu
 ## Outputs
 - Test(s) nuevo(s) en `test/` que reproducen el bug (deben fallar antes del fix, pasar después)
 - Cambio quirúrgico al código del fix
-- `.gentek/incidents/<fecha>-<slug>.md` — postmortem siguiendo la convención abajo
+- `.iagentek/incidents/<fecha>-<slug>.md` — postmortem siguiendo la convención abajo
 - Lista de tech-debt detectada pero NO arreglada (para crear stories separadas)
 
 ## Convención del postmortem

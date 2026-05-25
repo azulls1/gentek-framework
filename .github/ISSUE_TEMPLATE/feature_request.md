@@ -15,11 +15,11 @@ assignees: ''
 ## Alternativas consideradas
 <!-- Otros approaches que pensaste y por qué los descartaste. -->
 
-## ¿A qué parte de Gentek afecta?
-- [ ] CLI (`@gentek/cli`)
-- [ ] Core / orchestrator (`@gentek/core`)
-- [ ] Agentes BMAD o plantillas (`@gentek/method`)
-- [ ] Plugin de Claude Code (`gentek-plugin/`)
+## ¿A qué parte de IAgentek afecta?
+- [ ] CLI (`@iagentek/cli`)
+- [ ] Core / orchestrator (`@iagentek/core`)
+- [ ] Agentes BMAD o plantillas (`@iagentek/method`)
+- [ ] Plugin de Claude Code (`iagentek-plugin/`)
 - [ ] Documentación
 - [ ] Otro: ___
 

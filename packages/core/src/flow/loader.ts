@@ -1,5 +1,5 @@
 import yaml from 'js-yaml';
-import { loadFlow } from '@gentek/method';
+import { loadFlow } from '@iagentek/method';
 
 export interface PhaseDefinition {
   id: string;

@@ -1,4 +1,4 @@
-// Ensure the compiled gentek.js entry has a shebang and is executable.
+// Ensure the compiled iagentek.js entry has a shebang and is executable.
 import { chmodSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -7,9 +7,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const repoRoot = resolve(__dirname, '..');
 
-const binPath = resolve(repoRoot, 'packages', 'cli', 'dist', 'bin', 'gentek.js');
+const binPath = resolve(repoRoot, 'packages', 'cli', 'dist', 'bin', 'iagentek.js');
 if (!existsSync(binPath)) {
-  console.log('[fix-bin-shebang] dist/bin/gentek.js no existe — skip');
+  console.log('[fix-bin-shebang] dist/bin/iagentek.js no existe — skip');
   process.exit(0);
 }
 const content = readFileSync(binPath, 'utf-8');

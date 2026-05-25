@@ -7,8 +7,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   resolve: {
     alias: {
-      '@gentek/method': resolve(__dirname, 'packages/method/src/index.ts'),
-      '@gentek/core': resolve(__dirname, 'packages/core/src/index.ts'),
+      '@iagentek/method': resolve(__dirname, 'packages/method/src/index.ts'),
+      '@iagentek/core': resolve(__dirname, 'packages/core/src/index.ts'),
     },
   },
   test: {

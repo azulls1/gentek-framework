@@ -9,7 +9,7 @@ import {
   loadFlowDefinition,
   logger,
   type CheckpointHandler,
-} from '@gentek/core';
+} from '@iagentek/core';
 
 export interface CycleOptions {
   cwd?: string;
@@ -25,14 +25,14 @@ export async function runCycle(opts: CycleOptions): Promise<void> {
 
   const configMgr = new ConfigManager(cwd);
   if (!configMgr.exists()) {
-    logger.error('No hay .gentek/config.yaml. Corre primero: npx @gentek/cli init');
+    logger.error('No hay .iagentek/config.yaml. Corre primero: npx @iagentek/cli init');
     return;
   }
   const config = configMgr.load();
   const flowName = opts.flow ?? config.flow;
   const flow = loadFlowDefinition(flowName);
 
-  logger.header(`\n🔁 Gentek cycle — ${flow.name}  (proyecto: ${config.projectName})\n`);
+  logger.header(`\n🔁 IAgentek cycle — ${flow.name}  (proyecto: ${config.projectName})\n`);
   logger.dim(`Provider: ${config.provider.id}  |  Modo: ${config.mode}`);
   logger.dim(`Fases habilitadas: ${flow.phases.filter((p) => p.enabled !== false).length}/${flow.phases.length}`);
   console.log();
@@ -91,7 +91,7 @@ export async function runCycle(opts: CycleOptions): Promise<void> {
     checkpointHandler,
     userIdea,
     onAgentOutput: (phaseId, output) => {
-      logger.dim(`  (output del agente guardado en .gentek/.transcripts/${phaseId}.md, ${output.length} chars)`);
+      logger.dim(`  (output del agente guardado en .iagentek/.transcripts/${phaseId}.md, ${output.length} chars)`);
     },
   });
 
@@ -99,7 +99,7 @@ export async function runCycle(opts: CycleOptions): Promise<void> {
 }
 
 function alreadyHasBrief(cwd: string): boolean {
-  return existsSync(resolve(cwd, '.gentek', 'project-brief.md'));
+  return existsSync(resolve(cwd, '.iagentek', 'project-brief.md'));
 }
 
 /**

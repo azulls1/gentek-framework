@@ -1,5 +1,5 @@
 {
-  "name": "gentek",
+  "name": "iagentek",
   "version": "0.3.0",
   "description": "Framework de desarrollo autónomo SDD + BMAD. Slash commands y agentes para Claude Code.",
   "author": {
@@ -7,8 +7,8 @@
     "email": "azull.samael@gmail.com",
     "url": "https://github.com/azulls1"
   },
-  "homepage": "https://github.com/azulls1/gentek-framework",
-  "repository": "https://github.com/azulls1/gentek-framework",
+  "homepage": "https://github.com/azulls1/iagentek-framework",
+  "repository": "https://github.com/azulls1/iagentek-framework",
   "license": "MIT",
   "keywords": ["bmad", "spec-driven", "agents", "autonomous", "framework"]
 }

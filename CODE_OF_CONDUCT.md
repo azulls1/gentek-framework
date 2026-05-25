@@ -2,7 +2,7 @@
 
 ## Nuestro compromiso
 
-En interés de fomentar una comunidad abierta y acogedora, las personas que mantenemos y contribuimos a Gentek nos comprometemos a hacer de la participación en este proyecto una experiencia libre de acoso para todos, sin importar edad, tamaño corporal, discapacidad, etnia, identidad o expresión de género, nivel de experiencia, nacionalidad, apariencia personal, raza, religión u orientación sexual.
+En interés de fomentar una comunidad abierta y acogedora, las personas que mantenemos y contribuimos a IAgentek nos comprometemos a hacer de la participación en este proyecto una experiencia libre de acoso para todos, sin importar edad, tamaño corporal, discapacidad, etnia, identidad o expresión de género, nivel de experiencia, nacionalidad, apariencia personal, raza, religión u orientación sexual.
 
 ## Nuestros estándares
 

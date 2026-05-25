@@ -1,8 +1,8 @@
 import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
 import { dirname, resolve, relative } from 'node:path';
-import { loadAgent, type AgentRole } from '@gentek/method';
+import { loadAgent, type AgentRole } from '@iagentek/method';
 import type { AIProvider, ChatMessage } from '../providers/types.js';
-import type { GentekConfig } from '../config/loader.js';
+import type { IAgentekConfig } from '../config/loader.js';
 import type { PhaseDefinition, FlowDefinition } from '../flow/loader.js';
 import { StateManager } from '../state/manager.js';
 import { CheckpointManager, type CheckpointHandler } from '../checkpoints/manager.js';
@@ -11,7 +11,7 @@ import { logger } from '../util/logger.js';
 
 export interface OrchestratorOptions {
   projectDir: string;
-  config: GentekConfig;
+  config: IAgentekConfig;
   flow: FlowDefinition;
   provider: AIProvider;
   checkpointHandler: CheckpointHandler;
@@ -50,7 +50,7 @@ export class Orchestrator {
       // Write the agent's full transcript for traceability
       const transcriptPath = resolve(
         this.opts.projectDir,
-        '.gentek',
+        '.iagentek',
         '.transcripts',
         `${phase.id}.md`
       );
@@ -77,7 +77,7 @@ export class Orchestrator {
         );
         if (decision !== 'approve') {
           logger.warn(`\n⏸  Ciclo pausado en '${phase.name}'. Decisión: ${decision}.`);
-          logger.info(`Retoma con: npx @gentek/cli resume`);
+          logger.info(`Retoma con: npx @iagentek/cli resume`);
           return;
         }
       }
@@ -126,7 +126,7 @@ export class Orchestrator {
         return [
           summary,
           '',
-          '```file:.gentek/current-state.md',
+          '```file:.iagentek/current-state.md',
           summary,
           '```',
         ].join('\n');
@@ -176,7 +176,7 @@ function buildPhaseContext(
   sections.push(
     `Sigue tu rol y produce los outputs esperados. Para CADA archivo que generes, usa el formato exacto:\n\n` +
       `\`\`\`file:RUTA/RELATIVA/AL/PROYECTO.md\n[contenido completo del archivo]\n\`\`\`\n\n` +
-      `Ejemplo:\n\`\`\`file:.gentek/project-brief.md\n# Project Brief: ...\n\`\`\`\n\n` +
+      `Ejemplo:\n\`\`\`file:.iagentek/project-brief.md\n# Project Brief: ...\n\`\`\`\n\n` +
       `Después de los archivos, escribe un resumen breve de las decisiones clave (máx 5 bullets).`
   );
 

@@ -1,4 +1,4 @@
-import type { GentekConfig } from '../config/loader.js';
+import type { IAgentekConfig } from '../config/loader.js';
 import type { StateManager } from '../state/manager.js';
 
 export type CheckpointDecision = 'approve' | 'reject' | 'edit';
@@ -17,7 +17,7 @@ export interface CheckpointHandler {
 
 export class CheckpointManager {
   constructor(
-    private config: GentekConfig,
+    private config: IAgentekConfig,
     private state: StateManager,
     private handler: CheckpointHandler
   ) {}

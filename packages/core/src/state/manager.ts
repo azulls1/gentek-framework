@@ -7,7 +7,7 @@ export interface CheckpointRecord {
   notes?: string;
 }
 
-export interface GentekState {
+export interface IAgentekState {
   projectName: string;
   flow: string;
   currentPhase: string | null;
@@ -19,28 +19,28 @@ export interface GentekState {
 
 export class StateManager {
   private path: string;
-  private state: GentekState | null = null;
+  private state: IAgentekState | null = null;
 
   constructor(projectDir: string) {
-    this.path = resolve(projectDir, '.gentek', 'state.json');
+    this.path = resolve(projectDir, '.iagentek', 'state.json');
   }
 
   exists(): boolean {
     return existsSync(this.path);
   }
 
-  load(): GentekState {
+  load(): IAgentekState {
     if (this.state) return this.state;
     if (!this.exists()) {
-      throw new Error(`No hay state.json en ${this.path}. ¿Corriste 'gentek init'?`);
+      throw new Error(`No hay state.json en ${this.path}. ¿Corriste 'iagentek init'?`);
     }
-    this.state = JSON.parse(readFileSync(this.path, 'utf-8')) as GentekState;
+    this.state = JSON.parse(readFileSync(this.path, 'utf-8')) as IAgentekState;
     return this.state;
   }
 
-  save(state: Partial<GentekState>): GentekState {
+  save(state: Partial<IAgentekState>): IAgentekState {
     const current = this.exists() ? this.load() : this.empty();
-    const merged: GentekState = {
+    const merged: IAgentekState = {
       ...current,
       ...state,
       updatedAt: new Date().toISOString(),
@@ -51,7 +51,7 @@ export class StateManager {
     return merged;
   }
 
-  init(projectName: string, flow: string): GentekState {
+  init(projectName: string, flow: string): IAgentekState {
     const now = new Date().toISOString();
     return this.save({
       projectName,
@@ -63,7 +63,7 @@ export class StateManager {
     });
   }
 
-  recordCheckpoint(id: string, notes?: string): GentekState {
+  recordCheckpoint(id: string, notes?: string): IAgentekState {
     const current = this.load();
     const checkpoints = [
       ...current.checkpoints,
@@ -72,7 +72,7 @@ export class StateManager {
     return this.save({ checkpoints });
   }
 
-  markPhaseCompleted(phaseId: string): GentekState {
+  markPhaseCompleted(phaseId: string): IAgentekState {
     const current = this.load();
     if (current.completedPhases.includes(phaseId)) return current;
     return this.save({
@@ -81,11 +81,11 @@ export class StateManager {
     });
   }
 
-  setCurrentPhase(phaseId: string): GentekState {
+  setCurrentPhase(phaseId: string): IAgentekState {
     return this.save({ currentPhase: phaseId });
   }
 
-  private empty(): GentekState {
+  private empty(): IAgentekState {
     return {
       projectName: '',
       flow: '',

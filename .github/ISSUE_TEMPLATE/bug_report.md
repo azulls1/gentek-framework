@@ -25,7 +25,7 @@ assignees: ''
 ```
 
 ## Entorno
-- **Versión de Gentek:** (output de `npx @gentek/cli --version`)
+- **Versión de IAgentek:** (output de `npx @iagentek/cli --version`)
 - **Provider usado:** anthropic / claude-cli / openai / ...
 - **Node.js:** (output de `node --version`)
 - **npm:** (output de `npm --version`)
@@ -33,9 +33,9 @@ assignees: ''
 - **Flow:** greenfield / brownfield / bugfix / refactor
 
 ## Archivos relevantes (si aplica)
-- Contenido de `.gentek/config.yaml` (sin secretos)
-- Contenido de `.gentek/state.json`
-- Transcripts en `.gentek/.transcripts/` que muestran el fallo
+- Contenido de `.iagentek/config.yaml` (sin secretos)
+- Contenido de `.iagentek/state.json`
+- Transcripts en `.iagentek/.transcripts/` que muestran el fallo
 
 ## Checklist
 - [ ] Verifiqué que no hay otro issue abierto con este bug

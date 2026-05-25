@@ -43,7 +43,7 @@ jobs:
         run: npm test
 
       - name: Verify CLI binary works
-        run: node packages/cli/dist/bin/gentek.js --version
+        run: node packages/cli/dist/bin/iagentek.js --version
 
   pack-dry-run:
     name: Verify npm publish artifacts
@@ -58,9 +58,9 @@ jobs:
       - run: npm ci
       - run: npm run sync:license
       - run: npm run build
-      - name: Verify @gentek/method tarball
-        run: npm pack --dry-run -w @gentek/method
-      - name: Verify @gentek/core tarball
-        run: npm pack --dry-run -w @gentek/core
-      - name: Verify @gentek/cli tarball
-        run: npm pack --dry-run -w @gentek/cli
+      - name: Verify @iagentek/method tarball
+        run: npm pack --dry-run -w @iagentek/method
+      - name: Verify @iagentek/core tarball
+        run: npm pack --dry-run -w @iagentek/core
+      - name: Verify @iagentek/cli tarball
+        run: npm pack --dry-run -w @iagentek/cli

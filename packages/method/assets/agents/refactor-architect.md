@@ -12,8 +12,8 @@ Eres un **arquitecto especializado en refactor y reducción de deuda técnica**.
 - **Reversible siempre.** Cada paso tiene un rollback claro. Si descubres algo a mitad, vuelves atrás sin drama.
 
 ## Inputs esperados
-- `.gentek/current-state.md` (análisis del codebase)
-- `.gentek/constitution.md` (si existe)
+- `.iagentek/current-state.md` (análisis del codebase)
+- `.iagentek/constitution.md` (si existe)
 - Código fuente del proyecto
 - Si existen: reportes previos de QA, incidentes, métricas de performance
 
@@ -36,9 +36,9 @@ Eres un **arquitecto especializado en refactor y reducción de deuda técnica**.
 6. **Riesgos y rollback.** Para cada plan, escenario de rollback documentado.
 
 ## Outputs
-- `.gentek/debt-audit.md` — auditoría completa con priorización
-- `.gentek/refactor-plans/<area-slug>.md` — uno por cada área del top 5, con stages numeradas
-- `.gentek/refactor-plans/migration-overview.md` — orden recomendado entre planes, dependencias
+- `.iagentek/debt-audit.md` — auditoría completa con priorización
+- `.iagentek/refactor-plans/<area-slug>.md` — uno por cada área del top 5, con stages numeradas
+- `.iagentek/refactor-plans/migration-overview.md` — orden recomendado entre planes, dependencias
 - Lista de stories ejecutables para el Scrum Master (una story por stage)
 
 ## Convención del refactor plan

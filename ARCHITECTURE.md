@@ -1,10 +1,10 @@
-# Gentek — Arquitectura
+# IAgentek — Arquitectura
 
 > Documento técnico del framework. Para uso del producto ver [README.md](./README.md).
 
 ## Visión
 
-Gentek es un CLI ejecutable por `npx` que orquesta un equipo virtual de agentes IA (BMAD) que producen y consumen artefactos spec-driven (SDD) para ejecutar un ciclo completo de desarrollo de software.
+IAgentek es un CLI ejecutable por `npx` que orquesta un equipo virtual de agentes IA (BMAD) que producen y consumen artefactos spec-driven (SDD) para ejecutar un ciclo completo de desarrollo de software.
 
 ## Decisiones clave
 
@@ -28,21 +28,21 @@ Gentek es un CLI ejecutable por `npx` que orquesta un equipo virtual de agentes 
 - **Por qué:** convención simple, soportada por cualquier LLM, sin tool-calling. Funciona con cualquier provider, no nos amarra a Anthropic.
 - **Trade-off:** depende de que el modelo siga la convención. Mitigado por system prompts explícitos en cada agente.
 
-### 6. State en `.gentek/state.json`
+### 6. State en `.iagentek/state.json`
 - **Por qué:** simple, inspeccionable, sin DB. Cada proyecto tiene su propio estado.
 - **Trade-off:** no escala a equipos colaborando en tiempo real (no es el caso de uso del MVP).
 
 ## Estructura del monorepo
 
 ```
-FramworkGentek/
+FramworkIAgentek/
 ├── package.json                 # workspaces npm
 ├── tsconfig.base.json           # config TS compartida
 ├── scripts/
-│   ├── copy-assets.mjs          # post-build de @gentek/method
-│   └── fix-bin-shebang.mjs      # post-build de @gentek/cli
+│   ├── copy-assets.mjs          # post-build de @iagentek/method
+│   └── fix-bin-shebang.mjs      # post-build de @iagentek/cli
 └── packages/
-    ├── method/                  # @gentek/method
+    ├── method/                  # @iagentek/method
     │   ├── package.json
     │   ├── tsconfig.json
     │   ├── src/index.ts         # loaders de agents/templates/flows
@@ -50,7 +50,7 @@ FramworkGentek/
     │       ├── agents/*.md      # prompts BMAD (analyst, pm, architect, ...)
     │       ├── templates/*.md   # plantillas SDD (spec, plan, ...)
     │       └── flows/*.yaml     # definiciones de ciclo
-    ├── core/                    # @gentek/core
+    ├── core/                    # @iagentek/core
     │   ├── package.json
     │   ├── tsconfig.json
     │   └── src/
@@ -61,11 +61,11 @@ FramworkGentek/
     │       ├── checkpoints/     # CheckpointManager + handler interface
     │       ├── orchestrator/    # Orchestrator (corre fases, parsea outputs)
     │       └── util/logger.ts
-    └── cli/                     # @gentek/cli
-        ├── package.json         # bin: { "gentek": "./dist/bin/gentek.js" }
+    └── cli/                     # @iagentek/cli
+        ├── package.json         # bin: { "iagentek": "./dist/bin/iagentek.js" }
         ├── tsconfig.json
         └── src/
-            ├── bin/gentek.ts    # commander entry
+            ├── bin/iagentek.ts    # commander entry
             └── commands/
                 ├── init.ts
                 ├── cycle.ts
@@ -76,7 +76,7 @@ FramworkGentek/
 
 ```mermaid
 flowchart TD
-    A[gentek cycle] --> B[Load config.yaml + state.json]
+    A[iagentek cycle] --> B[Load config.yaml + state.json]
     B --> C[Load flow YAML --> phases]
     C --> D{Phase already completed?}
     D -->|yes| C
@@ -84,7 +84,7 @@ flowchart TD
     E --> F[Build context: brief + prior artifacts + user idea]
     F --> G[Provider.complete --> output]
     G --> H[Parse ```file:path``` blocks --> write to disk]
-    H --> I[Save transcript to .gentek/.transcripts/]
+    H --> I[Save transcript to .iagentek/.transcripts/]
     I --> J{Phase has checkpoint?}
     J -->|no| K[Mark phase completed]
     J -->|yes| L[CheckpointHandler asks human]
@@ -123,7 +123,7 @@ La implementación de CLI usa `prompts` para preguntar interactivamente. En el f
   name: Discovery & Problem Definition
   agent: analyst
   inputs: [user.idea, user.project_name]
-  outputs: [.gentek/project-brief.md, .gentek/constitution.md]
+  outputs: [.iagentek/project-brief.md, .iagentek/constitution.md]
   checkpoint:
     id: discovery-approved
     mode: required
@@ -143,7 +143,7 @@ La implementación de CLI usa `prompts` para preguntar interactivamente. En el f
 
 ## Cómo agregar un nuevo flow
 1. Crear `packages/method/assets/flows/<nombre>.yaml`.
-2. Usar en `gentek init --flow <nombre>` o cambiar en `config.yaml`.
+2. Usar en `iagentek init --flow <nombre>` o cambiar en `config.yaml`.
 
 ## Limitaciones conocidas del MVP
 - Solo provider Anthropic + Claude CLI (otros llegan en iteración 2).

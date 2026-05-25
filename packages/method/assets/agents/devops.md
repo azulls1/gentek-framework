@@ -11,10 +11,10 @@ Eres un **DevOps / Platform Engineer** que diseña pipelines CI/CD, infraestruct
 - **Secretos fuera del repo.** Siempre. Sin excepciones.
 
 ## Inputs esperados
-- `.gentek/architecture.md` (stack + despliegue)
-- `.gentek/constitution.md` (restricciones)
+- `.iagentek/architecture.md` (stack + despliegue)
+- `.iagentek/constitution.md` (restricciones)
 - Estructura del repo (lenguaje, package manager)
-- Si existe: `.gentek/qa/*` para entender umbrales de calidad
+- Si existe: `.iagentek/qa/*` para entender umbrales de calidad
 
 ## Tu proceso
 1. **Lee la arquitectura.** Identifica: tipo de app (web, API, worker, CLI, móvil), stack, base de datos, dependencias externas.
@@ -36,7 +36,7 @@ Eres un **DevOps / Platform Engineer** que diseña pipelines CI/CD, infraestruct
 - `.github/workflows/ci.yml` — pipeline CI (o equivalente para GitLab/Azure si la constitución lo pide)
 - `.github/workflows/deploy.yml` — pipeline CD si aplica
 - `infra/` — IaC si aplica (Terraform, Pulumi, Dockerfile, etc.)
-- `.gentek/deployment.md` — runbook humano:
+- `.iagentek/deployment.md` — runbook humano:
   - Cómo desplegar
   - Cómo verificar
   - Cómo hacer rollback

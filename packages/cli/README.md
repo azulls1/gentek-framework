@@ -1,18 +1,18 @@
-# @gentek/cli
+# @iagentek/cli
 
-CLI npx-ejecutable del framework **Gentek** (Spec-Driven Development + BMAD Method).
+CLI npx-ejecutable del framework **IAgentek** (Spec-Driven Development + BMAD Method).
 
 ```bash
-npx @gentek/cli init mi-producto
+npx @iagentek/cli init mi-producto
 cd mi-producto
-npx @gentek/cli cycle --idea "lo que quieras construir"
+npx @iagentek/cli cycle --idea "lo que quieras construir"
 ```
 
 ## Comandos
 
 | Comando | Descripción |
 |---|---|
-| `init [name]` | Bootstrap `.gentek/` con config + state |
+| `init [name]` | Bootstrap `.iagentek/` con config + state |
 | `cycle` | Ejecuta el flow completo con checkpoints |
 | `status` | Estado de fases, checkpoints, próximos pasos |
 | `resume` | Retoma desde la última fase pausada |
@@ -33,4 +33,4 @@ npx @gentek/cli cycle --idea "lo que quieras construir"
 - `refactor` — reducción de tech-debt por etapas
 
 ## Docs completas
-[github.com/azulls1/gentek-framework](https://github.com/azulls1/gentek-framework)
+[github.com/azulls1/iagentek-framework](https://github.com/azulls1/iagentek-framework)

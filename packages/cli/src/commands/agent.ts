@@ -1,13 +1,13 @@
 import { mkdirSync, writeFileSync, existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { resolve, dirname, relative } from 'node:path';
 import prompts from 'prompts';
-import { loadAgent, listAgents, type AgentRole } from '@gentek/method';
+import { loadAgent, listAgents, type AgentRole } from '@iagentek/method';
 import {
   ConfigManager,
   createProvider,
   logger,
   type ChatMessage,
-} from '@gentek/core';
+} from '@iagentek/core';
 
 export interface AgentOptions {
   role?: string;
@@ -21,7 +21,7 @@ export async function runAgent(opts: AgentOptions): Promise<void> {
 
   const configMgr = new ConfigManager(cwd);
   if (!configMgr.exists()) {
-    logger.error('No hay .gentek/config.yaml. Corre primero: npx @gentek/cli init');
+    logger.error('No hay .iagentek/config.yaml. Corre primero: npx @iagentek/cli init');
     return;
   }
   const config = configMgr.load();
@@ -50,7 +50,7 @@ export async function runAgent(opts: AgentOptions): Promise<void> {
     apiKey: config.provider.apiKeyEnv ? process.env[config.provider.apiKeyEnv] : undefined,
   });
 
-  // Build context from all .gentek/* artifacts
+  // Build context from all .iagentek/* artifacts
   const context = buildAgentContext(cwd);
 
   let extraPrompt = opts.prompt;
@@ -86,7 +86,7 @@ export async function runAgent(opts: AgentOptions): Promise<void> {
   });
 
   // Save transcript
-  const transcriptPath = resolve(cwd, '.gentek', '.transcripts', `agent-${role}-${Date.now()}.md`);
+  const transcriptPath = resolve(cwd, '.iagentek', '.transcripts', `agent-${role}-${Date.now()}.md`);
   writeFile(transcriptPath, output);
   logger.dim(`Transcripción guardada en ${relative(cwd, transcriptPath)}`);
 
@@ -101,8 +101,8 @@ export async function runAgent(opts: AgentOptions): Promise<void> {
 }
 
 function buildAgentContext(cwd: string): string {
-  const gentekDir = resolve(cwd, '.gentek');
-  if (!existsSync(gentekDir)) return '(no hay .gentek/ todavía)';
+  const iagentekDir = resolve(cwd, '.iagentek');
+  if (!existsSync(iagentekDir)) return '(no hay .iagentek/ todavía)';
 
   const sections: string[] = [];
   const filesToInclude = [
@@ -115,7 +115,7 @@ function buildAgentContext(cwd: string): string {
     'current-state.md',
   ];
   for (const f of filesToInclude) {
-    const path = resolve(gentekDir, f);
+    const path = resolve(iagentekDir, f);
     if (existsSync(path)) {
       sections.push(`### ${f}\n\`\`\`md\n${readFileSync(path, 'utf-8')}\n\`\`\``);
     }
@@ -123,7 +123,7 @@ function buildAgentContext(cwd: string): string {
 
   // Include all specs, plans, stories, tasks
   for (const subdir of ['specs', 'plans', 'stories', 'tasks']) {
-    const dir = resolve(gentekDir, subdir);
+    const dir = resolve(iagentekDir, subdir);
     if (!existsSync(dir)) continue;
     for (const entry of readdirSync(dir)) {
       const path = resolve(dir, entry);
@@ -133,7 +133,7 @@ function buildAgentContext(cwd: string): string {
     }
   }
 
-  return sections.join('\n\n') || '(.gentek/ está vacío)';
+  return sections.join('\n\n') || '(.iagentek/ está vacío)';
 }
 
 function extractAndWriteArtifacts(output: string, projectDir: string): string[] {

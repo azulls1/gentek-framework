@@ -9,7 +9,7 @@ describe('ConfigManager', () => {
   let dir: string;
 
   beforeEach(() => {
-    dir = mkdtempSync(resolve(tmpdir(), 'gentek-config-'));
+    dir = mkdtempSync(resolve(tmpdir(), 'iagentek-config-'));
   });
 
   afterEach(() => {
@@ -63,7 +63,7 @@ describe('StateManager', () => {
   let dir: string;
 
   beforeEach(() => {
-    dir = mkdtempSync(resolve(tmpdir(), 'gentek-state-'));
+    dir = mkdtempSync(resolve(tmpdir(), 'iagentek-state-'));
   });
 
   afterEach(() => {

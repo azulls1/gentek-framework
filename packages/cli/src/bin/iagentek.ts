@@ -5,18 +5,18 @@ import { runCycle } from '../commands/cycle.js';
 import { runStatus } from '../commands/status.js';
 import { runResume } from '../commands/resume.js';
 import { runAgent } from '../commands/agent.js';
-import { logger } from '@gentek/core';
+import { logger } from '@iagentek/core';
 
 const program = new Command();
 
 program
-  .name('gentek')
+  .name('iagentek')
   .description('Framework de desarrollo autónomo asistido por IA (SDD + BMAD)')
   .version('0.1.0');
 
 program
   .command('init [name]')
-  .description('Bootstrap de un nuevo proyecto Gentek (.gentek/ + config)')
+  .description('Bootstrap de un nuevo proyecto IAgentek (.iagentek/ + config)')
   .option('-p, --provider <id>', 'Provider de IA (claude-cli, anthropic, openai, ...)')
   .option('-f, --flow <name>', 'Flow inicial (greenfield, brownfield)', 'greenfield')
   .option('--cwd <dir>', 'Directorio del proyecto', process.cwd())

@@ -9,7 +9,7 @@ import {
   preferredProvider,
   logger,
   type ProviderId,
-} from '@gentek/core';
+} from '@iagentek/core';
 
 export interface InitOptions {
   name?: string;
@@ -23,16 +23,16 @@ export async function runInit(opts: InitOptions): Promise<void> {
   const projectDir = opts.name ? resolve(cwd, opts.name) : cwd;
   const projectName = opts.name ?? basename(projectDir);
 
-  logger.header(`\n🚀 Inicializando Gentek en: ${projectDir}\n`);
+  logger.header(`\n🚀 Inicializando IAgentek en: ${projectDir}\n`);
 
   if (opts.name && !existsSync(projectDir)) {
     mkdirSync(projectDir, { recursive: true });
   }
 
-  // Detect existing .gentek
+  // Detect existing .iagentek
   const config = new ConfigManager(projectDir);
   if (config.exists()) {
-    logger.warn('Ya existe un .gentek/config.yaml en este directorio.');
+    logger.warn('Ya existe un .iagentek/config.yaml en este directorio.');
     const { overwrite } = await prompts({
       type: 'confirm',
       name: 'overwrite',
@@ -93,7 +93,7 @@ export async function runInit(opts: InitOptions): Promise<void> {
       logger.success(`  ✅ ${envVar} guardada en ${projectDir}\\.env`);
       ensureGitignoreEnv(projectDir);
     } else {
-      logger.warn(`  ⚠️  No se guardó API key. Tendrás que exportar ${envVar} antes de correr 'gentek cycle'.`);
+      logger.warn(`  ⚠️  No se guardó API key. Tendrás que exportar ${envVar} antes de correr 'iagentek cycle'.`);
     }
   }
 
@@ -105,23 +105,23 @@ export async function runInit(opts: InitOptions): Promise<void> {
   state.init(projectName, cfg.flow);
 
   // Pre-create directory structure
-  const dirs = ['.gentek/specs', '.gentek/plans', '.gentek/stories', '.gentek/tasks', '.gentek/.transcripts'];
+  const dirs = ['.iagentek/specs', '.iagentek/plans', '.iagentek/stories', '.iagentek/tasks', '.iagentek/.transcripts'];
   dirs.forEach((d) => mkdirSync(resolve(projectDir, d), { recursive: true }));
 
   logger.success(`\n✅ Proyecto inicializado.\n`);
   logger.info(kleur.bold('Estructura creada:'));
-  logger.info(`  .gentek/config.yaml       — configuración del flow + provider`);
-  logger.info(`  .gentek/state.json        — tracking de fases y checkpoints`);
-  logger.info(`  .gentek/specs/            — specs SDD por feature`);
-  logger.info(`  .gentek/plans/            — plans técnicos por feature`);
-  logger.info(`  .gentek/stories/          — user stories (iteración 2)`);
-  logger.info(`  .gentek/tasks/            — tasks atómicas (iteración 2)`);
+  logger.info(`  .iagentek/config.yaml       — configuración del flow + provider`);
+  logger.info(`  .iagentek/state.json        — tracking de fases y checkpoints`);
+  logger.info(`  .iagentek/specs/            — specs SDD por feature`);
+  logger.info(`  .iagentek/plans/            — plans técnicos por feature`);
+  logger.info(`  .iagentek/stories/          — user stories (iteración 2)`);
+  logger.info(`  .iagentek/tasks/            — tasks atómicas (iteración 2)`);
   console.log();
   logger.info(kleur.bold('Próximo paso:'));
   if (opts.name) {
     logger.info(`  cd ${opts.name}`);
   }
-  logger.info(`  npx @gentek/cli cycle --idea "describe tu idea aquí"`);
+  logger.info(`  npx @iagentek/cli cycle --idea "describe tu idea aquí"`);
   console.log();
 }
 
@@ -164,7 +164,7 @@ function ensureGitignoreEnv(projectDir: string): void {
     if (content.split('\n').some((l) => l.trim() === line)) return;
     content += (content.endsWith('\n') ? '' : '\n') + `${line}\n`;
   } else {
-    content = `${line}\n.gentek/state.json\n.gentek/.transcripts/\n`;
+    content = `${line}\n.iagentek/state.json\n.iagentek/.transcripts/\n`;
   }
   writeFileSync(gitignorePath, content, 'utf-8');
 }

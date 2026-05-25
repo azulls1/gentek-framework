@@ -35,8 +35,8 @@ Envía un correo a **azull.samael@gmail.com** con:
 ## Alcance
 
 Esta política cubre:
-- Los 3 paquetes npm: `@gentek/cli`, `@gentek/core`, `@gentek/method`
-- El plugin de Claude Code en `gentek-plugin/`
+- Los 3 paquetes npm: `@iagentek/cli`, `@iagentek/core`, `@iagentek/method`
+- El plugin de Claude Code en `iagentek-plugin/`
 - Scripts del repo (`scripts/`)
 
 **Fuera de alcance:**

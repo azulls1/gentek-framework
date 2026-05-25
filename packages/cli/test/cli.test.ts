@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, '..', '..', '..');
-const cliBin = resolve(repoRoot, 'packages', 'cli', 'dist', 'bin', 'gentek.js');
+const cliBin = resolve(repoRoot, 'packages', 'cli', 'dist', 'bin', 'iagentek.js');
 
 function runCli(args: string[], cwd?: string): { stdout: string; stderr: string; code: number } {
   try {
@@ -27,7 +27,7 @@ function runCli(args: string[], cwd?: string): { stdout: string; stderr: string;
   }
 }
 
-describe('@gentek/cli (subprocess smoke tests)', () => {
+describe('@iagentek/cli (subprocess smoke tests)', () => {
   let sandboxes: string[] = [];
 
   beforeAll(() => {
@@ -61,8 +61,8 @@ describe('@gentek/cli (subprocess smoke tests)', () => {
     expect(stdout).toContain('agent');
   });
 
-  it('init creates .gentek structure', () => {
-    const sandbox = mkdtempSync(resolve(tmpdir(), 'gentek-cli-init-'));
+  it('init creates .iagentek structure', () => {
+    const sandbox = mkdtempSync(resolve(tmpdir(), 'iaiagentek-cli-init-'));
     sandboxes.push(sandbox);
 
     const { code } = runCli(
@@ -72,18 +72,18 @@ describe('@gentek/cli (subprocess smoke tests)', () => {
 
     expect(code).toBe(0);
     const projectDir = resolve(sandbox, 'demo');
-    expect(existsSync(resolve(projectDir, '.gentek', 'config.yaml'))).toBe(true);
-    expect(existsSync(resolve(projectDir, '.gentek', 'state.json'))).toBe(true);
-    expect(existsSync(resolve(projectDir, '.gentek', 'specs'))).toBe(true);
-    expect(existsSync(resolve(projectDir, '.gentek', 'plans'))).toBe(true);
+    expect(existsSync(resolve(projectDir, '.iagentek', 'config.yaml'))).toBe(true);
+    expect(existsSync(resolve(projectDir, '.iagentek', 'state.json'))).toBe(true);
+    expect(existsSync(resolve(projectDir, '.iagentek', 'specs'))).toBe(true);
+    expect(existsSync(resolve(projectDir, '.iagentek', 'plans'))).toBe(true);
 
-    const config = readFileSync(resolve(projectDir, '.gentek', 'config.yaml'), 'utf-8');
+    const config = readFileSync(resolve(projectDir, '.iagentek', 'config.yaml'), 'utf-8');
     expect(config).toContain('flow: greenfield');
     expect(config).toContain('id: claude-cli');
   });
 
   it('status reads existing project config', () => {
-    const sandbox = mkdtempSync(resolve(tmpdir(), 'gentek-cli-status-'));
+    const sandbox = mkdtempSync(resolve(tmpdir(), 'iaiagentek-cli-status-'));
     sandboxes.push(sandbox);
 
     runCli(['init', 'app', '--provider', 'claude-cli', '--flow', 'bugfix', '--cwd', sandbox], sandbox);
@@ -94,8 +94,8 @@ describe('@gentek/cli (subprocess smoke tests)', () => {
     expect(stdout).toContain('claude-cli');
   });
 
-  it('status fails gracefully outside a Gentek project', () => {
-    const sandbox = mkdtempSync(resolve(tmpdir(), 'gentek-cli-nogentek-'));
+  it('status fails gracefully outside a IAgentek project', () => {
+    const sandbox = mkdtempSync(resolve(tmpdir(), 'iaiagentek-cli-nogentek-'));
     sandboxes.push(sandbox);
 
     const { code, stderr } = runCli(['status', '--cwd', sandbox]);
@@ -104,7 +104,7 @@ describe('@gentek/cli (subprocess smoke tests)', () => {
   });
 
   it('init refuses to overwrite by default in non-interactive mode', () => {
-    const sandbox = mkdtempSync(resolve(tmpdir(), 'gentek-cli-overwrite-'));
+    const sandbox = mkdtempSync(resolve(tmpdir(), 'iaiagentek-cli-overwrite-'));
     sandboxes.push(sandbox);
 
     // First init succeeds

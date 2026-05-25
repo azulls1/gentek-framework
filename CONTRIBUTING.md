@@ -1,11 +1,11 @@
-# Contributing to Gentek
+# Contributing to IAgentek
 
-Gracias por considerar contribuir a Gentek. Esta guía te lleva del clone al PR mergeable en menos de 15 minutos.
+Gracias por considerar contribuir a IAgentek. Esta guía te lleva del clone al PR mergeable en menos de 15 minutos.
 
 ## TL;DR
 ```bash
-git clone https://github.com/azulls1/gentek-framework
-cd gentek-framework
+git clone https://github.com/azulls1/iagentek-framework
+cd iagentek-framework
 npm install
 npm run build
 npm test
@@ -25,12 +25,12 @@ Si los 4 comandos pasan, tu entorno está listo.
 
 ### Estructura del monorepo
 ```
-gentek-framework/
+iagentek-framework/
 ├── packages/
-│   ├── method/    # @gentek/method — agentes BMAD + plantillas SDD + flows (assets markdown)
-│   ├── core/      # @gentek/core — providers, orchestrator, checkpoints, state
-│   └── cli/       # @gentek/cli — bin/gentek.js, comandos init/cycle/status/resume/agent
-├── gentek-plugin/ # Plugin de Claude Code (slash commands + agents nativos)
+│   ├── method/    # @iagentek/method — agentes BMAD + plantillas SDD + flows (assets markdown)
+│   ├── core/      # @iagentek/core — providers, orchestrator, checkpoints, state
+│   └── cli/       # @iagentek/cli — bin/iagentek.js, comandos init/cycle/status/resume/agent
+├── iagentek-plugin/ # Plugin de Claude Code (slash commands + agents nativos)
 ├── scripts/       # Scripts de build/publish
 ├── .github/       # CI, issue templates
 └── docs raíz:     # README, ARCHITECTURE, CHANGELOG, PUBLISHING, etc.
@@ -76,8 +76,8 @@ Tiene que pasar sin errores antes de mergear (el CI bloquea).
 
 ### 6. Smoke test del CLI
 ```bash
-node packages/cli/dist/bin/gentek.js --help
-node packages/cli/dist/bin/gentek.js init demo --provider claude-cli --cwd /tmp/gentek-test
+node packages/cli/dist/bin/iagentek.js --help
+node packages/cli/dist/bin/iagentek.js init demo --provider claude-cli --cwd /tmp/gentek-test
 ```
 
 ### 7. Commit
@@ -117,16 +117,16 @@ Sigue el template (`.github/PULL_REQUEST_TEMPLATE.md`). Incluye:
 
 ```bash
 # Después de un build
-npm link -w @gentek/cli
+npm link -w @iagentek/cli
 
-# Ahora `gentek` está disponible globalmente apuntando a tu copia local
-gentek --version
-gentek init test-local
+# Ahora `iagentek` está disponible globalmente apuntando a tu copia local
+iagentek --version
+iagentek init test-local
 ```
 
 Para deshacer:
 ```bash
-npm unlink -g @gentek/cli
+npm unlink -g @iagentek/cli
 ```
 
 ---

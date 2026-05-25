@@ -13,7 +13,7 @@ import {
 } from '../src/index.js';
 import { existsSync } from 'node:fs';
 
-describe('@gentek/method loaders', () => {
+describe('@iagentek/method loaders', () => {
   it('exposes the three asset directories', () => {
     expect(existsSync(AGENTS_DIR)).toBe(true);
     expect(existsSync(TEMPLATES_DIR)).toBe(true);

@@ -40,7 +40,7 @@ describe('Orchestrator', () => {
   let checkpointHandler: CheckpointHandler;
 
   beforeEach(() => {
-    dir = mkdtempSync(resolve(tmpdir(), 'gentek-orch-'));
+    dir = mkdtempSync(resolve(tmpdir(), 'iagentek-orch-'));
     provider = new MockProvider();
     approvedCheckpoints = [];
     checkpointHandler = async (ctx) => {
@@ -64,13 +64,13 @@ describe('Orchestrator', () => {
 
     provider.setResponses([
       [
-        '```file:.gentek/project-brief.md',
+        '```file:.iagentek/project-brief.md',
         '# Project Brief: test-app',
         '',
         'Mock content for the brief.',
         '```',
         '',
-        '```file:.gentek/constitution.md',
+        '```file:.iagentek/constitution.md',
         '# Constitution',
         '',
         'Principle 1',
@@ -90,21 +90,21 @@ describe('Orchestrator', () => {
     await orchestrator.run();
 
     // Verificamos que se escribieron los archivos del agente
-    expect(existsSync(resolve(dir, '.gentek/project-brief.md'))).toBe(true);
-    expect(existsSync(resolve(dir, '.gentek/constitution.md'))).toBe(true);
-    expect(readFileSync(resolve(dir, '.gentek/project-brief.md'), 'utf-8')).toContain(
+    expect(existsSync(resolve(dir, '.iagentek/project-brief.md'))).toBe(true);
+    expect(existsSync(resolve(dir, '.iagentek/constitution.md'))).toBe(true);
+    expect(readFileSync(resolve(dir, '.iagentek/project-brief.md'), 'utf-8')).toContain(
       'test-app'
     );
 
     // Verificamos que se guardó la transcripción
-    expect(existsSync(resolve(dir, '.gentek/.transcripts/discovery.md'))).toBe(true);
+    expect(existsSync(resolve(dir, '.iagentek/.transcripts/discovery.md'))).toBe(true);
 
     // Verificamos que el checkpoint se ejecutó
     expect(approvedCheckpoints).toContain('discovery-approved');
 
     // El estado debe reflejar que la fase está completa
     const stateContent = JSON.parse(
-      readFileSync(resolve(dir, '.gentek/state.json'), 'utf-8')
+      readFileSync(resolve(dir, '.iagentek/state.json'), 'utf-8')
     );
     expect(stateContent.completedPhases).toContain('discovery');
   });
@@ -118,8 +118,8 @@ describe('Orchestrator', () => {
     const twoPhases = { ...flow, phases: flow.phases.slice(0, 2) };
 
     provider.setResponses([
-      '```file:.gentek/project-brief.md\n# Brief\n```',
-      '```file:.gentek/PRD.md\n# PRD\n```',
+      '```file:.iagentek/project-brief.md\n# Brief\n```',
+      '```file:.iagentek/PRD.md\n# PRD\n```',
     ]);
 
     const rejecting: CheckpointHandler = async () => ({ decision: 'reject' });
@@ -137,8 +137,8 @@ describe('Orchestrator', () => {
 
     // Sólo se debió haber llamado al provider para la primera fase, no la segunda
     expect(provider.calls).toHaveLength(1);
-    expect(existsSync(resolve(dir, '.gentek/project-brief.md'))).toBe(true);
-    expect(existsSync(resolve(dir, '.gentek/PRD.md'))).toBe(false);
+    expect(existsSync(resolve(dir, '.iagentek/project-brief.md'))).toBe(true);
+    expect(existsSync(resolve(dir, '.iagentek/PRD.md'))).toBe(false);
   });
 
   it('runs the builtin __codebase__ agent in brownfield without calling the LLM', async () => {
@@ -162,7 +162,7 @@ describe('Orchestrator', () => {
     // El builtin no debe haber llamado al provider
     expect(provider.calls).toHaveLength(0);
     // Debe haber producido current-state.md
-    expect(existsSync(resolve(dir, '.gentek/current-state.md'))).toBe(true);
+    expect(existsSync(resolve(dir, '.iagentek/current-state.md'))).toBe(true);
   });
 
   it('skips phases already marked completed in state', async () => {

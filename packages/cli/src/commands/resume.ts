@@ -1,4 +1,4 @@
-import { ConfigManager, StateManager, logger } from '@gentek/core';
+import { ConfigManager, StateManager, logger } from '@iagentek/core';
 import kleur from 'kleur';
 import { runCycle } from './cycle.js';
 
@@ -12,7 +12,7 @@ export async function runResume(opts: ResumeOptions): Promise<void> {
   const state = new StateManager(cwd);
 
   if (!config.exists() || !state.exists()) {
-    logger.error('No hay proyecto Gentek aquí. Corre primero: npx @gentek/cli init');
+    logger.error('No hay proyecto IAgentek aquí. Corre primero: npx @iagentek/cli init');
     return;
   }
 

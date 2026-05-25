@@ -7,7 +7,7 @@ phases:
     name: Snapshot del código
     agent: __codebase__
     outputs:
-      - .gentek/current-state.md
+      - .iagentek/current-state.md
     checkpoint:
       id: codebase-analyzed
       mode: auto
@@ -18,11 +18,11 @@ phases:
     name: Auditoría de deuda + plan de migración
     agent: refactor-architect
     inputs:
-      - .gentek/current-state.md
-      - .gentek/constitution.md
+      - .iagentek/current-state.md
+      - .iagentek/constitution.md
     outputs:
-      - .gentek/debt-audit.md
-      - .gentek/refactor-plans/*.md
+      - .iagentek/debt-audit.md
+      - .iagentek/refactor-plans/*.md
     checkpoint:
       id: refactor-planned
       mode: required
@@ -35,12 +35,12 @@ phases:
     name: Descomposición en stories y sprints
     agent: scrum-master
     inputs:
-      - .gentek/debt-audit.md
-      - .gentek/refactor-plans/*.md
+      - .iagentek/debt-audit.md
+      - .iagentek/refactor-plans/*.md
     outputs:
-      - .gentek/stories/*.md
-      - .gentek/tasks/*.md
-      - .gentek/sprint-plan.md
+      - .iagentek/stories/*.md
+      - .iagentek/tasks/*.md
+      - .iagentek/sprint-plan.md
     checkpoint:
       id: planning-approved
       mode: required
@@ -52,9 +52,9 @@ phases:
     name: Ejecución incremental por stage
     agent: dev
     inputs:
-      - .gentek/stories/*.md
-      - .gentek/tasks/*.md
-      - .gentek/refactor-plans/*.md
+      - .iagentek/stories/*.md
+      - .iagentek/tasks/*.md
+      - .iagentek/refactor-plans/*.md
     outputs:
       - src/**/*
       - test/**/*
@@ -69,10 +69,10 @@ phases:
     name: QA de regresión
     agent: qa
     inputs:
-      - .gentek/stories/*.md
-      - .gentek/refactor-plans/*.md
+      - .iagentek/stories/*.md
+      - .iagentek/refactor-plans/*.md
     outputs:
-      - .gentek/qa/*-report.md
+      - .iagentek/qa/*-report.md
     checkpoint:
       id: qa-approved
       mode: required
@@ -84,9 +84,9 @@ phases:
     name: Release del refactor
     agent: devops
     inputs:
-      - .gentek/architecture.md
+      - .iagentek/architecture.md
     outputs:
-      - .gentek/deployment.md
+      - .iagentek/deployment.md
     checkpoint:
       id: release-approved
       mode: required

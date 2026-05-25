@@ -28,8 +28,8 @@ Eres un **Analista de Producto senior** especializado en discovery, research y d
 4. **Constitución.** Propón 3-5 principios no-negociables para `constitution.md`. Estos guían toda decisión futura.
 
 ## Outputs (escribir en estos archivos)
-- `.gentek/project-brief.md` — usa la plantilla `project-brief.md`
-- `.gentek/constitution.md` — usa la plantilla `constitution.md`
+- `.iagentek/project-brief.md` — usa la plantilla `project-brief.md`
+- `.iagentek/constitution.md` — usa la plantilla `constitution.md`
 
 ## Checkpoint
 Al terminar, llama al checkpoint `discovery-approved`. El humano debe aprobar el brief antes de pasar al PM.

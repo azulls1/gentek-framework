@@ -10,8 +10,8 @@ phases:
       - user.idea
       - user.project_name
     outputs:
-      - .gentek/project-brief.md
-      - .gentek/constitution.md
+      - .iagentek/project-brief.md
+      - .iagentek/constitution.md
     checkpoint:
       id: discovery-approved
       mode: required
@@ -19,19 +19,19 @@ phases:
         El Analyst generó el project brief y la constitución del proyecto.
         Revisa los archivos y aprueba para continuar a la definición de features.
       summary_template: |
-        Brief generado en .gentek/project-brief.md
-        Constitución en .gentek/constitution.md
+        Brief generado en .iagentek/project-brief.md
+        Constitución en .iagentek/constitution.md
         Próximo paso: PM genera el PRD y specs.
 
   - id: definition
     name: Product Definition (PRD + Specs)
     agent: pm
     inputs:
-      - .gentek/project-brief.md
-      - .gentek/constitution.md
+      - .iagentek/project-brief.md
+      - .iagentek/constitution.md
     outputs:
-      - .gentek/PRD.md
-      - .gentek/specs/*.md
+      - .iagentek/PRD.md
+      - .iagentek/specs/*.md
     checkpoint:
       id: specs-approved
       mode: required
@@ -44,13 +44,13 @@ phases:
     name: Technical Design
     agent: architect
     inputs:
-      - .gentek/project-brief.md
-      - .gentek/constitution.md
-      - .gentek/PRD.md
-      - .gentek/specs/*.md
+      - .iagentek/project-brief.md
+      - .iagentek/constitution.md
+      - .iagentek/PRD.md
+      - .iagentek/specs/*.md
     outputs:
-      - .gentek/architecture.md
-      - .gentek/plans/*.md
+      - .iagentek/architecture.md
+      - .iagentek/plans/*.md
     checkpoint:
       id: architecture-approved
       mode: required
@@ -62,16 +62,16 @@ phases:
     name: Sprint Planning (Stories + Tasks)
     agent: scrum-master
     inputs:
-      - .gentek/PRD.md
-      - .gentek/specs/*.md
-      - .gentek/plans/*.md
-      - .gentek/architecture.md
-      - .gentek/constitution.md
+      - .iagentek/PRD.md
+      - .iagentek/specs/*.md
+      - .iagentek/plans/*.md
+      - .iagentek/architecture.md
+      - .iagentek/constitution.md
     outputs:
-      - .gentek/stories/*.md
-      - .gentek/tasks/*.md
-      - .gentek/sprint-plan.md
-      - .gentek/DoD.md
+      - .iagentek/stories/*.md
+      - .iagentek/tasks/*.md
+      - .iagentek/sprint-plan.md
+      - .iagentek/DoD.md
     checkpoint:
       id: planning-approved
       mode: required
@@ -84,12 +84,12 @@ phases:
     name: Implementation
     agent: dev
     inputs:
-      - .gentek/stories/*.md
-      - .gentek/tasks/*.md
-      - .gentek/specs/*.md
-      - .gentek/plans/*.md
-      - .gentek/architecture.md
-      - .gentek/constitution.md
+      - .iagentek/stories/*.md
+      - .iagentek/tasks/*.md
+      - .iagentek/specs/*.md
+      - .iagentek/plans/*.md
+      - .iagentek/architecture.md
+      - .iagentek/constitution.md
     outputs:
       - src/**/*
       - test/**/*
@@ -105,11 +105,11 @@ phases:
     name: QA & Acceptance
     agent: qa
     inputs:
-      - .gentek/stories/*.md
-      - .gentek/specs/*.md
-      - .gentek/DoD.md
+      - .iagentek/stories/*.md
+      - .iagentek/specs/*.md
+      - .iagentek/DoD.md
     outputs:
-      - .gentek/qa/*-report.md
+      - .iagentek/qa/*-report.md
     checkpoint:
       id: qa-approved
       mode: required
@@ -121,11 +121,11 @@ phases:
     name: Release Engineering
     agent: devops
     inputs:
-      - .gentek/architecture.md
-      - .gentek/constitution.md
+      - .iagentek/architecture.md
+      - .iagentek/constitution.md
     outputs:
       - .github/workflows/*
-      - .gentek/deployment.md
+      - .iagentek/deployment.md
       - .env.example
     checkpoint:
       id: release-approved

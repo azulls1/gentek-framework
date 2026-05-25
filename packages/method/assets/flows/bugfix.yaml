@@ -7,7 +7,7 @@ phases:
     name: Snapshot del código
     agent: __codebase__
     outputs:
-      - .gentek/current-state.md
+      - .iagentek/current-state.md
     checkpoint:
       id: codebase-analyzed
       mode: auto
@@ -18,28 +18,28 @@ phases:
     name: Debug, reproducción, causa raíz y fix
     agent: debugger
     inputs:
-      - .gentek/current-state.md
+      - .iagentek/current-state.md
       - user.bug_description
     outputs:
       - test/**/*
       - src/**/*
-      - .gentek/incidents/*.md
+      - .iagentek/incidents/*.md
     checkpoint:
       id: incident-resolved
       mode: required
       prompt: |
         El Debugger reprodujo el bug, identificó la causa raíz,
         añadió un test que falla antes del fix, y aplicó el cambio mínimo.
-        Revisa el postmortem en .gentek/incidents/ y aprueba para QA.
+        Revisa el postmortem en .iagentek/incidents/ y aprueba para QA.
 
   - id: validation
     name: QA del fix
     agent: qa
     inputs:
-      - .gentek/incidents/*.md
-      - .gentek/DoD.md
+      - .iagentek/incidents/*.md
+      - .iagentek/DoD.md
     outputs:
-      - .gentek/qa/*-report.md
+      - .iagentek/qa/*-report.md
     checkpoint:
       id: qa-approved
       mode: required
@@ -51,10 +51,10 @@ phases:
     name: Hotfix release
     agent: devops
     inputs:
-      - .gentek/architecture.md
-      - .gentek/incidents/*.md
+      - .iagentek/architecture.md
+      - .iagentek/incidents/*.md
     outputs:
-      - .gentek/deployment.md
+      - .iagentek/deployment.md
     checkpoint:
       id: release-approved
       mode: required

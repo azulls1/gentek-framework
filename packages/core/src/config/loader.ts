@@ -3,7 +3,7 @@ import { dirname, resolve } from 'node:path';
 import yaml from 'js-yaml';
 import type { ProviderId } from '../providers/types.js';
 
-export interface GentekConfig {
+export interface IAgentekConfig {
   version: string;
   projectName: string;
   provider: {
@@ -22,26 +22,26 @@ export class ConfigManager {
   private path: string;
 
   constructor(projectDir: string) {
-    this.path = resolve(projectDir, '.gentek', 'config.yaml');
+    this.path = resolve(projectDir, '.iagentek', 'config.yaml');
   }
 
   exists(): boolean {
     return existsSync(this.path);
   }
 
-  load(): GentekConfig {
+  load(): IAgentekConfig {
     if (!this.exists()) {
-      throw new Error(`No hay config.yaml en ${this.path}. ¿Corriste 'gentek init'?`);
+      throw new Error(`No hay config.yaml en ${this.path}. ¿Corriste 'iagentek init'?`);
     }
-    return yaml.load(readFileSync(this.path, 'utf-8')) as GentekConfig;
+    return yaml.load(readFileSync(this.path, 'utf-8')) as IAgentekConfig;
   }
 
-  save(config: GentekConfig): void {
+  save(config: IAgentekConfig): void {
     mkdirSync(dirname(this.path), { recursive: true });
     writeFileSync(this.path, yaml.dump(config, { lineWidth: 100 }), 'utf-8');
   }
 
-  defaultConfig(projectName: string, providerId: ProviderId, flow = 'greenfield'): GentekConfig {
+  defaultConfig(projectName: string, providerId: ProviderId, flow = 'greenfield'): IAgentekConfig {
     return {
       version: '0.1.0',
       projectName,

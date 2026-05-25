@@ -62,7 +62,7 @@ const IGNORE_DIRS = new Set([
   'env',
   'target',
   'vendor',
-  '.gentek',
+  '.iagentek',
   '.idea',
   '.vscode',
 ]);

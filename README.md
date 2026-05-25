@@ -1,4 +1,4 @@
-# Gentek
+# IAgentek
 
 > Framework de desarrollo autónomo asistido por IA para equipos de programadores.
 > Fusiona **Spec-Driven Development** (specs como source-of-truth) con **BMAD Method** (agentes especializados con roles claros).
@@ -6,22 +6,22 @@
 Un comando, un ciclo entero. Greenfield, brownfield, bugfix o refactor. Claude por default, cualquier IA por API key. Disponible como **CLI `npx`** o como **plugin de Claude Code**.
 
 ```bash
-npx @gentek/cli init mi-producto
+npx @iagentek/cli init mi-producto
 cd mi-producto
-npx @gentek/cli cycle --idea "Quiero un sistema de tickets para soporte que..."
+npx @iagentek/cli cycle --idea "Quiero un sistema de tickets para soporte que..."
 ```
 
 O desde Claude Code:
 ```
-/gentek-init mi-producto
-/gentek-cycle --idea "..."
+/iagentek-init mi-producto
+/iagentek-cycle --idea "..."
 ```
 
 ---
 
 ## ¿Qué hace?
 
-Gentek orquesta un equipo virtual de agentes (Analyst → PM → Architect → Scrum Master → Dev → QA → DevOps + Debugger + Refactor Architect) que pasan por un ciclo de desarrollo completo. Cada agente produce artefactos **spec-driven** (constitución, PRD, specs, plans, tasks, stories) que son la fuente de verdad del proyecto. Tú apruebas en checkpoints clave y el ciclo sigue.
+IAgentek orquesta un equipo virtual de agentes (Analyst → PM → Architect → Scrum Master → Dev → QA → DevOps + Debugger + Refactor Architect) que pasan por un ciclo de desarrollo completo. Cada agente produce artefactos **spec-driven** (constitución, PRD, specs, plans, tasks, stories) que son la fuente de verdad del proyecto. Tú apruebas en checkpoints clave y el ciclo sigue.
 
 **Modos de ejecución:**
 - `autonomous-with-checkpoints` (default) — corre solo, se detiene en momentos clave
@@ -53,20 +53,20 @@ Analyst · PM · Architect · Scrum Master · Dev · QA · DevOps · Debugger ·
 
 ### 1) Bootstrap
 ```bash
-npx @gentek/cli init mi-producto
+npx @iagentek/cli init mi-producto
 ```
 Detecta automáticamente el provider disponible. Si necesitas API key y no está en env, te la pide y la guarda en `.env` (con `.gitignore` automático).
 
 ### 2) Ejecutar el ciclo
 ```bash
 cd mi-producto
-npx @gentek/cli cycle --idea "App móvil para reservar canchas de pádel"
+npx @iagentek/cli cycle --idea "App móvil para reservar canchas de pádel"
 ```
 
 ### 3) Comandos disponibles
 | Comando | Qué hace |
 |---|---|
-| `init [name]` | Bootstrap `.gentek/` con config + state |
+| `init [name]` | Bootstrap `.iagentek/` con config + state |
 | `cycle [--flow X] [--idea "..."]` | Ejecuta el ciclo con checkpoints |
 | `status` | Muestra fases, checkpoints aprobados, próximos pasos |
 | `resume` | Retoma desde la última fase pausada |
@@ -78,19 +78,19 @@ npx @gentek/cli cycle --idea "App móvil para reservar canchas de pádel"
 
 Instala el plugin apuntando a este repo:
 ```
-/plugin add github.com/azulls1/gentek-framework path:gentek-plugin
+/plugin add github.com/azulls1/iagentek-framework path:iagentek-plugin
 ```
 
 Comandos disponibles después de instalar:
-- `/gentek-init` — bootstrap interactivo
-- `/gentek-cycle` — ciclo completo
-- `/gentek-status` — estado actual
-- `/gentek-resume` — retoma desde checkpoint
-- `/gentek-agent` — invoca un agente
+- `/iagentek-init` — bootstrap interactivo
+- `/iagentek-cycle` — ciclo completo
+- `/iagentek-status` — estado actual
+- `/iagentek-resume` — retoma desde checkpoint
+- `/iagentek-agent` — invoca un agente
 
-Agentes invocables como `@gentek-analyst`, `@gentek-pm`, `@gentek-architect`, etc.
+Agentes invocables como `@iagentek-analyst`, `@iagentek-pm`, `@iagentek-architect`, etc.
 
-Ver detalles en [`gentek-plugin/README.md`](./gentek-plugin/README.md).
+Ver detalles en [`iagentek-plugin/README.md`](./iagentek-plugin/README.md).
 
 ---
 
@@ -100,7 +100,7 @@ Ver detalles en [`gentek-plugin/README.md`](./gentek-plugin/README.md).
 mi-producto/
 ├── .env                       # API key (gitignored)
 ├── .gitignore
-└── .gentek/
+└── .iagentek/
     ├── config.yaml            # provider, flow, modo, checkpoints
     ├── state.json             # tracking de fases (gitignored)
     ├── constitution.md        # principios no-negociables (SDD)
@@ -133,7 +133,7 @@ mi-producto/
 | Filosofía | Specs son el contrato | Roles especializados ejecutan |
 | Validación | Acceptance criteria verificables | Checkpoints humanos por fase |
 
-**En Gentek:** los agentes BMAD son los ejecutores; los artefactos SDD son el contrato. Cada agente lee artefactos previos como input y produce los suyos como output. El humano aprueba en checkpoints.
+**En IAgentek:** los agentes BMAD son los ejecutores; los artefactos SDD son el contrato. Cada agente lee artefactos previos como input y produce los suyos como output. El humano aprueba en checkpoints.
 
 ---
 
@@ -141,21 +141,21 @@ mi-producto/
 
 Ver [ARCHITECTURE.md](./ARCHITECTURE.md). Monorepo con 3 paquetes npm + 1 plugin de Claude Code:
 
-- `@gentek/cli` — CLI ejecutable por `npx`
-- `@gentek/core` — providers de IA, orchestrator, checkpoints, state, codebase analyzer
-- `@gentek/method` — agentes BMAD + plantillas SDD + flows (markdown + YAML)
-- `gentek-plugin/` — plugin de Claude Code complementario (no se publica a npm)
+- `@iagentek/cli` — CLI ejecutable por `npx`
+- `@iagentek/core` — providers de IA, orchestrator, checkpoints, state, codebase analyzer
+- `@iagentek/method` — agentes BMAD + plantillas SDD + flows (markdown + YAML)
+- `iagentek-plugin/` — plugin de Claude Code complementario (no se publica a npm)
 
 ---
 
 ## Desarrollo local
 
 ```bash
-git clone https://github.com/azulls1/gentek-framework
-cd gentek-framework
+git clone https://github.com/azulls1/iagentek-framework
+cd iagentek-framework
 npm install
 npm run build
-node packages/cli/dist/bin/gentek.js --help
+node packages/cli/dist/bin/iagentek.js --help
 ```
 
 ## Publicación a npm
@@ -183,7 +183,7 @@ Ver [PUBLISHING.md](./PUBLISHING.md).
 ---
 
 ## Contribuir
-Pull requests bienvenidos. Issues en [github.com/azulls1/gentek-framework/issues](https://github.com/azulls1/gentek-framework/issues).
+Pull requests bienvenidos. Issues en [github.com/azulls1/iagentek-framework/issues](https://github.com/azulls1/iagentek-framework/issues).
 
 ## Licencia
 MIT — ver [LICENSE](./LICENSE).

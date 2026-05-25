@@ -1,6 +1,6 @@
 # Estado actual del producto: {{PROJECT_NAME}}
 
-> Snapshot del código existente al momento de iniciar Gentek. Sirve como input al brief y al PRD para que las decisiones se tomen sobre lo real, no lo ideal.
+> Snapshot del código existente al momento de iniciar IAgentek. Sirve como input al brief y al PRD para que las decisiones se tomen sobre lo real, no lo ideal.
 
 ## Resumen ejecutivo (1 párrafo)
 {{EXECUTIVE_SUMMARY}}
