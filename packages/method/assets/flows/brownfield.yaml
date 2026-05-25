@@ -1,0 +1,10 @@
+name: brownfield
+description: Ciclo para producto existente — reverse engineering antes de planear
+version: 0.1.0
+enabled: false  # implementación completa en iteración 2
+
+phases:
+  - id: codebase-analysis
+    name: Análisis del código existente
+    agent: analyst
+    notes: Stub. Pendiente iteración 2.

@@ -1,0 +1,110 @@
+name: greenfield
+description: Ciclo completo para producto nuevo desde cero (sin código existente)
+version: 0.1.0
+
+phases:
+  - id: discovery
+    name: Discovery & Problem Definition
+    agent: analyst
+    inputs:
+      - user.idea
+      - user.project_name
+    outputs:
+      - .gentek/project-brief.md
+      - .gentek/constitution.md
+    checkpoint:
+      id: discovery-approved
+      mode: required
+      prompt: |
+        El Analyst generó el project brief y la constitución del proyecto.
+        Revisa los archivos y aprueba para continuar a la definición de features.
+      summary_template: |
+        Brief generado en .gentek/project-brief.md
+        Constitución en .gentek/constitution.md
+        Próximo paso: PM genera el PRD y specs.
+
+  - id: definition
+    name: Product Definition (PRD + Specs)
+    agent: pm
+    inputs:
+      - .gentek/project-brief.md
+      - .gentek/constitution.md
+    outputs:
+      - .gentek/PRD.md
+      - .gentek/specs/*.md
+    checkpoint:
+      id: specs-approved
+      mode: required
+      prompt: |
+        El PM generó el PRD y un spec por cada feature MUST.
+        Revisa la priorización (MoSCoW) y los specs individuales.
+        Aprueba para continuar al diseño técnico.
+      summary_template: |
+        PRD en .gentek/PRD.md
+        Specs generados: {{spec_count}}
+        Próximo paso: Architect diseña la arquitectura técnica.
+
+  - id: design
+    name: Technical Design
+    agent: architect
+    inputs:
+      - .gentek/project-brief.md
+      - .gentek/constitution.md
+      - .gentek/PRD.md
+      - .gentek/specs/*.md
+    outputs:
+      - .gentek/architecture.md
+      - .gentek/plans/*.md
+    checkpoint:
+      id: architecture-approved
+      mode: required
+      prompt: |
+        El Architect propuso el stack, estructura y plans técnicos por feature.
+        Revisa los trade-offs y aprueba para continuar.
+      summary_template: |
+        Arquitectura en .gentek/architecture.md
+        Plans generados: {{plan_count}}
+        Próximo paso: Scrum Master (pendiente en iteración 2).
+
+  # Las siguientes fases se activan en iteración 2
+  - id: planning
+    name: Sprint Planning (Stories + Tasks)
+    agent: scrum-master
+    enabled: false
+    inputs:
+      - .gentek/specs/*.md
+      - .gentek/plans/*.md
+    outputs:
+      - .gentek/stories/*.md
+      - .gentek/tasks/*.md
+
+  - id: implementation
+    name: Implementation Loop
+    agent: dev
+    enabled: false
+    loop: per-story
+    inputs:
+      - .gentek/stories/*.md
+      - .gentek/tasks/*.md
+    outputs:
+      - src/**/*
+
+  - id: validation
+    name: QA & Acceptance
+    agent: qa
+    enabled: false
+    inputs:
+      - .gentek/stories/*.md
+      - src/**/*
+    outputs:
+      - test reports
+
+  - id: release
+    name: Release Engineering
+    agent: devops
+    enabled: false
+    inputs:
+      - .gentek/architecture.md
+    outputs:
+      - .github/workflows/*
+      - infra/*

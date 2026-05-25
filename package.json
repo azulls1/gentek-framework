@@ -1,0 +1,35 @@
+{
+  "name": "gentek",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Framework de desarrollo autónomo asistido por IA — fusiona Spec-Driven Development con BMAD Method",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w @gentek/method && npm run build -w @gentek/core && npm run build -w @gentek/cli",
+    "clean": "npm run clean --workspaces --if-present && rimraf node_modules",
+    "dev": "npm run dev --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "cli": "node packages/cli/dist/bin/gentek.js"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "rimraf": "^5.0.5",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "keywords": [
+    "ai",
+    "framework",
+    "bmad",
+    "spec-driven",
+    "claude",
+    "autonomous",
+    "agents"
+  ],
+  "license": "MIT"
+}

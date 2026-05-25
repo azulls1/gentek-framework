@@ -1,0 +1,36 @@
+{
+  "name": "@gentek/core",
+  "version": "0.1.0",
+  "description": "Núcleo de Gentek — providers de IA, orchestrator de fases y sistema de checkpoints",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./providers": {
+      "import": "./dist/providers/index.js",
+      "types": "./dist/providers/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rimraf dist",
+    "dev": "tsc -p tsconfig.json --watch"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.27.0",
+    "@gentek/method": "0.1.0",
+    "js-yaml": "^4.1.0",
+    "kleur": "^4.1.5"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9"
+  },
+  "license": "MIT"
+}
