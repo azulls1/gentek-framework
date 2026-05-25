@@ -22,5 +22,25 @@
     "clean": "rimraf dist",
     "dev": "tsc -p tsconfig.json --watch"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "author": "azulls1 <azull.samael@gmail.com>",
+  "homepage": "https://github.com/azulls1/gentek-framework",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/azulls1/gentek-framework.git",
+    "directory": "packages/method"
+  },
+  "bugs": {
+    "url": "https://github.com/azulls1/gentek-framework/issues"
+  },
+  "keywords": [
+    "bmad",
+    "spec-driven",
+    "agents",
+    "templates",
+    "markdown"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

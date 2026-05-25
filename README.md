@@ -3,7 +3,7 @@
 > Framework de desarrollo autónomo asistido por IA para equipos de programadores.
 > Fusiona **Spec-Driven Development** (specs como source-of-truth) con **BMAD Method** (agentes especializados con roles claros).
 
-Un comando, un ciclo entero. Greenfield o brownfield. Claude por default, cualquier IA por API key.
+Un comando, un ciclo entero. Greenfield, brownfield, bugfix o refactor. Claude por default, cualquier IA por API key. Disponible como **CLI `npx`** o como **plugin de Claude Code**.
 
 ```bash
 npx @gentek/cli init mi-producto
@@ -11,70 +11,86 @@ cd mi-producto
 npx @gentek/cli cycle --idea "Quiero un sistema de tickets para soporte que..."
 ```
 
+O desde Claude Code:
+```
+/gentek-init mi-producto
+/gentek-cycle --idea "..."
+```
+
 ---
 
 ## ¿Qué hace?
 
-Gentek orquesta un equipo virtual de agentes (Analyst → PM → Architect → Scrum Master → Dev → QA → DevOps) que pasan por un ciclo de desarrollo completo. Cada agente produce artefactos **spec-driven** (constitución, PRD, specs, plans, tasks, stories) que son la fuente de verdad del proyecto. Tú apruebas en checkpoints clave y el ciclo sigue.
+Gentek orquesta un equipo virtual de agentes (Analyst → PM → Architect → Scrum Master → Dev → QA → DevOps + Debugger + Refactor Architect) que pasan por un ciclo de desarrollo completo. Cada agente produce artefactos **spec-driven** (constitución, PRD, specs, plans, tasks, stories) que son la fuente de verdad del proyecto. Tú apruebas en checkpoints clave y el ciclo sigue.
 
 **Modos de ejecución:**
 - `autonomous-with-checkpoints` (default) — corre solo, se detiene en momentos clave
 - `fully-autonomous` — end-to-end sin parar
 - `interactive` — pregunta en cada paso
 
-**Ciclos disponibles:**
-- `greenfield` — producto desde cero ✅ MVP
-- `brownfield` — sobre código existente ⏳ iteración 2
-- `bugfix` — incident response ⏳ iteración 3
-- `refactor` — tech-debt ⏳ iteración 3
+**4 ciclos completos:**
+- `greenfield` — producto desde cero (7 fases)
+- `brownfield` — sobre código existente (8 fases, análisis previo automático)
+- `bugfix` — incident response corto (triage → repro → fix → postmortem)
+- `refactor` — reducción de tech-debt por etapas (audit → migration plan → ejecución segura)
+
+**6 providers de IA (auto-detectados):**
+| Provider | Cómo se detecta | Default model |
+|---|---|---|
+| `claude-cli` | comando `claude` en PATH | claude-opus-4-7 |
+| `anthropic` | `ANTHROPIC_API_KEY` | claude-opus-4-7 |
+| `openai` | `OPENAI_API_KEY` | gpt-4o |
+| `gemini` | `GEMINI_API_KEY` | gemini-2.0-flash |
+| `deepseek` | `DEEPSEEK_API_KEY` | deepseek-chat |
+| `ollama` | comando `ollama` en PATH | llama3.1 |
+
+**9 agentes BMAD:**
+Analyst · PM · Architect · Scrum Master · Dev · QA · DevOps · Debugger · Refactor Architect.
 
 ---
 
-## Quick start
+## Quick start (CLI)
 
 ### 1) Bootstrap
-
 ```bash
 npx @gentek/cli init mi-producto
 ```
-
-Te preguntará el provider de IA. Detecta automáticamente:
-- `claude` CLI en PATH (reusa auth de Claude Code)
-- `ANTHROPIC_API_KEY` env var
-- `OPENAI_API_KEY`, `GEMINI_API_KEY`, `DEEPSEEK_API_KEY` (iteración 2)
-- `ollama` CLI local (iteración 2)
-
-Si no hay nada configurado, te pide la API key y la guarda en `.env` (con `.gitignore` automático).
+Detecta automáticamente el provider disponible. Si necesitas API key y no está en env, te la pide y la guarda en `.env` (con `.gitignore` automático).
 
 ### 2) Ejecutar el ciclo
-
 ```bash
 cd mi-producto
-npx @gentek/cli cycle --idea "App móvil para reservar canchas de pádel con pagos integrados"
+npx @gentek/cli cycle --idea "App móvil para reservar canchas de pádel"
 ```
 
-Verás:
+### 3) Comandos disponibles
+| Comando | Qué hace |
+|---|---|
+| `init [name]` | Bootstrap `.gentek/` con config + state |
+| `cycle [--flow X] [--idea "..."]` | Ejecuta el ciclo con checkpoints |
+| `status` | Muestra fases, checkpoints aprobados, próximos pasos |
+| `resume` | Retoma desde la última fase pausada |
+| `agent <role> [--prompt "..."]` | Invoca un agente BMAD aislado |
+
+---
+
+## Quick start (Claude Code plugin)
+
+Instala el plugin apuntando a este repo:
 ```
-🔁 Gentek cycle — greenfield  (proyecto: mi-producto)
-Provider: anthropic  |  Modo: autonomous-with-checkpoints
-
-🛠  Fase: Discovery & Problem Definition  (agente: analyst)
-  📝 Artefactos generados:
-     - .gentek/project-brief.md
-     - .gentek/constitution.md
-
-🚦 Checkpoint: discovery-approved
-El Analyst generó el project brief y la constitución del proyecto.
-Revisa los archivos y aprueba para continuar a la definición de features.
-
-? ¿Cómo procedemos? › Aprobar y continuar
+/plugin add github.com/azulls1/gentek-framework path:gentek-plugin
 ```
 
-### 3) Ver el estado
+Comandos disponibles después de instalar:
+- `/gentek-init` — bootstrap interactivo
+- `/gentek-cycle` — ciclo completo
+- `/gentek-status` — estado actual
+- `/gentek-resume` — retoma desde checkpoint
+- `/gentek-agent` — invoca un agente
 
-```bash
-npx @gentek/cli status
-```
+Agentes invocables como `@gentek-analyst`, `@gentek-pm`, `@gentek-architect`, etc.
+
+Ver detalles en [`gentek-plugin/README.md`](./gentek-plugin/README.md).
 
 ---
 
@@ -89,16 +105,20 @@ mi-producto/
     ├── state.json             # tracking de fases (gitignored)
     ├── constitution.md        # principios no-negociables (SDD)
     ├── project-brief.md       # output del Analyst
+    ├── current-state.md       # solo en brownfield/bugfix/refactor (auto)
     ├── PRD.md                 # output del PM
     ├── architecture.md        # output del Architect
+    ├── sprint-plan.md         # output del Scrum Master
+    ├── DoD.md                 # Definition of Done
     ├── specs/                 # specs SDD por feature
-    │   ├── auth.md
-    │   └── booking.md
     ├── plans/                 # plans técnicos por feature
-    │   ├── auth.md
-    │   └── booking.md
-    ├── stories/               # user stories (iteración 2)
-    ├── tasks/                 # tasks atómicas (iteración 2)
+    ├── stories/               # user stories (sprint)
+    ├── tasks/                 # tasks atómicas (1-4h)
+    ├── qa/                    # reportes de QA por story
+    ├── deployment.md          # runbook de DevOps
+    ├── incidents/             # postmortems (solo bugfix)
+    ├── debt-audit.md          # auditoría (solo refactor)
+    ├── refactor-plans/        # planes por etapas (solo refactor)
     └── .transcripts/          # outputs crudos de cada agente (gitignored)
 ```
 
@@ -119,65 +139,51 @@ mi-producto/
 
 ## Arquitectura del framework
 
-Ver [ARCHITECTURE.md](./ARCHITECTURE.md).
+Ver [ARCHITECTURE.md](./ARCHITECTURE.md). Monorepo con 3 paquetes npm + 1 plugin de Claude Code:
 
-Monorepo con 3 paquetes npm:
 - `@gentek/cli` — CLI ejecutable por `npx`
-- `@gentek/core` — providers de IA, orchestrator, checkpoints, state
-- `@gentek/method` — agentes BMAD + plantillas SDD (markdown puro)
+- `@gentek/core` — providers de IA, orchestrator, checkpoints, state, codebase analyzer
+- `@gentek/method` — agentes BMAD + plantillas SDD + flows (markdown + YAML)
+- `gentek-plugin/` — plugin de Claude Code complementario (no se publica a npm)
 
 ---
 
-## Desarrollo local (contribuir)
+## Desarrollo local
 
 ```bash
-# clonar
-git clone <repo>
-cd FramworkGentek
-
-# instalar deps de todos los workspaces
+git clone https://github.com/azulls1/gentek-framework
+cd gentek-framework
 npm install
-
-# build de todos los paquetes
 npm run build
-
-# link global para usar `gentek` directamente
-cd packages/cli
-npm link
-
-# ahora puedes correr
-gentek init test-project
-cd test-project
-gentek cycle --idea "una idea de prueba"
+node packages/cli/dist/bin/gentek.js --help
 ```
 
----
-
-## Roadmap
-
-**Iteración 1 (MVP — actual):**
-- ✅ Monorepo + TypeScript
-- ✅ `gentek init`, `gentek cycle`, `gentek status`
-- ✅ Provider: Anthropic + Claude CLI con auto-detección
-- ✅ Agentes: Analyst, PM, Architect
-- ✅ Flow: greenfield
-- ✅ Checkpoints interactivos
-
-**Iteración 2:**
-- Agentes Dev, QA, DevOps
-- Flow brownfield (con análisis del código existente)
-- Providers OpenAI, Gemini, DeepSeek, Ollama
-- Comando `gentek resume`
-- Comando `gentek agent <role>` (invocación aislada)
-
-**Iteración 3:**
-- Flows bugfix y refactor
-- Plugin de Claude Code complementario (`/gentek` slash commands)
-- Publicación oficial a npm
-- Web UI opcional para visualizar el estado del ciclo
+## Publicación a npm
+Ver [PUBLISHING.md](./PUBLISHING.md).
 
 ---
+
+## Estado y roadmap
+
+**v0.3.0 (actual — iteración 3):**
+- ✅ 4 ciclos completos (greenfield, brownfield, bugfix, refactor)
+- ✅ 9 agentes BMAD con prompts completos
+- ✅ 6 providers de IA con auto-detección
+- ✅ Plugin de Claude Code (5 slash commands + 9 agents)
+- ✅ Paquetes preparados para publicación a npm
+- ✅ Analizador automático de codebase para brownfield
+
+**Próximas mejoras (no comprometidas):**
+- Streaming de tokens en tiempo real
+- Web UI para visualizar el ciclo
+- Soporte para más providers (Mistral, Groq, Cohere)
+- Loop real por story en la fase de implementación
+- Cache de respuestas para reducir costos de IA
+
+---
+
+## Contribuir
+Pull requests bienvenidos. Issues en [github.com/azulls1/gentek-framework/issues](https://github.com/azulls1/gentek-framework/issues).
 
 ## Licencia
-
-MIT
+MIT — ver [LICENSE](./LICENSE).

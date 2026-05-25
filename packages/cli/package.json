@@ -27,6 +27,32 @@
     "@types/prompts": "^2.4.9"
   },
   "license": "MIT",
+  "author": "azulls1 <azull.samael@gmail.com>",
+  "homepage": "https://github.com/azulls1/gentek-framework",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/azulls1/gentek-framework.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/azulls1/gentek-framework/issues"
+  },
+  "keywords": [
+    "ai",
+    "framework",
+    "bmad",
+    "spec-driven",
+    "claude",
+    "openai",
+    "gemini",
+    "autonomous",
+    "agents",
+    "cli",
+    "npx"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=18.17.0"
   }

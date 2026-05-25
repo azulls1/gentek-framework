@@ -34,5 +34,30 @@
   "devDependencies": {
     "@types/js-yaml": "^4.0.9"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "author": "azulls1 <azull.samael@gmail.com>",
+  "homepage": "https://github.com/azulls1/gentek-framework",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/azulls1/gentek-framework.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/azulls1/gentek-framework/issues"
+  },
+  "keywords": [
+    "ai",
+    "framework",
+    "bmad",
+    "spec-driven",
+    "anthropic",
+    "openai",
+    "gemini",
+    "deepseek",
+    "ollama",
+    "orchestrator"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

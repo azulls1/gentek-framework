@@ -19,7 +19,9 @@ export type AgentRole =
   | 'scrum-master'
   | 'dev'
   | 'qa'
-  | 'devops';
+  | 'devops'
+  | 'debugger'
+  | 'refactor-architect';
 
 export interface AgentDefinition {
   role: AgentRole;
