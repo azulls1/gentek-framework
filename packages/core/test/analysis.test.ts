@@ -48,6 +48,45 @@ describe('analyzeCodebase', () => {
     );
   });
 
+  it('detects python deps from pyproject.toml correctly (regression: TOML keys leaking)', () => {
+    const pyFixture = mkdtempSync(resolve(tmpdir(), 'iagentek-py-'));
+    writeFileSync(
+      resolve(pyFixture, 'pyproject.toml'),
+      `[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "myapp"
+version = "0.1.0"
+description = "Test"
+requires-python = ">=3.9"
+license = "MIT"
+authors = [{ name = "Test" }]
+dependencies = [
+  "requests>=2.0",
+  "click",
+  "fastapi[all]>=0.100,<1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "ruff"]
+`
+    );
+    const result = analyzeCodebase(pyFixture);
+    const py = result.packageManagers.find((p) => p.ecosystem === 'python');
+    expect(py).toBeDefined();
+    expect(py!.declaredDependencies).toEqual(
+      expect.arrayContaining(['requests', 'click', 'fastapi', 'pytest', 'ruff'])
+    );
+    // Regression: TOML keys should NOT leak as dependencies
+    expect(py!.declaredDependencies).not.toContain('build-backend');
+    expect(py!.declaredDependencies).not.toContain('requires-python');
+    expect(py!.declaredDependencies).not.toContain('license');
+    expect(py!.declaredDependencies).not.toContain('description');
+    rmSync(pyFixture, { recursive: true, force: true });
+  });
+
   it('detects React and Express as frameworks', () => {
     const result = analyzeCodebase(fixture);
     expect(result.frameworks).toEqual(expect.arrayContaining(['React', 'Express']));
