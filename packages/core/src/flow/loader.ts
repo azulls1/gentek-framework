@@ -1,5 +1,5 @@
 import yaml from 'js-yaml';
-import { loadFlow } from '@iagentek/method';
+import { loadFlow, type Lang } from '@iagentek/method';
 
 export interface PhaseDefinition {
   id: string;
@@ -24,8 +24,8 @@ export interface FlowDefinition {
   phases: PhaseDefinition[];
 }
 
-export function loadFlowDefinition(flowName: string): FlowDefinition {
-  const raw = loadFlow(flowName);
+export function loadFlowDefinition(flowName: string, lang: Lang = 'en'): FlowDefinition {
+  const raw = loadFlow(flowName, lang);
   return yaml.load(raw) as FlowDefinition;
 }
 

@@ -27,6 +27,7 @@ program
   .description('Bootstrap a new IAgentek project (.iagentek/ + config)')
   .option('-p, --provider <id>', 'AI provider (claude-cli, anthropic, openai, ...)')
   .option('-f, --flow <name>', 'Initial flow (greenfield, brownfield, bugfix, refactor)', 'greenfield')
+  .option('-l, --lang <code>', 'Output language for generated artifacts (en | es)')
   .option('--cwd <dir>', 'Project directory', process.cwd())
   .action(async (name, options) => {
     try {
@@ -43,6 +44,7 @@ program
   .option('--cwd <dir>', 'Project directory', process.cwd())
   .option('--flow <name>', 'Force a specific flow (override config)')
   .option('--idea <text>', 'Initial project idea (for discovery)')
+  .option('-l, --lang <code>', 'Override output language for this run (en | es)')
   .action(async (options) => {
     try {
       await runCycle(options);

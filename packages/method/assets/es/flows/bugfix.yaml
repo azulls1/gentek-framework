@@ -1,0 +1,63 @@
+name: bugfix
+description: Ciclo corto para un incidente o bug específico — reproducción → causa raíz → fix con tests → postmortem
+version: 0.3.0
+
+phases:
+  - id: codebase-analysis
+    name: Snapshot del código
+    agent: __codebase__
+    outputs:
+      - .iagentek/current-state.md
+    checkpoint:
+      id: codebase-analyzed
+      mode: auto
+      prompt: |
+        Análisis del código generado para que el Debugger tenga contexto.
+
+  - id: triage-and-fix
+    name: Debug, reproducción, causa raíz y fix
+    agent: debugger
+    inputs:
+      - .iagentek/current-state.md
+      - user.bug_description
+    outputs:
+      - test/**/*
+      - src/**/*
+      - .iagentek/incidents/*.md
+    checkpoint:
+      id: incident-resolved
+      mode: required
+      prompt: |
+        El Debugger reprodujo el bug, identificó la causa raíz,
+        añadió un test que falla antes del fix, y aplicó el cambio mínimo.
+        Revisa el postmortem en .iagentek/incidents/ y aprueba para QA.
+
+  - id: validation
+    name: QA del fix
+    agent: qa
+    inputs:
+      - .iagentek/incidents/*.md
+      - .iagentek/DoD.md
+    outputs:
+      - .iagentek/qa/*-report.md
+    checkpoint:
+      id: qa-approved
+      mode: required
+      prompt: |
+        El QA validó que el fix resuelve el bug sin regresiones.
+        Aprueba para liberar el hotfix.
+
+  - id: release
+    name: Hotfix release
+    agent: devops
+    inputs:
+      - .iagentek/architecture.md
+      - .iagentek/incidents/*.md
+    outputs:
+      - .iagentek/deployment.md
+    checkpoint:
+      id: release-approved
+      mode: required
+      prompt: |
+        DevOps preparó el plan de release del hotfix.
+        Verifica el runbook y aprueba el deploy.

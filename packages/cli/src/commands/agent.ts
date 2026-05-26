@@ -43,7 +43,7 @@ export async function runAgent(opts: AgentOptions): Promise<void> {
     return;
   }
 
-  const agent = loadAgent(role as AgentRole);
+  const agent = loadAgent(role as AgentRole, config.language ?? 'en');
   const provider = createProvider({
     id: config.provider.id,
     model: config.provider.model,

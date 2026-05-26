@@ -1,0 +1,94 @@
+name: refactor
+description: Ciclo para reducción de deuda técnica — audit → priorización → migración por etapas → ejecución segura
+version: 0.3.0
+
+phases:
+  - id: codebase-analysis
+    name: Snapshot del código
+    agent: __codebase__
+    outputs:
+      - .iagentek/current-state.md
+    checkpoint:
+      id: codebase-analyzed
+      mode: auto
+      prompt: |
+        Análisis del código completado.
+
+  - id: debt-audit
+    name: Auditoría de deuda + plan de migración
+    agent: refactor-architect
+    inputs:
+      - .iagentek/current-state.md
+      - .iagentek/constitution.md
+    outputs:
+      - .iagentek/debt-audit.md
+      - .iagentek/refactor-plans/*.md
+    checkpoint:
+      id: refactor-planned
+      mode: required
+      prompt: |
+        El Refactor Architect identificó deuda real, priorizó top 5 (dolor × esfuerzo)
+        y diseñó planes por etapas con tests de regresión y rollback documentado.
+        Revisa y aprueba para descomponer en stories.
+
+  - id: planning
+    name: Descomposición en stories y sprints
+    agent: scrum-master
+    inputs:
+      - .iagentek/debt-audit.md
+      - .iagentek/refactor-plans/*.md
+    outputs:
+      - .iagentek/stories/*.md
+      - .iagentek/tasks/*.md
+      - .iagentek/sprint-plan.md
+    checkpoint:
+      id: planning-approved
+      mode: required
+      prompt: |
+        Scrum Master generó una story por stage del plan.
+        Verifica el orden de ejecución y dependencias.
+
+  - id: implementation
+    name: Ejecución incremental por stage
+    agent: dev
+    inputs:
+      - .iagentek/stories/*.md
+      - .iagentek/tasks/*.md
+      - .iagentek/refactor-plans/*.md
+    outputs:
+      - src/**/*
+      - test/**/*
+    checkpoint:
+      id: story-done
+      mode: required
+      prompt: |
+        Dev ejecutó las stages del plan, manteniendo tests verdes en cada paso.
+        Verifica que NO se introdujeron features nuevas.
+
+  - id: validation
+    name: QA de regresión
+    agent: qa
+    inputs:
+      - .iagentek/stories/*.md
+      - .iagentek/refactor-plans/*.md
+    outputs:
+      - .iagentek/qa/*-report.md
+    checkpoint:
+      id: qa-approved
+      mode: required
+      prompt: |
+        QA confirmó que el comportamiento del sistema NO cambió desde
+        la perspectiva del usuario. Aprueba para release.
+
+  - id: release
+    name: Release del refactor
+    agent: devops
+    inputs:
+      - .iagentek/architecture.md
+    outputs:
+      - .iagentek/deployment.md
+    checkpoint:
+      id: release-approved
+      mode: required
+      prompt: |
+        DevOps preparó deploy + rollback plan. Aprueba release.

@@ -98,4 +98,54 @@ describe('@iagentek/method loaders', () => {
   it('throws on unknown agent', () => {
     expect(() => loadAgent('nonexistent' as AgentRole)).toThrow();
   });
+
+  describe('bilingual support', () => {
+    it('loads English agent by default', async () => {
+      const agent = loadAgent('analyst');
+      expect(agent.lang).toBe('en');
+      expect(agent.prompt.toLowerCase()).toContain('identity');
+    });
+
+    it('loads Spanish agent when lang=es', () => {
+      const agent = loadAgent('analyst', 'es');
+      expect(agent.lang).toBe('es');
+      expect(agent.prompt.toLowerCase()).toContain('identidad');
+    });
+
+    it('loads English template by default', () => {
+      const tpl = loadTemplate('project-brief');
+      expect(tpl).toContain('Project Brief');
+      expect(tpl).toContain('The problem');
+    });
+
+    it('loads Spanish template when lang=es', () => {
+      const tpl = loadTemplate('project-brief', 'es');
+      expect(tpl).toContain('Project Brief');
+      expect(tpl).toContain('El problema');
+    });
+
+    it('loads English flow by default', () => {
+      const yaml = loadFlow('greenfield');
+      expect(yaml).toContain('Full cycle for a brand-new product');
+    });
+
+    it('loads Spanish flow when lang=es', () => {
+      const yaml = loadFlow('greenfield', 'es');
+      expect(yaml).toContain('Ciclo completo para producto nuevo');
+    });
+
+    it('exposes SUPPORTED_LANGS and DEFAULT_LANG', async () => {
+      const mod = await import('../src/index.js');
+      expect(mod.SUPPORTED_LANGS).toEqual(['en', 'es']);
+      expect(mod.DEFAULT_LANG).toBe('en');
+    });
+
+    it('detectSystemLang returns es when LANG starts with es', async () => {
+      const original = process.env.LANG;
+      process.env.LANG = 'es_MX.UTF-8';
+      const mod = await import('../src/index.js');
+      expect(mod.detectSystemLang()).toBe('es');
+      process.env.LANG = original;
+    });
+  });
 });

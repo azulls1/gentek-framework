@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
 import { dirname, resolve, relative } from 'node:path';
-import { loadAgent, type AgentRole } from '@iagentek/method';
+import { loadAgent, type AgentRole, type Lang } from '@iagentek/method';
 import type { AIProvider, ChatMessage } from '../providers/types.js';
 import type { IAgentekConfig } from '../config/loader.js';
 import type { PhaseDefinition, FlowDefinition } from '../flow/loader.js';
@@ -93,13 +93,15 @@ export class Orchestrator {
       return this.runBuiltinAgent(phase);
     }
 
-    const agent = loadAgent(phase.agent as AgentRole);
+    const lang = this.opts.config.language ?? 'en';
+    const agent = loadAgent(phase.agent as AgentRole, lang);
 
     const contextSections = buildPhaseContext(
       phase,
       this.opts.projectDir,
       this.opts.userIdea,
-      this.opts.config.projectName
+      this.opts.config.projectName,
+      lang
     );
 
     const messages: ChatMessage[] = [
@@ -150,11 +152,13 @@ function buildPhaseContext(
   phase: PhaseDefinition,
   projectDir: string,
   userIdea: string | undefined,
-  projectName: string
+  projectName: string,
+  lang: Lang
 ): string {
   const sections: string[] = [];
   sections.push(`# Phase context: ${phase.name}`);
   sections.push(`**Project:** ${projectName}`);
+  sections.push(`**Output language:** ${lang === 'es' ? 'Spanish (español)' : 'English'}`);
   if (userIdea) {
     sections.push(`**Initial idea from human:**\n${userIdea}`);
   }
@@ -172,6 +176,10 @@ function buildPhaseContext(
     }
   }
 
+  const langInstr = lang === 'es'
+    ? 'Write all generated artifacts in Spanish (español).'
+    : 'Write all generated artifacts in English.';
+
   sections.push('## Instructions');
   sections.push(
     `Follow your role and produce the expected outputs. For EACH file you generate, use the exact format:\n\n` +
@@ -180,7 +188,8 @@ function buildPhaseContext(
       `CRITICAL RULE: DO NOT use native filesystem tools (Write, Edit, Bash) to write project files. ` +
       `All content must go IN your output as file:path blocks with complete code. ` +
       `If you only write a placeholder comment inside the block, the orchestrator will write THAT placeholder to disk — losing any real work you did with tools.\n\n` +
-      `After the files, write a brief summary of the key decisions (max 5 bullets). Write outputs in English by default unless the user's idea is in another language.`
+      `LANGUAGE: ${langInstr}\n\n` +
+      `After the files, write a brief summary of the key decisions (max 5 bullets).`
   );
 
   return sections.join('\n\n');

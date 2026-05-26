@@ -10,12 +10,14 @@ import {
   logger,
   type ProviderId,
 } from '@iagentek/core';
+import { detectSystemLang, type Lang } from '@iagentek/method';
 
 export interface InitOptions {
   name?: string;
   provider?: ProviderId;
   flow?: string;
   cwd?: string;
+  lang?: Lang;
 }
 
 export async function runInit(opts: InitOptions): Promise<void> {
@@ -44,6 +46,31 @@ export async function runInit(opts: InitOptions): Promise<void> {
       return;
     }
   }
+
+  // Language selection
+  let language: Lang;
+  if (opts.lang) {
+    language = opts.lang;
+  } else if (opts.provider) {
+    // Non-interactive mode (user passed --provider): use system locale, default English
+    language = detectSystemLang();
+  } else {
+    const systemLang = detectSystemLang();
+    const { selectedLang } = await prompts({
+      type: 'select',
+      name: 'selectedLang',
+      message: 'Output language for generated artifacts',
+      choices: [
+        { title: 'English', value: 'en' },
+        { title: 'Español', value: 'es' },
+      ],
+      initial: systemLang === 'es' ? 1 : 0,
+    });
+    language = selectedLang ?? 'en';
+  }
+  const langLabel = language === 'es' ? 'Español' : 'English';
+  logger.info(kleur.gray(`  Language: ${langLabel}`));
+  console.log();
 
   // Provider detection + selection
   const detection = detectProviders();
@@ -98,7 +125,7 @@ export async function runInit(opts: InitOptions): Promise<void> {
   }
 
   // Create config + state
-  const cfg = config.defaultConfig(projectName, providerId, opts.flow ?? 'greenfield');
+  const cfg = config.defaultConfig(projectName, providerId, opts.flow ?? 'greenfield', language);
   config.save(cfg);
 
   const state = new StateManager(projectDir);

@@ -2,10 +2,12 @@ import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import yaml from 'js-yaml';
 import type { ProviderId } from '../providers/types.js';
+import type { Lang } from '@iagentek/method';
 
 export interface IAgentekConfig {
   version: string;
   projectName: string;
+  language: Lang;
   provider: {
     id: ProviderId;
     model?: string;
@@ -31,9 +33,14 @@ export class ConfigManager {
 
   load(): IAgentekConfig {
     if (!this.exists()) {
-      throw new Error(`No hay config.yaml en ${this.path}. ¿Corriste 'iagentek init'?`);
+      throw new Error(`No config.yaml at ${this.path}. Did you run 'iagentek init'?`);
     }
-    return yaml.load(readFileSync(this.path, 'utf-8')) as IAgentekConfig;
+    const parsed = yaml.load(readFileSync(this.path, 'utf-8')) as IAgentekConfig;
+    // Back-compat: configs from 0.3.x didn't have `language` — default to English
+    if (!parsed.language) {
+      parsed.language = 'en';
+    }
+    return parsed;
   }
 
   save(config: IAgentekConfig): void {
@@ -41,10 +48,16 @@ export class ConfigManager {
     writeFileSync(this.path, yaml.dump(config, { lineWidth: 100 }), 'utf-8');
   }
 
-  defaultConfig(projectName: string, providerId: ProviderId, flow = 'greenfield'): IAgentekConfig {
+  defaultConfig(
+    projectName: string,
+    providerId: ProviderId,
+    flow = 'greenfield',
+    language: Lang = 'en'
+  ): IAgentekConfig {
     return {
-      version: '0.1.0',
+      version: '0.4.0',
       projectName,
+      language,
       provider: {
         id: providerId,
         model: defaultModelFor(providerId),

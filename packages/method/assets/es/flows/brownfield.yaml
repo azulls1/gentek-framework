@@ -1,0 +1,133 @@
+name: brownfield
+description: Ciclo para producto existente — analiza el código antes de planear cambios
+version: 0.2.0
+
+phases:
+  - id: codebase-analysis
+    name: Análisis del código existente
+    agent: __codebase__
+    inputs:
+      - codebase
+    outputs:
+      - .iagentek/current-state.md
+    checkpoint:
+      id: codebase-analyzed
+      mode: auto
+      prompt: |
+        El analizador escaneó el código existente y generó current-state.md.
+        Revisa el snapshot antes de pasar al discovery.
+
+  - id: discovery
+    name: Discovery sobre código existente
+    agent: analyst
+    inputs:
+      - .iagentek/current-state.md
+      - user.idea
+    outputs:
+      - .iagentek/project-brief.md
+      - .iagentek/constitution.md
+    checkpoint:
+      id: discovery-approved
+      mode: required
+      prompt: |
+        El Analyst leyó el current-state.md y generó brief + constitución
+        adaptados al proyecto existente (no a un greenfield ideal).
+        Aprueba para continuar.
+
+  - id: definition
+    name: Product Definition (PRD + Specs)
+    agent: pm
+    inputs:
+      - .iagentek/current-state.md
+      - .iagentek/project-brief.md
+      - .iagentek/constitution.md
+    outputs:
+      - .iagentek/PRD.md
+      - .iagentek/specs/*.md
+    checkpoint:
+      id: specs-approved
+      mode: required
+      prompt: |
+        El PM priorizó features considerando el código y la deuda existente.
+        Revisa el MoSCoW y los specs.
+
+  - id: design
+    name: Diseño técnico (sobre la arquitectura existente)
+    agent: architect
+    inputs:
+      - .iagentek/current-state.md
+      - .iagentek/PRD.md
+      - .iagentek/specs/*.md
+      - .iagentek/constitution.md
+    outputs:
+      - .iagentek/architecture.md
+      - .iagentek/plans/*.md
+    checkpoint:
+      id: architecture-approved
+      mode: required
+      prompt: |
+        El Architect propuso cambios respetando la arquitectura actual,
+        marcando explícitamente qué se modifica y qué se reescribe.
+
+  - id: planning
+    name: Sprint Planning
+    agent: scrum-master
+    inputs:
+      - .iagentek/PRD.md
+      - .iagentek/specs/*.md
+      - .iagentek/plans/*.md
+      - .iagentek/architecture.md
+    outputs:
+      - .iagentek/stories/*.md
+      - .iagentek/tasks/*.md
+      - .iagentek/sprint-plan.md
+      - .iagentek/DoD.md
+    checkpoint:
+      id: planning-approved
+      mode: required
+      prompt: Aprueba stories y tasks para iniciar implementación.
+
+  - id: implementation
+    name: Implementation
+    agent: dev
+    inputs:
+      - .iagentek/stories/*.md
+      - .iagentek/tasks/*.md
+      - .iagentek/specs/*.md
+      - .iagentek/plans/*.md
+      - .iagentek/architecture.md
+    outputs:
+      - src/**/*
+      - test/**/*
+    checkpoint:
+      id: story-done
+      mode: required
+      prompt: Revisa el código generado antes de pasar a QA.
+
+  - id: validation
+    name: QA
+    agent: qa
+    inputs:
+      - .iagentek/stories/*.md
+      - .iagentek/specs/*.md
+      - .iagentek/DoD.md
+    outputs:
+      - .iagentek/qa/*-report.md
+    checkpoint:
+      id: qa-approved
+      mode: required
+      prompt: Revisa reportes de QA antes de release.
+
+  - id: release
+    name: Release Engineering
+    agent: devops
+    inputs:
+      - .iagentek/architecture.md
+      - .iagentek/constitution.md
+    outputs:
+      - .github/workflows/*
+      - .iagentek/deployment.md
+    checkpoint:
+      id: release-approved
+      mode: required
+      prompt: Aprueba el plan de release.

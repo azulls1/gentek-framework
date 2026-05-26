@@ -100,7 +100,7 @@ describe('@iagentek/cli (subprocess smoke tests)', () => {
 
     const { code, stderr } = runCli(['status', '--cwd', sandbox]);
     expect(code).toBe(1);
-    expect(stderr + ' ').toMatch(/no hay/i);
+    expect(stderr + ' ').toMatch(/no config\.yaml|no iagentek project/i);
   });
 
   it('init refuses to overwrite by default in non-interactive mode', () => {

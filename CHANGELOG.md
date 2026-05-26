@@ -4,7 +4,33 @@ All notable changes to this project are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.3.4] — 2026-05-26
+## [0.4.0] — 2026-05-26
+
+### Added — Bilingual output (English / Spanish)
+- **The framework now ships in two fully-supported output languages.** Users choose `English` or `Español` at `init` time (interactive prompt) or via `--lang en|es`. The choice persists in `.iagentek/config.yaml` as `language: en | es` and can be overridden per cycle with `iagentek cycle --lang es`.
+- Auto-detection of the system locale (`LANG`, `LC_ALL`, `LC_MESSAGES`) suggests Spanish when the OS is configured for `es_*`.
+- Assets reorganized:
+  - `packages/method/assets/en/{agents,templates,flows}/` — English (default, canonical)
+  - `packages/method/assets/es/{agents,templates,flows}/` — Spanish equivalents
+- New public types and helpers from `@iagentek/method`:
+  - `Lang = 'en' | 'es'`
+  - `SUPPORTED_LANGS`, `DEFAULT_LANG`
+  - `detectSystemLang()`
+  - `loadAgent(role, lang?)`, `loadTemplate(name, lang?)`, `loadFlow(name, lang?)` — all accept an optional `lang` parameter with fallback to English when an asset is missing in the requested language.
+- New CLI flags: `iagentek init --lang en|es`, `iagentek cycle --lang en|es`.
+- `iagentek status` now displays the configured language.
+- The orchestrator injects a `LANGUAGE:` instruction into every agent's context so the LLM produces artifacts in the chosen language.
+
+### Backward compatibility
+- Configs from 0.3.x without a `language` field automatically default to `en` when loaded.
+- All public APIs accept `lang` as an optional parameter; existing call sites that pass no lang continue to work unchanged (English).
+
+### Skipped
+- v0.3.4 was committed locally but never published to npm — superseded by v0.4.0 which contains everything 0.3.4 had plus bilingual support.
+
+---
+
+## [0.3.4] — 2026-05-26 (never published)
 
 ### Changed
 - **Full English translation of all product internals.** Previously the prompts of the 9 BMAD agents, the 9 SDD templates, the 4 flow YAMLs, and the orchestrator/CLI strings were in Spanish. The generated artifacts (`project-brief.md`, `PRD.md`, `architecture.md`, etc.) consequently came out in Spanish, which was inconsistent with the English README and the international audience IAgentek targets.

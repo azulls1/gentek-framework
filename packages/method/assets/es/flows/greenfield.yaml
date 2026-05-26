@@ -1,0 +1,135 @@
+name: greenfield
+description: Ciclo completo para producto nuevo desde cero (sin código existente)
+version: 0.2.0
+
+phases:
+  - id: discovery
+    name: Discovery & Problem Definition
+    agent: analyst
+    inputs:
+      - user.idea
+      - user.project_name
+    outputs:
+      - .iagentek/project-brief.md
+      - .iagentek/constitution.md
+    checkpoint:
+      id: discovery-approved
+      mode: required
+      prompt: |
+        El Analyst generó el project brief y la constitución del proyecto.
+        Revisa los archivos y aprueba para continuar a la definición de features.
+      summary_template: |
+        Brief generado en .iagentek/project-brief.md
+        Constitución en .iagentek/constitution.md
+        Próximo paso: PM genera el PRD y specs.
+
+  - id: definition
+    name: Product Definition (PRD + Specs)
+    agent: pm
+    inputs:
+      - .iagentek/project-brief.md
+      - .iagentek/constitution.md
+    outputs:
+      - .iagentek/PRD.md
+      - .iagentek/specs/*.md
+    checkpoint:
+      id: specs-approved
+      mode: required
+      prompt: |
+        El PM generó el PRD y un spec por cada feature MUST.
+        Revisa la priorización (MoSCoW) y los specs individuales.
+        Aprueba para continuar al diseño técnico.
+
+  - id: design
+    name: Technical Design
+    agent: architect
+    inputs:
+      - .iagentek/project-brief.md
+      - .iagentek/constitution.md
+      - .iagentek/PRD.md
+      - .iagentek/specs/*.md
+    outputs:
+      - .iagentek/architecture.md
+      - .iagentek/plans/*.md
+    checkpoint:
+      id: architecture-approved
+      mode: required
+      prompt: |
+        El Architect propuso el stack, estructura y plans técnicos por feature.
+        Revisa los trade-offs y aprueba para continuar.
+
+  - id: planning
+    name: Sprint Planning (Stories + Tasks)
+    agent: scrum-master
+    inputs:
+      - .iagentek/PRD.md
+      - .iagentek/specs/*.md
+      - .iagentek/plans/*.md
+      - .iagentek/architecture.md
+      - .iagentek/constitution.md
+    outputs:
+      - .iagentek/stories/*.md
+      - .iagentek/tasks/*.md
+      - .iagentek/sprint-plan.md
+      - .iagentek/DoD.md
+    checkpoint:
+      id: planning-approved
+      mode: required
+      prompt: |
+        El Scrum Master descompuso specs en stories y tasks atómicas.
+        Revisa el sprint-plan.md, la DoD y los criterios de aceptación.
+        Aprueba para continuar a la implementación.
+
+  - id: implementation
+    name: Implementation
+    agent: dev
+    inputs:
+      - .iagentek/stories/*.md
+      - .iagentek/tasks/*.md
+      - .iagentek/specs/*.md
+      - .iagentek/plans/*.md
+      - .iagentek/architecture.md
+      - .iagentek/constitution.md
+    outputs:
+      - src/**/*
+      - test/**/*
+    checkpoint:
+      id: story-done
+      mode: required
+      prompt: |
+        El Dev implementó las stories y añadió tests.
+        Revisa el código generado, ejecuta los tests localmente,
+        y aprueba para continuar a QA.
+
+  - id: validation
+    name: QA & Acceptance
+    agent: qa
+    inputs:
+      - .iagentek/stories/*.md
+      - .iagentek/specs/*.md
+      - .iagentek/DoD.md
+    outputs:
+      - .iagentek/qa/*-report.md
+    checkpoint:
+      id: qa-approved
+      mode: required
+      prompt: |
+        El QA validó los ACs de cada story y produjo reportes.
+        Revisa veredictos y hallazgos antes de release.
+
+  - id: release
+    name: Release Engineering
+    agent: devops
+    inputs:
+      - .iagentek/architecture.md
+      - .iagentek/constitution.md
+    outputs:
+      - .github/workflows/*
+      - .iagentek/deployment.md
+      - .env.example
+    checkpoint:
+      id: release-approved
+      mode: required
+      prompt: |
+        DevOps preparó pipelines, infra y runbook de despliegue.
+        Revisa el deployment.md y aprueba el release.

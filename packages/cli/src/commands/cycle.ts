@@ -10,11 +10,13 @@ import {
   logger,
   type CheckpointHandler,
 } from '@iagentek/core';
+import type { Lang } from '@iagentek/method';
 
 export interface CycleOptions {
   cwd?: string;
   flow?: string;
   idea?: string;
+  lang?: Lang;
 }
 
 export async function runCycle(opts: CycleOptions): Promise<void> {
@@ -29,11 +31,14 @@ export async function runCycle(opts: CycleOptions): Promise<void> {
     return;
   }
   const config = configMgr.load();
+  if (opts.lang) {
+    config.language = opts.lang;
+  }
   const flowName = opts.flow ?? config.flow;
-  const flow = loadFlowDefinition(flowName);
+  const flow = loadFlowDefinition(flowName, config.language);
 
   logger.header(`\n🔁 IAgentek cycle — ${flow.name}  (project: ${config.projectName})\n`);
-  logger.dim(`Provider: ${config.provider.id}  |  Mode: ${config.mode}`);
+  logger.dim(`Provider: ${config.provider.id}  |  Mode: ${config.mode}  |  Lang: ${config.language}`);
   logger.dim(`Enabled phases: ${flow.phases.filter((p) => p.enabled !== false).length}/${flow.phases.length}`);
   console.log();
 

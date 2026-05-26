@@ -9,11 +9,12 @@ export async function runStatus(opts: StatusOptions): Promise<void> {
   const cwd = opts.cwd ?? process.cwd();
   const config = new ConfigManager(cwd).load();
   const state = new StateManager(cwd).load();
-  const flow = loadFlowDefinition(config.flow);
+  const flow = loadFlowDefinition(config.flow, config.language);
 
   logger.header(`\n📊 IAgentek status — ${config.projectName}\n`);
   logger.info(`Flow:      ${config.flow}`);
   logger.info(`Provider:  ${config.provider.id}  (${config.provider.model})`);
+  logger.info(`Language:  ${config.language === 'es' ? 'Español' : 'English'}`);
   logger.info(`Mode:      ${config.mode}`);
   logger.info(`Created:   ${state.createdAt}`);
   logger.info(`Updated:   ${state.updatedAt}`);
