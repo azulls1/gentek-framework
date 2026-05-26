@@ -1,16 +1,16 @@
 ---
-description: Bootstrap IAgentek en un proyecto (greenfield o brownfield)
-argument-hint: [nombre-proyecto] [--flow greenfield|brownfield]
+description: Bootstrap IAgentek in a project (greenfield or brownfield)
+argument-hint: [project-name] [--flow greenfield|brownfield]
 ---
 
-Ejecuta `npx @iagentek/cli init $ARGUMENTS` en el directorio actual usando la herramienta Bash.
+Run `npx @iagentek/cli init $ARGUMENTS` in the current directory using the Bash tool.
 
-Si el usuario no pasó argumentos, primero pregunta con AskUserQuestion:
-1. Nombre del proyecto (o "." si ya está en la carpeta)
-2. Flow inicial: greenfield, brownfield, bugfix, refactor
-3. Provider de IA: claude-cli, anthropic, openai, gemini, deepseek, ollama
+If the user passed no arguments, first ask via AskUserQuestion:
+1. Project name (or "." if you're already in the folder)
+2. Initial flow: greenfield, brownfield, bugfix, refactor
+3. AI provider: claude-cli, anthropic, openai, gemini, deepseek, ollama
 
-Después de ejecutar el comando, muestra los próximos pasos sugeridos:
-- `cd <nombre>` si creó subdirectorio
-- `/iagentek-cycle` para arrancar el ciclo
-- `/iagentek-status` para ver el estado actual
+After running the command, show the suggested next steps:
+- `cd <name>` if a subdirectory was created
+- `/iagentek-cycle` to start the cycle
+- `/iagentek-status` to see current state

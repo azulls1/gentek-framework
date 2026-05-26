@@ -1,7 +1,7 @@
 ---
-description: Muestra estado actual del ciclo IAgentek (fases completas, checkpoints, próximos pasos)
+description: Show the current IAgentek cycle status (completed phases, checkpoints, next steps)
 ---
 
-Ejecuta `npx @iagentek/cli status` con la herramienta Bash en el directorio actual y muestra el output al usuario.
+Run `npx @iagentek/cli status` with the Bash tool in the current directory and show the output to the user.
 
-Si no existe `.iagentek/`, sugiere correr `/iagentek-init` primero.
+If `.iagentek/` doesn't exist, suggest running `/iagentek-init` first.

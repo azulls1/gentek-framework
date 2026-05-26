@@ -1,14 +1,14 @@
 ---
-description: Ejecuta el ciclo IAgentek completo con checkpoints (lee config del proyecto)
+description: Run the full IAgentek cycle with checkpoints (reads project config)
 argument-hint: [--flow greenfield|brownfield|bugfix|refactor] [--idea "..."]
 ---
 
-Ejecuta `npx @iagentek/cli cycle $ARGUMENTS` con la herramienta Bash en el directorio actual.
+Run `npx @iagentek/cli cycle $ARGUMENTS` with the Bash tool in the current directory.
 
-Antes de ejecutar:
-1. Verifica que existe `.iagentek/config.yaml` — si no, sugiere correr `/iagentek-init` primero.
-2. Si el usuario no pasó `--idea` y el proyecto no tiene `.iagentek/project-brief.md`, pregunta la idea del producto en 1-3 frases con AskUserQuestion.
+Before running:
+1. Verify that `.iagentek/config.yaml` exists — if not, suggest running `/iagentek-init` first.
+2. If the user didn't pass `--idea` and the project lacks `.iagentek/project-brief.md`, ask for the product idea in 1-3 sentences with AskUserQuestion.
 
-Después del ciclo:
-- Si terminó completo, sugiere `/iagentek-status` para ver el resumen.
-- Si quedó en pausa por un checkpoint, indica al usuario qué archivo revisar y cómo retomar con `/iagentek-resume`.
+After the cycle:
+- If it completed fully, suggest `/iagentek-status` to see the summary.
+- If it paused at a checkpoint, tell the user which file to review and how to resume with `/iagentek-resume`.

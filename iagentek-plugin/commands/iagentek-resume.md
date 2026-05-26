@@ -1,7 +1,7 @@
 ---
-description: Retoma el ciclo IAgentek desde la última fase pausada
+description: Resume the IAgentek cycle from the last paused phase
 ---
 
-Ejecuta `npx @iagentek/cli resume` con la herramienta Bash en el directorio actual.
+Run `npx @iagentek/cli resume` with the Bash tool in the current directory.
 
-Si no existe `.iagentek/state.json`, sugiere correr `/iagentek-init` primero.
+If `.iagentek/state.json` doesn't exist, suggest running `/iagentek-init` first.

@@ -1,19 +1,19 @@
 ---
-description: Invoca un agente BMAD aislado (analyst, pm, architect, scrum-master, dev, qa, devops, debugger, refactor-architect)
-argument-hint: <role> [--prompt "instrucción extra"]
+description: Invoke a single BMAD agent in isolation (analyst, pm, architect, scrum-master, dev, qa, devops, debugger, refactor-architect)
+argument-hint: <role> [--prompt "extra instruction"]
 ---
 
-Ejecuta `npx @iagentek/cli agent $ARGUMENTS` con la herramienta Bash en el directorio actual.
+Run `npx @iagentek/cli agent $ARGUMENTS` with the Bash tool in the current directory.
 
-Si el usuario no especificó role, primero pregunta con AskUserQuestion cuál de los agentes BMAD usar:
-- analyst (discovery, problema)
+If the user did not specify a role, first ask via AskUserQuestion which BMAD agent to use:
+- analyst (discovery, problem)
 - pm (PRD, specs)
-- architect (stack, diseño)
+- architect (stack, design)
 - scrum-master (stories, tasks)
-- dev (implementación)
-- qa (validación)
+- dev (implementation)
+- qa (validation)
 - devops (CI/CD, release)
-- debugger (bugs, incidentes)
-- refactor-architect (deuda técnica)
+- debugger (bugs, incidents)
+- refactor-architect (tech debt)
 
-Luego pregunta si quiere agregar una instrucción adicional al contexto del proyecto, o si basta con el contexto actual.
+Then ask whether they want to add an extra instruction to the project context, or whether the current context is enough.
