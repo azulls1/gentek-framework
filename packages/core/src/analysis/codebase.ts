@@ -196,10 +196,7 @@ function detectPackageManagers(rootPath: string): PackageManagerInfo[] {
       .map((l) => l.split(/[=<>~]/)[0].trim())
       .filter(Boolean)
   );
-  tryFile('pyproject.toml', 'python', (c) => {
-    const matches = c.matchAll(/^\s*["']?([a-zA-Z0-9_-]+)["']?\s*=/gm);
-    return [...matches].map((m) => m[1]);
-  });
+  tryFile('pyproject.toml', 'python', (c) => extractPyprojectDeps(c));
   tryFile('go.mod', 'go', (c) => {
     const matches = c.matchAll(/^require\s+([^\s]+)/gm);
     return [...matches].map((m) => m[1]);
@@ -223,6 +220,61 @@ function detectPackageManagers(rootPath: string): PackageManagerInfo[] {
   });
 
   return found;
+}
+
+/**
+ * Extracts real Python dependencies from a pyproject.toml.
+ *
+ * Looks at the `[project] dependencies = [...]` list and the
+ * `[project.optional-dependencies]` table. Parses dependency specifiers like
+ * "requests>=2.0", "click", "fastapi[all]>=0.100,<1.0" → base package name.
+ *
+ * Ignores TOML keys themselves (like `build-backend`, `requires-python`) which
+ * the previous naive parser was incorrectly returning as "dependencies".
+ */
+function extractPyprojectDeps(content: string): string[] {
+  const deps = new Set<string>();
+  const arrayRegex = /^\s*([a-zA-Z0-9_-]+)\s*=\s*\[([\s\S]*?)\]/gm;
+  // Scan top-level arrays under any section
+  let match;
+  while ((match = arrayRegex.exec(content)) !== null) {
+    const key = match[1];
+    const body = match[2];
+    // Only consider arrays whose key looks like a dep list
+    if (!/^(dependencies|requires|install_requires|optional|dev|test|docs|lint|typing|.+)$/.test(key)) {
+      continue;
+    }
+    // Heuristic: only treat as deps if the key is "dependencies" OR the array
+    // is inside [project.optional-dependencies]. We approximate by looking at
+    // preceding text.
+    const precedingChunk = content.slice(0, match.index);
+    const lastSection = /\[([^\]]+)\]/g;
+    let sectionMatch;
+    let lastSectionName = '';
+    while ((sectionMatch = lastSection.exec(precedingChunk)) !== null) {
+      lastSectionName = sectionMatch[1];
+    }
+    const isDepList =
+      key === 'dependencies' ||
+      key === 'requires' ||
+      lastSectionName.startsWith('project.optional-dependencies') ||
+      lastSectionName === 'tool.poetry.dependencies' ||
+      lastSectionName === 'tool.poetry.dev-dependencies' ||
+      lastSectionName === 'build-system';
+
+    if (!isDepList) continue;
+
+    // Each item is "name", "name>=1.0", "name[extra]>=1.0,<2", etc.
+    const itemRegex = /["']([^"'<>=~!,\s\[]+)/g;
+    let item;
+    while ((item = itemRegex.exec(body)) !== null) {
+      const name = item[1].trim();
+      if (name.length > 0 && /^[a-zA-Z]/.test(name)) {
+        deps.add(name);
+      }
+    }
+  }
+  return [...deps];
 }
 
 function detectFrameworks(rootPath: string, pms: PackageManagerInfo[]): string[] {
