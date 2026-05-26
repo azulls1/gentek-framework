@@ -1,0 +1,32 @@
+{
+  "name": "iagentek-framework",
+  "version": "0.4.2",
+  "description": "Marketplace for the IAgentek autonomous AI development framework — exposes BMAD agents and SDD slash commands as Claude Code plugins.",
+  "owner": {
+    "name": "azulls1",
+    "email": "azull.samael@gmail.com",
+    "url": "https://github.com/azulls1"
+  },
+  "homepage": "https://github.com/azulls1/iagentek-framework",
+  "repository": "https://github.com/azulls1/iagentek-framework",
+  "license": "MIT",
+  "plugins": [
+    {
+      "name": "iagentek",
+      "source": "./iagentek-plugin",
+      "description": "Autonomous AI dev framework (SDD + BMAD): 5 slash commands (/iagentek-init, /iagentek-cycle, /iagentek-status, /iagentek-resume, /iagentek-agent) and 9 invocable BMAD agents (analyst, pm, architect, scrum-master, dev, qa, devops, debugger, refactor-architect). Bilingual output (English/Spanish).",
+      "version": "0.4.2",
+      "keywords": [
+        "ai",
+        "framework",
+        "bmad",
+        "spec-driven",
+        "agents",
+        "autonomous",
+        "claude-code",
+        "npx",
+        "bilingual"
+      ]
+    }
+  ]
+}
