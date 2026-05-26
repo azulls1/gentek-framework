@@ -48,7 +48,7 @@ phases:
         Aprueba para liberar el hotfix.
 
   - id: release
-    name: Hotfix release
+    name: Release del hotfix
     agent: devops
     inputs:
       - .iagentek/architecture.md

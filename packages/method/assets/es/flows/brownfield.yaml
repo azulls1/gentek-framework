@@ -35,7 +35,7 @@ phases:
         Aprueba para continuar.
 
   - id: definition
-    name: Product Definition (PRD + Specs)
+    name: Definición de producto (PRD + Specs)
     agent: pm
     inputs:
       - .iagentek/current-state.md
@@ -70,7 +70,7 @@ phases:
         marcando explícitamente qué se modifica y qué se reescribe.
 
   - id: planning
-    name: Sprint Planning
+    name: Planificación de sprint
     agent: scrum-master
     inputs:
       - .iagentek/PRD.md
@@ -88,7 +88,7 @@ phases:
       prompt: Aprueba stories y tasks para iniciar implementación.
 
   - id: implementation
-    name: Implementation
+    name: Implementación
     agent: dev
     inputs:
       - .iagentek/stories/*.md

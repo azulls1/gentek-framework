@@ -4,7 +4,7 @@ version: 0.2.0
 
 phases:
   - id: discovery
-    name: Discovery & Problem Definition
+    name: Discovery y definición del problema
     agent: analyst
     inputs:
       - user.idea
@@ -24,7 +24,7 @@ phases:
         Próximo paso: PM genera el PRD y specs.
 
   - id: definition
-    name: Product Definition (PRD + Specs)
+    name: Definición de producto (PRD + Specs)
     agent: pm
     inputs:
       - .iagentek/project-brief.md
@@ -41,7 +41,7 @@ phases:
         Aprueba para continuar al diseño técnico.
 
   - id: design
-    name: Technical Design
+    name: Diseño técnico
     agent: architect
     inputs:
       - .iagentek/project-brief.md
@@ -59,7 +59,7 @@ phases:
         Revisa los trade-offs y aprueba para continuar.
 
   - id: planning
-    name: Sprint Planning (Stories + Tasks)
+    name: Planificación de sprint (Stories + Tasks)
     agent: scrum-master
     inputs:
       - .iagentek/PRD.md
@@ -81,7 +81,7 @@ phases:
         Aprueba para continuar a la implementación.
 
   - id: implementation
-    name: Implementation
+    name: Implementación
     agent: dev
     inputs:
       - .iagentek/stories/*.md
@@ -102,7 +102,7 @@ phases:
         y aprueba para continuar a QA.
 
   - id: validation
-    name: QA & Acceptance
+    name: QA y aceptación
     agent: qa
     inputs:
       - .iagentek/stories/*.md

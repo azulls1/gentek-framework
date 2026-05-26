@@ -1,6 +1,6 @@
 {
   "name": "@iagentek/method",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "BMAD agents + Spec-Driven Development templates for the IAgentek framework",
   "type": "module",
   "main": "./dist/index.js",
