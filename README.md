@@ -1,5 +1,11 @@
 # IAgentek
 
+[![npm version](https://img.shields.io/npm/v/@iagentek/cli.svg?label=npm&color=cb3837)](https://www.npmjs.com/package/@iagentek/cli)
+[![CI](https://img.shields.io/github/actions/workflow/status/azulls1/iagentek-framework/ci.yml?branch=main&label=CI)](https://github.com/azulls1/iagentek-framework/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![Node](https://img.shields.io/node/v/@iagentek/cli.svg)](https://nodejs.org)
+[![npm downloads](https://img.shields.io/npm/dm/@iagentek/cli.svg)](https://www.npmjs.com/package/@iagentek/cli)
+
 > Autonomous AI-assisted development framework for engineering teams.
 > Merges **Spec-Driven Development** (specs as source of truth) with the **BMAD Method** (specialized agents with clear roles).
 
@@ -147,6 +153,57 @@ See [ARCHITECTURE.md](./ARCHITECTURE.md). Monorepo with 3 npm packages + 1 Claud
 - `@iagentek/core` — AI providers, orchestrator, checkpoints, state, codebase analyzer
 - `@iagentek/method` — BMAD agents + SDD templates + flows (markdown + YAML)
 - `iagentek-plugin/` — complementary Claude Code plugin (not published to npm)
+
+---
+
+## Quick smoke test (verify end-to-end in ~30 min)
+
+Want to confirm the framework actually produces working code on your machine? Run this:
+
+```bash
+# 1. Bootstrap a sandbox project
+mkdir -p /tmp/iagentek-smoke && cd /tmp/iagentek-smoke
+npx @iagentek/cli init demo --provider claude-cli
+
+# 2. Use fully-autonomous mode so it runs all 7 phases without prompts
+cd demo
+cat > .iagentek/config.yaml <<EOF
+version: 0.1.0
+projectName: demo
+provider:
+  id: claude-cli
+  model: claude-opus-4-7
+flow: greenfield
+mode: fully-autonomous
+checkpoints:
+  discovery-approved: auto
+  specs-approved: auto
+  architecture-approved: auto
+  planning-approved: auto
+  story-done: auto
+  qa-approved: auto
+  release-approved: auto
+EOF
+
+# 3. Run the full cycle with a simple, well-scoped idea
+npx @iagentek/cli cycle --idea "A Python CLI 'urlsnap' that downloads HTML from a URL and saves it with a timestamped filename. Handle 404/500/timeout errors. Flag --output for destination folder."
+```
+
+The cycle takes ~25-45 min (Claude does the heavy lifting). When it finishes you'll have:
+- Spec-driven artifacts (`.iagentek/project-brief.md`, `PRD.md`, `architecture.md`, specs, plans, stories, tasks)
+- Real Python code in `src/urlsnap/*.py` (cli, downloader, naming, writer, errors, ...)
+- pytest test suite in `tests/`
+- CI workflows in `.github/workflows/`
+- Project scaffold (`pyproject.toml`, `README.md`, `.env.example`)
+
+Then verify the generated product actually works:
+
+```bash
+PYTHONPATH=src python -m urlsnap https://example.com -o /tmp/snaps
+ls /tmp/snaps/   # → example.com_2026-05-26T143022.html (real HTML downloaded)
+```
+
+**Requirements:** Claude Code CLI installed and authenticated (`claude` in PATH) — or any other supported provider with an API key in env.
 
 ---
 

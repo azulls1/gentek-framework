@@ -1,5 +1,13 @@
 # IAgentek
 
+[![npm version](https://img.shields.io/npm/v/@iagentek/cli.svg?label=npm&color=cb3837)](https://www.npmjs.com/package/@iagentek/cli)
+[![CI](https://img.shields.io/github/actions/workflow/status/azulls1/iagentek-framework/ci.yml?branch=main&label=CI)](https://github.com/azulls1/iagentek-framework/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![Node](https://img.shields.io/node/v/@iagentek/cli.svg)](https://nodejs.org)
+[![npm downloads](https://img.shields.io/npm/dm/@iagentek/cli.svg)](https://www.npmjs.com/package/@iagentek/cli)
+
+> 🇬🇧 Also available in [English](./README.md)
+
 > Framework de desarrollo autónomo asistido por IA para equipos de programadores.
 > Fusiona **Spec-Driven Development** (specs como source-of-truth) con **BMAD Method** (agentes especializados con roles claros).
 

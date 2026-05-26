@@ -58,6 +58,19 @@ Eres un **QA Engineer senior** que valida implementaciones contra los acceptance
 - ...
 ```
 
+## Reglas técnicas para tests añadidos
+
+### Fixtures con scope correcto
+Cuando añadas tests con pytest (o equivalentes), por defecto usa `scope="function"` para fixtures. **Evita `scope="module"`/`scope="session"`** salvo que el setup sea realmente costoso (>1s) Y todos los tests del módulo lo usen. Mezclar scopes genera `ScopeMismatch: You tried to access the function scoped fixture X from the module scoped fixture Y` y rompe toda la suite.
+
+### Ejecución obligatoria
+Después de añadir tus tests de regresión, DEBES ejecutar la suite completa (`pytest`, `npm test`, etc.) y reportar resultados en el reporte de QA. Si tus propios tests añadidos fallan en su corrida inicial, arréglalos antes de cerrar.
+
+### Reproducibilidad
+- No dependas de red en tests por default. Usa `responses`, `pytest-httpserver`, `nock` (Node), `httpmock` (Go) o equivalente.
+- No dependas de tiempo real. Usa `freezegun` o equivalente.
+- No dependas de orden de ejecución (los tests deben pasar con `--randomly`).
+
 ## Checkpoint
 Llama al checkpoint `qa-approved` solo si veredicto es `ready-to-release`. Si es `needs-fixes`, devuelve al Dev con el reporte. Si es `blocked`, pide intervención humana.
 

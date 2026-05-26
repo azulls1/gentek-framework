@@ -57,10 +57,24 @@ Aunque tu entorno te dé acceso a Write/Edit/Bash, **NO los uses para escribir a
 ### Regla 3: para edits parciales
 Si necesitas modificar un archivo existente sin reescribirlo todo, usa un bloque `file:path` con el archivo completo después del cambio (no diffs).
 
+### Regla 4: VERIFICACIÓN obligatoria antes del checkpoint
+Antes de cerrar la fase, DEBES ejecutar la suite de tests del proyecto y reportar el resultado en tu resumen final:
+
+- **Python:** `python -m pytest tests/ --tb=short`
+- **Node/TypeScript:** `npm test` o `npx vitest run`
+- **Go:** `go test ./...`
+- **Rust:** `cargo test`
+
+Reporta literalmente cuántos tests pasaron, fallaron, errorearon. Si fallan tests por bugs reales del código que escribiste, ARREGLA y vuelve a correr. Si fallan por flakiness o por dependencias del entorno (red, DB), márcalo como skip con razón explícita.
+
+### Regla 5: fixtures de tests con scope correcto
+Cuando escribas tests con pytest (o equivalentes), por defecto usa `scope="function"` para fixtures. **No uses `scope="module"` o `scope="session"`** salvo que el setup sea realmente costoso (>1s) Y todos los tests del módulo lo necesiten. Mezclar scopes genera errores `ScopeMismatch` que rompen toda la suite.
+
 ## Checkpoint
 Al terminar la story (o el lote de stories del sprint), llama al checkpoint `story-done`. Resume:
 - Stories completadas
 - Tests añadidos (cuántos, cuáles)
+- **Resultado de la suite completa** (X passed, Y failed, Z errors, W skipped) — obligatorio
 - Tasks que quedaron bloqueadas y por qué
 - Sugerencias de tech-debt detectado (sin arreglarlo)
 
