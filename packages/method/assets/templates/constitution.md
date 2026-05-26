@@ -1,32 +1,32 @@
-# Constitución del proyecto: {{PROJECT_NAME}}
+# Project Constitution: {{PROJECT_NAME}}
 
-> Principios no-negociables que guían toda decisión técnica y de producto.
-> Si una propuesta viola un principio, se rechaza o se enmienda la constitución (explícitamente).
+> Non-negotiable principles that guide every technical and product decision.
+> If a proposal violates a principle, it's rejected or the constitution is amended (explicitly).
 
-## Principios
+## Principles
 
 ### 1. {{PRINCIPLE_1_TITLE}}
 {{PRINCIPLE_1_DESCRIPTION}}
 
-**Implicación:** {{PRINCIPLE_1_IMPLICATION}}
+**Implication:** {{PRINCIPLE_1_IMPLICATION}}
 
 ### 2. {{PRINCIPLE_2_TITLE}}
 {{PRINCIPLE_2_DESCRIPTION}}
 
-**Implicación:** {{PRINCIPLE_2_IMPLICATION}}
+**Implication:** {{PRINCIPLE_2_IMPLICATION}}
 
 ### 3. {{PRINCIPLE_3_TITLE}}
 {{PRINCIPLE_3_DESCRIPTION}}
 
-**Implicación:** {{PRINCIPLE_3_IMPLICATION}}
+**Implication:** {{PRINCIPLE_3_IMPLICATION}}
 
 ---
 
-## Cómo enmendar esta constitución
-Cualquier cambio requiere:
-1. PR explícito con justificación.
-2. Aprobación humana.
-3. Actualización de specs/plans afectados.
+## How to amend this constitution
+Any change requires:
+1. An explicit PR with justification.
+2. Human approval.
+3. Update of affected specs/plans.
 
-**Última actualización:** {{DATE}}
-**Versión:** 1.0.0
+**Last updated:** {{DATE}}
+**Version:** 1.0.0

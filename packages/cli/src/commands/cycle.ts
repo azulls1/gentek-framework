@@ -25,16 +25,16 @@ export async function runCycle(opts: CycleOptions): Promise<void> {
 
   const configMgr = new ConfigManager(cwd);
   if (!configMgr.exists()) {
-    logger.error('No hay .iagentek/config.yaml. Corre primero: npx @iagentek/cli init');
+    logger.error('No .iagentek/config.yaml found. Run first: npx @iagentek/cli init');
     return;
   }
   const config = configMgr.load();
   const flowName = opts.flow ?? config.flow;
   const flow = loadFlowDefinition(flowName);
 
-  logger.header(`\n🔁 IAgentek cycle — ${flow.name}  (proyecto: ${config.projectName})\n`);
-  logger.dim(`Provider: ${config.provider.id}  |  Modo: ${config.mode}`);
-  logger.dim(`Fases habilitadas: ${flow.phases.filter((p) => p.enabled !== false).length}/${flow.phases.length}`);
+  logger.header(`\n🔁 IAgentek cycle — ${flow.name}  (project: ${config.projectName})\n`);
+  logger.dim(`Provider: ${config.provider.id}  |  Mode: ${config.mode}`);
+  logger.dim(`Enabled phases: ${flow.phases.filter((p) => p.enabled !== false).length}/${flow.phases.length}`);
   console.log();
 
   const provider = createProvider({
@@ -48,7 +48,7 @@ export async function runCycle(opts: CycleOptions): Promise<void> {
     const { idea } = await prompts({
       type: 'text',
       name: 'idea',
-      message: 'Describe la idea del producto (1-3 frases)',
+      message: 'Describe the product idea (1-3 sentences)',
     });
     userIdea = idea;
   }
@@ -64,10 +64,10 @@ export async function runCycle(opts: CycleOptions): Promise<void> {
     const { decision } = await prompts({
       type: 'select',
       name: 'decision',
-      message: '¿Cómo procedemos?',
+      message: 'How do we proceed?',
       choices: [
-        { title: kleur.green('Aprobar y continuar'), value: 'approve' },
-        { title: kleur.yellow('Pausar (editaré manualmente y retomo con `resume`)'), value: 'reject' },
+        { title: kleur.green('Approve and continue'), value: 'approve' },
+        { title: kleur.yellow('Pause (I will edit manually and resume)'), value: 'reject' },
       ],
       initial: 0,
     });
@@ -76,7 +76,7 @@ export async function runCycle(opts: CycleOptions): Promise<void> {
       const { notes } = await prompts({
         type: 'text',
         name: 'notes',
-        message: 'Notas (opcional, ENTER para saltar):',
+        message: 'Notes (optional, ENTER to skip):',
       });
       return { decision: 'approve', notes };
     }
@@ -91,7 +91,7 @@ export async function runCycle(opts: CycleOptions): Promise<void> {
     checkpointHandler,
     userIdea,
     onAgentOutput: (phaseId, output) => {
-      logger.dim(`  (output del agente guardado en .iagentek/.transcripts/${phaseId}.md, ${output.length} chars)`);
+      logger.dim(`  (agent output saved at .iagentek/.transcripts/${phaseId}.md, ${output.length} chars)`);
     },
   });
 

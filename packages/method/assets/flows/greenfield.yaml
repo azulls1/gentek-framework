@@ -1,5 +1,5 @@
 name: greenfield
-description: Ciclo completo para producto nuevo desde cero (sin código existente)
+description: Full cycle for a brand-new product (no existing code)
 version: 0.2.0
 
 phases:
@@ -16,12 +16,12 @@ phases:
       id: discovery-approved
       mode: required
       prompt: |
-        El Analyst generó el project brief y la constitución del proyecto.
-        Revisa los archivos y aprueba para continuar a la definición de features.
+        The Analyst generated the project brief and the project constitution.
+        Review the files and approve to continue to feature definition.
       summary_template: |
-        Brief generado en .iagentek/project-brief.md
-        Constitución en .iagentek/constitution.md
-        Próximo paso: PM genera el PRD y specs.
+        Brief generated at .iagentek/project-brief.md
+        Constitution at .iagentek/constitution.md
+        Next step: PM generates the PRD and specs.
 
   - id: definition
     name: Product Definition (PRD + Specs)
@@ -36,9 +36,9 @@ phases:
       id: specs-approved
       mode: required
       prompt: |
-        El PM generó el PRD y un spec por cada feature MUST.
-        Revisa la priorización (MoSCoW) y los specs individuales.
-        Aprueba para continuar al diseño técnico.
+        The PM generated the PRD and a spec for each MUST feature.
+        Review prioritization (MoSCoW) and the individual specs.
+        Approve to continue to technical design.
 
   - id: design
     name: Technical Design
@@ -55,8 +55,8 @@ phases:
       id: architecture-approved
       mode: required
       prompt: |
-        El Architect propuso el stack, estructura y plans técnicos por feature.
-        Revisa los trade-offs y aprueba para continuar.
+        The Architect proposed the stack, structure, and technical plans per feature.
+        Review the trade-offs and approve to continue.
 
   - id: planning
     name: Sprint Planning (Stories + Tasks)
@@ -76,9 +76,9 @@ phases:
       id: planning-approved
       mode: required
       prompt: |
-        El Scrum Master descompuso specs en stories y tasks atómicas.
-        Revisa el sprint-plan.md, la DoD y los criterios de aceptación.
-        Aprueba para continuar a la implementación.
+        The Scrum Master decomposed specs into stories and atomic tasks.
+        Review sprint-plan.md, the DoD, and the acceptance criteria.
+        Approve to continue to implementation.
 
   - id: implementation
     name: Implementation
@@ -97,9 +97,9 @@ phases:
       id: story-done
       mode: required
       prompt: |
-        El Dev implementó las stories y añadió tests.
-        Revisa el código generado, ejecuta los tests localmente,
-        y aprueba para continuar a QA.
+        The Dev implemented the stories and added tests.
+        Review the generated code, run tests locally,
+        and approve to continue to QA.
 
   - id: validation
     name: QA & Acceptance
@@ -114,8 +114,8 @@ phases:
       id: qa-approved
       mode: required
       prompt: |
-        El QA validó los ACs de cada story y produjo reportes.
-        Revisa veredictos y hallazgos antes de release.
+        QA validated the ACs of each story and produced reports.
+        Review verdicts and findings before release.
 
   - id: release
     name: Release Engineering
@@ -131,5 +131,5 @@ phases:
       id: release-approved
       mode: required
       prompt: |
-        DevOps preparó pipelines, infra y runbook de despliegue.
-        Revisa el deployment.md y aprueba el release.
+        DevOps prepared pipelines, infra, and deployment runbook.
+        Review deployment.md and approve the release.

@@ -107,10 +107,10 @@ dev = ["pytest>=7", "ruff"]
   it('summarizeAnalysis returns a non-empty string with key sections', () => {
     const result = analyzeCodebase(fixture);
     const summary = summarizeAnalysis(result);
-    expect(summary).toContain('# Análisis del codebase');
-    expect(summary).toContain('## Lenguajes detectados');
+    expect(summary).toContain('# Codebase analysis');
+    expect(summary).toContain('## Detected languages');
     expect(summary).toContain('## Package managers');
-    expect(summary).toContain('## Frameworks');
+    expect(summary).toContain('## Detected frameworks');
   });
 
   it('ignores node_modules and .git', () => {

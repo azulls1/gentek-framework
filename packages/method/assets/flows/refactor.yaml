@@ -1,10 +1,10 @@
 name: refactor
-description: Ciclo para reducción de deuda técnica — audit → priorización → migración por etapas → ejecución segura
+description: Cycle for tech-debt reduction — audit → prioritization → staged migration → safe execution
 version: 0.3.0
 
 phases:
   - id: codebase-analysis
-    name: Snapshot del código
+    name: Code snapshot
     agent: __codebase__
     outputs:
       - .iagentek/current-state.md
@@ -12,10 +12,10 @@ phases:
       id: codebase-analyzed
       mode: auto
       prompt: |
-        Análisis del código completado.
+        Code analysis complete.
 
   - id: debt-audit
-    name: Auditoría de deuda + plan de migración
+    name: Debt audit + migration plan
     agent: refactor-architect
     inputs:
       - .iagentek/current-state.md
@@ -27,12 +27,12 @@ phases:
       id: refactor-planned
       mode: required
       prompt: |
-        El Refactor Architect identificó deuda real, priorizó top 5 (dolor × esfuerzo)
-        y diseñó planes por etapas con tests de regresión y rollback documentado.
-        Revisa y aprueba para descomponer en stories.
+        The Refactor Architect identified real debt, prioritized top 5 (pain × effort)
+        and designed staged plans with regression tests and documented rollback.
+        Review and approve to decompose into stories.
 
   - id: planning
-    name: Descomposición en stories y sprints
+    name: Decomposition into stories and sprints
     agent: scrum-master
     inputs:
       - .iagentek/debt-audit.md
@@ -45,11 +45,11 @@ phases:
       id: planning-approved
       mode: required
       prompt: |
-        Scrum Master generó una story por stage del plan.
-        Verifica el orden de ejecución y dependencias.
+        Scrum Master generated one story per plan stage.
+        Verify the execution order and dependencies.
 
   - id: implementation
-    name: Ejecución incremental por stage
+    name: Incremental execution per stage
     agent: dev
     inputs:
       - .iagentek/stories/*.md
@@ -62,11 +62,11 @@ phases:
       id: story-done
       mode: required
       prompt: |
-        Dev ejecutó las stages del plan, manteniendo tests verdes en cada paso.
-        Verifica que NO se introdujeron features nuevas.
+        Dev executed the plan stages, keeping tests green at each step.
+        Verify that NO new features were introduced.
 
   - id: validation
-    name: QA de regresión
+    name: Regression QA
     agent: qa
     inputs:
       - .iagentek/stories/*.md
@@ -77,11 +77,11 @@ phases:
       id: qa-approved
       mode: required
       prompt: |
-        QA confirmó que el comportamiento del sistema NO cambió desde
-        la perspectiva del usuario. Aprueba para release.
+        QA confirmed system behavior did NOT change from the
+        user's perspective. Approve for release.
 
   - id: release
-    name: Release del refactor
+    name: Refactor release
     agent: devops
     inputs:
       - .iagentek/architecture.md
@@ -91,4 +91,4 @@ phases:
       id: release-approved
       mode: required
       prompt: |
-        DevOps preparó deploy + rollback plan. Aprueba release.
+        DevOps prepared deploy + rollback plan. Approve release.

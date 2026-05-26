@@ -12,17 +12,17 @@ export async function runResume(opts: ResumeOptions): Promise<void> {
   const state = new StateManager(cwd);
 
   if (!config.exists() || !state.exists()) {
-    logger.error('No hay proyecto IAgentek aquí. Corre primero: npx @iagentek/cli init');
+    logger.error('No IAgentek project here. Run first: npx @iagentek/cli init');
     return;
   }
 
   const s = state.load();
   if (s.currentPhase) {
-    logger.info(kleur.bold(`▶  Retomando desde fase: ${s.currentPhase}`));
+    logger.info(kleur.bold(`▶  Resuming from phase: ${s.currentPhase}`));
   } else if (s.completedPhases.length > 0) {
-    logger.info(kleur.bold(`▶  Continuando desde la siguiente fase pendiente`));
+    logger.info(kleur.bold(`▶  Continuing from the next pending phase`));
   } else {
-    logger.info(kleur.bold(`▶  Ningún progreso previo — arrancando desde el inicio`));
+    logger.info(kleur.bold(`▶  No prior progress — starting from scratch`));
   }
   console.log();
 

@@ -1,7 +1,7 @@
 {
   "name": "@iagentek/method",
-  "version": "0.3.3",
-  "description": "Agentes BMAD + plantillas Spec-Driven Development para IAgentek",
+  "version": "0.3.4",
+  "description": "BMAD agents + Spec-Driven Development templates for the IAgentek framework",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

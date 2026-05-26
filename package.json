@@ -1,8 +1,8 @@
 {
   "name": "iagentek",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "private": true,
-  "description": "Framework de desarrollo autónomo asistido por IA — fusiona Spec-Driven Development con BMAD Method",
+  "description": "Autonomous AI-assisted development framework — merges Spec-Driven Development with the BMAD Method",
   "workspaces": [
     "packages/*"
   ],

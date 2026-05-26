@@ -37,11 +37,11 @@ export class Orchestrator {
 
     for (const phase of phases) {
       if (state.completedPhases.includes(phase.id)) {
-        logger.dim(`  ⤴  Skip fase '${phase.name}' (ya completada)`);
+        logger.dim(`  ⤴  Skip phase '${phase.name}' (already completed)`);
         continue;
       }
 
-      logger.header(`\n🛠  Fase: ${phase.name}  (agente: ${phase.agent})`);
+      logger.header(`\n🛠  Phase: ${phase.name}  (agent: ${phase.agent})`);
       this.state.setCurrentPhase(phase.id);
 
       const output = await this.runPhase(phase);
@@ -59,7 +59,7 @@ export class Orchestrator {
       // Extract and write any structured outputs the agent produced
       const writtenFiles = extractAndWriteArtifacts(output, this.opts.projectDir);
       if (writtenFiles.length > 0) {
-        logger.dim(`  📝 Artefactos generados:`);
+        logger.dim(`  📝 Artifacts generated:`);
         writtenFiles.forEach((f) =>
           logger.dim(`     - ${relative(this.opts.projectDir, f)}`)
         );
@@ -76,8 +76,8 @@ export class Orchestrator {
           writtenFiles
         );
         if (decision !== 'approve') {
-          logger.warn(`\n⏸  Ciclo pausado en '${phase.name}'. Decisión: ${decision}.`);
-          logger.info(`Retoma con: npx @iagentek/cli resume`);
+          logger.warn(`\n⏸  Cycle paused at '${phase.name}'. Decision: ${decision}.`);
+          logger.info(`Resume with: npx @iagentek/cli resume`);
           return;
         }
       }
@@ -85,7 +85,7 @@ export class Orchestrator {
       this.state.markPhaseCompleted(phase.id);
     }
 
-    logger.success('\n✅ Ciclo completo. Todas las fases habilitadas terminaron.');
+    logger.success('\n✅ Cycle complete. All enabled phases finished.');
   }
 
   private async runPhase(phase: PhaseDefinition): Promise<string> {
@@ -120,7 +120,7 @@ export class Orchestrator {
   private async runBuiltinAgent(phase: PhaseDefinition): Promise<string> {
     switch (phase.agent) {
       case '__codebase__': {
-        logger.dim('  🔍 Analizando codebase...');
+        logger.dim('  🔍 Analyzing codebase...');
         const analysis = analyzeCodebase(this.opts.projectDir);
         const summary = summarizeAnalysis(analysis);
         return [
@@ -132,15 +132,15 @@ export class Orchestrator {
         ].join('\n');
       }
       default:
-        throw new Error(`Builtin agent desconocido: ${phase.agent}`);
+        throw new Error(`Unknown builtin agent: ${phase.agent}`);
     }
   }
 
   private summarize(phase: PhaseDefinition, writtenFiles: string[]): string {
     return [
-      `Fase: ${phase.name}`,
-      `Agente: ${phase.agent}`,
-      `Archivos generados: ${writtenFiles.length}`,
+      `Phase: ${phase.name}`,
+      `Agent: ${phase.agent}`,
+      `Generated files: ${writtenFiles.length}`,
       ...writtenFiles.map((f) => `  - ${relative(this.opts.projectDir, f)}`),
     ].join('\n');
   }
@@ -153,14 +153,14 @@ function buildPhaseContext(
   projectName: string
 ): string {
   const sections: string[] = [];
-  sections.push(`# Contexto de la fase: ${phase.name}`);
-  sections.push(`**Proyecto:** ${projectName}`);
+  sections.push(`# Phase context: ${phase.name}`);
+  sections.push(`**Project:** ${projectName}`);
   if (userIdea) {
-    sections.push(`**Idea inicial del humano:**\n${userIdea}`);
+    sections.push(`**Initial idea from human:**\n${userIdea}`);
   }
 
   if (phase.inputs && phase.inputs.length > 0) {
-    sections.push('## Archivos de input existentes');
+    sections.push('## Existing input files');
     for (const input of phase.inputs) {
       // Skip wildcards and user.* references in MVP
       if (input.includes('*') || input.startsWith('user.')) continue;
@@ -172,15 +172,15 @@ function buildPhaseContext(
     }
   }
 
-  sections.push('## Instrucciones');
+  sections.push('## Instructions');
   sections.push(
-    `Sigue tu rol y produce los outputs esperados. Para CADA archivo que generes, usa el formato exacto:\n\n` +
-      `\`\`\`file:RUTA/RELATIVA/AL/PROYECTO.md\n[contenido COMPLETO del archivo — código real, no placeholders, no comentarios resumen]\n\`\`\`\n\n` +
-      `Ejemplo:\n\`\`\`file:.iagentek/project-brief.md\n# Project Brief: ...\n\`\`\`\n\n` +
-      `REGLA CRÍTICA: NO uses herramientas nativas de filesystem (Write, Edit, Bash) para escribir archivos del proyecto. ` +
-      `Todo el contenido debe ir EN tu output como bloques file:path con código completo. ` +
-      `Si solo escribes un comentario placeholder dentro del bloque, el orchestrator escribirá ESE placeholder al disco — perdiendo cualquier trabajo real que hayas hecho con tools.\n\n` +
-      `Después de los archivos, escribe un resumen breve de las decisiones clave (máx 5 bullets).`
+    `Follow your role and produce the expected outputs. For EACH file you generate, use the exact format:\n\n` +
+      `\`\`\`file:PATH/RELATIVE/TO/PROJECT.md\n[COMPLETE file content — real code, no placeholders, no summary comments]\n\`\`\`\n\n` +
+      `Example:\n\`\`\`file:.iagentek/project-brief.md\n# Project Brief: ...\n\`\`\`\n\n` +
+      `CRITICAL RULE: DO NOT use native filesystem tools (Write, Edit, Bash) to write project files. ` +
+      `All content must go IN your output as file:path blocks with complete code. ` +
+      `If you only write a placeholder comment inside the block, the orchestrator will write THAT placeholder to disk — losing any real work you did with tools.\n\n` +
+      `After the files, write a brief summary of the key decisions (max 5 bullets). Write outputs in English by default unless the user's idea is in another language.`
   );
 
   return sections.join('\n\n');

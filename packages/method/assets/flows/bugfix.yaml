@@ -1,10 +1,10 @@
 name: bugfix
-description: Ciclo corto para un incidente o bug específico — reproducción → causa raíz → fix con tests → postmortem
+description: Short cycle for a specific incident or bug — reproduction → root cause → fix with tests → postmortem
 version: 0.3.0
 
 phases:
   - id: codebase-analysis
-    name: Snapshot del código
+    name: Code snapshot
     agent: __codebase__
     outputs:
       - .iagentek/current-state.md
@@ -12,10 +12,10 @@ phases:
       id: codebase-analyzed
       mode: auto
       prompt: |
-        Análisis del código generado para que el Debugger tenga contexto.
+        Code analysis generated so the Debugger has context.
 
   - id: triage-and-fix
-    name: Debug, reproducción, causa raíz y fix
+    name: Debug, reproduction, root cause, and fix
     agent: debugger
     inputs:
       - .iagentek/current-state.md
@@ -28,12 +28,12 @@ phases:
       id: incident-resolved
       mode: required
       prompt: |
-        El Debugger reprodujo el bug, identificó la causa raíz,
-        añadió un test que falla antes del fix, y aplicó el cambio mínimo.
-        Revisa el postmortem en .iagentek/incidents/ y aprueba para QA.
+        The Debugger reproduced the bug, identified the root cause,
+        added a test that fails before the fix, and applied the minimal change.
+        Review the postmortem at .iagentek/incidents/ and approve for QA.
 
   - id: validation
-    name: QA del fix
+    name: QA of the fix
     agent: qa
     inputs:
       - .iagentek/incidents/*.md
@@ -44,8 +44,8 @@ phases:
       id: qa-approved
       mode: required
       prompt: |
-        El QA validó que el fix resuelve el bug sin regresiones.
-        Aprueba para liberar el hotfix.
+        QA validated the fix resolves the bug without regressions.
+        Approve to release the hotfix.
 
   - id: release
     name: Hotfix release
@@ -59,5 +59,5 @@ phases:
       id: release-approved
       mode: required
       prompt: |
-        DevOps preparó el plan de release del hotfix.
-        Verifica el runbook y aprueba el deploy.
+        DevOps prepared the hotfix release plan.
+        Check the runbook and approve the deploy.

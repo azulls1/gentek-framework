@@ -79,7 +79,7 @@ describe('@iagentek/method loaders', () => {
         const agent = loadAgent(role);
         expect(agent.role).toBe(role);
         expect(agent.prompt.length).toBeGreaterThan(200);
-        expect(agent.prompt.toLowerCase()).toMatch(/identidad|principios/);
+        expect(agent.prompt.toLowerCase()).toMatch(/identity|principles/);
       });
     }
   });

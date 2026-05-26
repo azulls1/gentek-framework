@@ -21,7 +21,7 @@ export async function runAgent(opts: AgentOptions): Promise<void> {
 
   const configMgr = new ConfigManager(cwd);
   if (!configMgr.exists()) {
-    logger.error('No hay .iagentek/config.yaml. Corre primero: npx @iagentek/cli init');
+    logger.error('No .iagentek/config.yaml found. Run first: npx @iagentek/cli init');
     return;
   }
   const config = configMgr.load();
@@ -33,13 +33,13 @@ export async function runAgent(opts: AgentOptions): Promise<void> {
     const { selected } = await prompts({
       type: 'select',
       name: 'selected',
-      message: '¿Qué agente quieres invocar?',
+      message: 'Which agent do you want to invoke?',
       choices: available.map((a) => ({ title: a, value: a })),
     });
     role = selected;
   }
   if (!role || !available.includes(role)) {
-    logger.error(`Agente desconocido: ${role}. Disponibles: ${available.join(', ')}`);
+    logger.error(`Unknown agent: ${role}. Available: ${available.join(', ')}`);
     return;
   }
 
@@ -58,22 +58,22 @@ export async function runAgent(opts: AgentOptions): Promise<void> {
     const { p } = await prompts({
       type: 'text',
       name: 'p',
-      message: '¿Instrucción extra para el agente? (ENTER para usar solo el contexto del proyecto)',
+      message: 'Extra instruction for the agent? (ENTER to use only the project context)',
     });
     extraPrompt = p;
   }
 
-  logger.header(`\n🧠 Invocando agente '${role}' con provider ${config.provider.id}\n`);
+  logger.header(`\n🧠 Invoking agent '${role}' with provider ${config.provider.id}\n`);
 
   const messages: ChatMessage[] = [
     {
       role: 'user',
       content: [
-        '# Contexto del proyecto',
+        '# Project context',
         context,
-        extraPrompt ? `\n# Instrucción adicional\n${extraPrompt}` : '',
-        '\n# Instrucciones de salida',
-        'Para cualquier archivo que generes o modifiques completo, usa:\n```file:ruta/relativa.md\n[contenido]\n```',
+        extraPrompt ? `\n# Additional instruction\n${extraPrompt}` : '',
+        '\n# Output instructions',
+        'For any file you generate or fully modify, use:\n```file:relative/path.md\n[content]\n```',
       ]
         .filter(Boolean)
         .join('\n\n'),
@@ -88,21 +88,21 @@ export async function runAgent(opts: AgentOptions): Promise<void> {
   // Save transcript
   const transcriptPath = resolve(cwd, '.iagentek', '.transcripts', `agent-${role}-${Date.now()}.md`);
   writeFile(transcriptPath, output);
-  logger.dim(`Transcripción guardada en ${relative(cwd, transcriptPath)}`);
+  logger.dim(`Transcript saved at ${relative(cwd, transcriptPath)}`);
 
   // Extract artifacts
   const writtenFiles = extractAndWriteArtifacts(output, cwd);
   if (writtenFiles.length > 0) {
-    logger.success(`\n✅ Archivos generados/actualizados:`);
+    logger.success(`\n✅ Files generated/updated:`);
     writtenFiles.forEach((f) => logger.info(`  - ${relative(cwd, f)}`));
   } else {
-    logger.dim('\n(el agente no generó archivos — revisa el transcript para ver su respuesta)');
+    logger.dim('\n(the agent generated no files — check the transcript for its response)');
   }
 }
 
 function buildAgentContext(cwd: string): string {
   const iagentekDir = resolve(cwd, '.iagentek');
-  if (!existsSync(iagentekDir)) return '(no hay .iagentek/ todavía)';
+  if (!existsSync(iagentekDir)) return '(no .iagentek/ yet)';
 
   const sections: string[] = [];
   const filesToInclude = [
@@ -133,7 +133,7 @@ function buildAgentContext(cwd: string): string {
     }
   }
 
-  return sections.join('\n\n') || '(.iagentek/ está vacío)';
+  return sections.join('\n\n') || '(.iagentek/ is empty)';
 }
 
 function extractAndWriteArtifacts(output: string, projectDir: string): string[] {

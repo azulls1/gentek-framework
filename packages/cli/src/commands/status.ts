@@ -14,19 +14,19 @@ export async function runStatus(opts: StatusOptions): Promise<void> {
   logger.header(`\n📊 IAgentek status — ${config.projectName}\n`);
   logger.info(`Flow:      ${config.flow}`);
   logger.info(`Provider:  ${config.provider.id}  (${config.provider.model})`);
-  logger.info(`Modo:      ${config.mode}`);
-  logger.info(`Creado:    ${state.createdAt}`);
-  logger.info(`Update:    ${state.updatedAt}`);
+  logger.info(`Mode:      ${config.mode}`);
+  logger.info(`Created:   ${state.createdAt}`);
+  logger.info(`Updated:   ${state.updatedAt}`);
   console.log();
 
-  logger.header('Fases:');
+  logger.header('Phases:');
   for (const phase of flow.phases) {
     if (phase.enabled === false) {
-      logger.dim(`  ⊘  ${phase.name}  (deshabilitada en este flow)`);
+      logger.dim(`  ⊘  ${phase.name}  (disabled in this flow)`);
     } else if (state.completedPhases.includes(phase.id)) {
       logger.success(`  ✅ ${phase.name}`);
     } else if (state.currentPhase === phase.id) {
-      logger.warn(`  ▶️  ${phase.name}  (en curso o pausada)`);
+      logger.warn(`  ▶️  ${phase.name}  (in progress or paused)`);
     } else {
       logger.dim(`  ⏳ ${phase.name}`);
     }
@@ -34,7 +34,7 @@ export async function runStatus(opts: StatusOptions): Promise<void> {
   console.log();
 
   if (state.checkpoints.length > 0) {
-    logger.header('Checkpoints aprobados:');
+    logger.header('Approved checkpoints:');
     for (const c of state.checkpoints) {
       const notes = c.notes ? kleur.gray(`  — "${c.notes}"`) : '';
       logger.info(`  ✓ ${c.id}  ${kleur.dim(c.approvedAt)}${notes}`);
@@ -43,12 +43,12 @@ export async function runStatus(opts: StatusOptions): Promise<void> {
   }
 
   if (state.currentPhase && !state.completedPhases.includes(state.currentPhase)) {
-    logger.info(kleur.bold('Próximo paso:'));
-    logger.info(`  npx @iagentek/cli cycle  (retoma la fase en curso)`);
+    logger.info(kleur.bold('Next step:'));
+    logger.info(`  npx @iagentek/cli cycle  (resumes the current phase)`);
   } else if (state.completedPhases.length === flow.phases.filter((p) => p.enabled !== false).length) {
-    logger.success('🎉 Todas las fases habilitadas completaron.');
+    logger.success('🎉 All enabled phases completed.');
   } else {
-    logger.info(kleur.bold('Próximo paso:'));
+    logger.info(kleur.bold('Next step:'));
     logger.info(`  npx @iagentek/cli cycle`);
   }
 }

@@ -319,49 +319,49 @@ function detectFrameworks(rootPath: string, pms: PackageManagerInfo[]): string[]
 
 export function summarizeAnalysis(a: CodebaseAnalysis): string {
   const lines: string[] = [];
-  lines.push(`# Análisis del codebase`);
+  lines.push(`# Codebase analysis`);
   lines.push(``);
   lines.push(`**Path:** ${a.rootPath}`);
-  lines.push(`**Total de archivos:** ${a.totalFiles} (de los cuales ${a.totalSourceFiles} son fuente)`);
+  lines.push(`**Total files:** ${a.totalFiles} (of which ${a.totalSourceFiles} are source)`);
   lines.push(``);
-  lines.push(`## Lenguajes detectados`);
+  lines.push(`## Detected languages`);
   if (a.languages.length === 0) {
-    lines.push(`(ninguno reconocido)`);
+    lines.push(`(none recognized)`);
   } else {
     for (const l of a.languages.slice(0, 10)) {
-      lines.push(`- ${l.language} (${l.extension}): ${l.files} archivos`);
+      lines.push(`- ${l.language} (${l.extension}): ${l.files} files`);
     }
   }
   lines.push(``);
-  lines.push(`## Package managers / ecosistemas`);
+  lines.push(`## Package managers / ecosystems`);
   if (a.packageManagers.length === 0) {
-    lines.push(`(ninguno detectado)`);
+    lines.push(`(none detected)`);
   } else {
     for (const pm of a.packageManagers) {
-      lines.push(`- ${pm.ecosystem} (${pm.manifestFile}) — ${pm.declaredDependencies.length} deps declaradas`);
+      lines.push(`- ${pm.ecosystem} (${pm.manifestFile}) — ${pm.declaredDependencies.length} declared deps`);
       if (pm.declaredDependencies.length > 0) {
         const sample = pm.declaredDependencies.slice(0, 15).join(', ');
-        const more = pm.declaredDependencies.length > 15 ? `, +${pm.declaredDependencies.length - 15} más` : '';
+        const more = pm.declaredDependencies.length > 15 ? `, +${pm.declaredDependencies.length - 15} more` : '';
         lines.push(`  - top deps: ${sample}${more}`);
       }
     }
   }
   lines.push(``);
-  lines.push(`## Frameworks detectados`);
-  lines.push(a.frameworks.length > 0 ? `- ${a.frameworks.join('\n- ')}` : `(ninguno reconocido)`);
+  lines.push(`## Detected frameworks`);
+  lines.push(a.frameworks.length > 0 ? `- ${a.frameworks.join('\n- ')}` : `(none recognized)`);
   lines.push(``);
-  lines.push(`## Estructura top-level`);
-  lines.push(`Archivos raíz: ${a.rootFiles.join(', ') || '(ninguno)'}`);
-  lines.push(`Directorios top: ${a.topLevelDirs.join(', ') || '(ninguno)'}`);
+  lines.push(`## Top-level structure`);
+  lines.push(`Root files: ${a.rootFiles.join(', ') || '(none)'}`);
+  lines.push(`Top directories: ${a.topLevelDirs.join(', ') || '(none)'}`);
   lines.push(``);
   if (a.hasReadme && a.readmeExcerpt) {
-    lines.push(`## README (extracto)`);
+    lines.push(`## README (excerpt)`);
     lines.push('```');
     lines.push(a.readmeExcerpt);
     lines.push('```');
   } else {
     lines.push(`## README`);
-    lines.push(`No se encontró README en la raíz.`);
+    lines.push(`No README found at root.`);
   }
   return lines.join('\n');
 }

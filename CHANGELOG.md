@@ -4,6 +4,32 @@ All notable changes to this project are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.4] — 2026-05-26
+
+### Changed
+- **Full English translation of all product internals.** Previously the prompts of the 9 BMAD agents, the 9 SDD templates, the 4 flow YAMLs, and the orchestrator/CLI strings were in Spanish. The generated artifacts (`project-brief.md`, `PRD.md`, `architecture.md`, etc.) consequently came out in Spanish, which was inconsistent with the English README and the international audience IAgentek targets.
+- Translated:
+  - 9 agent prompts (`assets/agents/*.md`): Analyst, PM, Architect, Scrum Master, Dev, QA, DevOps, Debugger, Refactor Architect
+  - 9 SDD templates (`assets/templates/*.md`): constitution, project-brief, PRD, spec, plan, tasks, story, architecture, current-state
+  - 4 flow YAML files (`assets/flows/*.yaml`): greenfield, brownfield, bugfix, refactor — checkpoint prompts and summaries
+  - Codebase analyzer output strings (`summarizeAnalysis()`)
+  - Orchestrator strings (phase headers, checkpoint pauses, builtin agent dim text)
+  - All CLI command strings (init, cycle, status, resume, agent — prompts, errors, success messages)
+  - Package descriptions in all 4 `package.json` files
+- Default language directive added to every agent's instruction context: outputs in English unless the user's idea is in another language (the framework respects user-driven multilingual projects).
+
+### Fixed
+- pyproject.toml parser in the codebase analyzer no longer leaks TOML keys (`build-backend`, `requires-python`, `license`, `description`, etc.) as if they were package dependencies. Now it parses `[project] dependencies = [...]`, `[project.optional-dependencies]`, and `[tool.poetry.dependencies]` correctly. Caught during brownfield smoke test.
+- Stronger Dev agent prompt: mandates running the full test suite (`pytest`/`npm test`/`go test`/`cargo test`) before closing the implementation phase and reporting `X passed / Y failed / Z errors / W skipped` in the summary.
+- Stronger QA agent prompt: defaults to `scope="function"` for pytest fixtures (avoids `ScopeMismatch` errors seen in 0.3.3 smoke test); forbids network/time-dependent tests; mandates `--randomly`-safe ordering.
+
+### Docs
+- Added shields.io badges to both READMEs (npm version, CI status, MIT license, Node version, npm downloads)
+- New "Quick smoke test" section in README — copy-pasteable script anyone can run to verify end-to-end in ~30 min
+- README.es.md gets a "🇬🇧 Also available in English" link back
+
+---
+
 ## [0.3.3] — 2026-05-26
 
 ### Fixed

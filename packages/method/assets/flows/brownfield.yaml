@@ -1,10 +1,10 @@
 name: brownfield
-description: Ciclo para producto existente — analiza el código antes de planear cambios
+description: Cycle for an existing product — analyze the code before planning changes
 version: 0.2.0
 
 phases:
   - id: codebase-analysis
-    name: Análisis del código existente
+    name: Existing-code analysis
     agent: __codebase__
     inputs:
       - codebase
@@ -14,11 +14,11 @@ phases:
       id: codebase-analyzed
       mode: auto
       prompt: |
-        El analizador escaneó el código existente y generó current-state.md.
-        Revisa el snapshot antes de pasar al discovery.
+        The analyzer scanned the existing code and generated current-state.md.
+        Review the snapshot before moving to discovery.
 
   - id: discovery
-    name: Discovery sobre código existente
+    name: Discovery over existing code
     agent: analyst
     inputs:
       - .iagentek/current-state.md
@@ -30,9 +30,9 @@ phases:
       id: discovery-approved
       mode: required
       prompt: |
-        El Analyst leyó el current-state.md y generó brief + constitución
-        adaptados al proyecto existente (no a un greenfield ideal).
-        Aprueba para continuar.
+        The Analyst read current-state.md and produced a brief + constitution
+        adapted to the existing project (not an ideal greenfield).
+        Approve to continue.
 
   - id: definition
     name: Product Definition (PRD + Specs)
@@ -48,11 +48,11 @@ phases:
       id: specs-approved
       mode: required
       prompt: |
-        El PM priorizó features considerando el código y la deuda existente.
-        Revisa el MoSCoW y los specs.
+        The PM prioritized features considering the existing code and debt.
+        Review the MoSCoW and the specs.
 
   - id: design
-    name: Diseño técnico (sobre la arquitectura existente)
+    name: Technical design (over the existing architecture)
     agent: architect
     inputs:
       - .iagentek/current-state.md
@@ -66,8 +66,8 @@ phases:
       id: architecture-approved
       mode: required
       prompt: |
-        El Architect propuso cambios respetando la arquitectura actual,
-        marcando explícitamente qué se modifica y qué se reescribe.
+        The Architect proposed changes respecting the current architecture,
+        explicitly marking what is modified and what is rewritten.
 
   - id: planning
     name: Sprint Planning
@@ -85,7 +85,7 @@ phases:
     checkpoint:
       id: planning-approved
       mode: required
-      prompt: Aprueba stories y tasks para iniciar implementación.
+      prompt: Approve stories and tasks to start implementation.
 
   - id: implementation
     name: Implementation
@@ -102,7 +102,7 @@ phases:
     checkpoint:
       id: story-done
       mode: required
-      prompt: Revisa el código generado antes de pasar a QA.
+      prompt: Review the generated code before moving to QA.
 
   - id: validation
     name: QA
@@ -116,7 +116,7 @@ phases:
     checkpoint:
       id: qa-approved
       mode: required
-      prompt: Revisa reportes de QA antes de release.
+      prompt: Review QA reports before release.
 
   - id: release
     name: Release Engineering
@@ -130,4 +130,4 @@ phases:
     checkpoint:
       id: release-approved
       mode: required
-      prompt: Aprueba el plan de release.
+      prompt: Approve the release plan.

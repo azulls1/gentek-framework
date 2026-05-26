@@ -23,7 +23,7 @@ export async function runInit(opts: InitOptions): Promise<void> {
   const projectDir = opts.name ? resolve(cwd, opts.name) : cwd;
   const projectName = opts.name ?? basename(projectDir);
 
-  logger.header(`\n🚀 Inicializando IAgentek en: ${projectDir}\n`);
+  logger.header(`\n🚀 Initializing IAgentek at: ${projectDir}\n`);
 
   if (opts.name && !existsSync(projectDir)) {
     mkdirSync(projectDir, { recursive: true });
@@ -32,15 +32,15 @@ export async function runInit(opts: InitOptions): Promise<void> {
   // Detect existing .iagentek
   const config = new ConfigManager(projectDir);
   if (config.exists()) {
-    logger.warn('Ya existe un .iagentek/config.yaml en este directorio.');
+    logger.warn('A .iagentek/config.yaml already exists in this directory.');
     const { overwrite } = await prompts({
       type: 'confirm',
       name: 'overwrite',
-      message: '¿Sobrescribir configuración existente?',
+      message: 'Overwrite existing configuration?',
       initial: false,
     });
     if (!overwrite) {
-      logger.info('Init cancelado. Tu configuración actual sigue intacta.');
+      logger.info('Init cancelled. Your current configuration is untouched.');
       return;
     }
   }
@@ -49,7 +49,7 @@ export async function runInit(opts: InitOptions): Promise<void> {
   const detection = detectProviders();
   const preferred = preferredProvider(detection);
 
-  logger.info(kleur.bold('Providers detectados:'));
+  logger.info(kleur.bold('Detected providers:'));
   for (const d of detection) {
     const mark = d.available ? kleur.green('●') : kleur.gray('○');
     const note = d.note ? kleur.gray(`  (${d.note})`) : '';
@@ -62,19 +62,19 @@ export async function runInit(opts: InitOptions): Promise<void> {
     providerId = opts.provider;
   } else {
     const choices = detection.map((d) => ({
-      title: d.available ? `${d.id} ${kleur.green('(disponible)')}` : `${d.id} ${kleur.gray('(no configurado)')}`,
+      title: d.available ? `${d.id} ${kleur.green('(available)')}` : `${d.id} ${kleur.gray('(not configured)')}`,
       value: d.id,
       disabled: !d.available,
     }));
     const { selected } = await prompts({
       type: 'select',
       name: 'selected',
-      message: 'Elige el provider de IA',
+      message: 'Choose the AI provider',
       choices,
       initial: preferred ? detection.indexOf(preferred) : 0,
     });
     if (!selected) {
-      logger.error('No seleccionaste provider. Aborto.');
+      logger.error('No provider selected. Aborting.');
       return;
     }
     providerId = selected;
@@ -86,14 +86,14 @@ export async function runInit(opts: InitOptions): Promise<void> {
     const { apiKey } = await prompts({
       type: 'password',
       name: 'apiKey',
-      message: `${envVar} no está en el entorno. Pégala aquí (se guardará en .env, ignorado por git):`,
+      message: `${envVar} not in environment. Paste it here (will be saved to .env, gitignored):`,
     });
     if (apiKey) {
       writeEnvFile(projectDir, envVar, apiKey);
-      logger.success(`  ✅ ${envVar} guardada en ${projectDir}\\.env`);
+      logger.success(`  ✅ ${envVar} saved at ${projectDir}\\.env`);
       ensureGitignoreEnv(projectDir);
     } else {
-      logger.warn(`  ⚠️  No se guardó API key. Tendrás que exportar ${envVar} antes de correr 'iagentek cycle'.`);
+      logger.warn(`  ⚠️  No API key saved. You'll need to export ${envVar} before running 'iagentek cycle'.`);
     }
   }
 
@@ -108,20 +108,20 @@ export async function runInit(opts: InitOptions): Promise<void> {
   const dirs = ['.iagentek/specs', '.iagentek/plans', '.iagentek/stories', '.iagentek/tasks', '.iagentek/.transcripts'];
   dirs.forEach((d) => mkdirSync(resolve(projectDir, d), { recursive: true }));
 
-  logger.success(`\n✅ Proyecto inicializado.\n`);
-  logger.info(kleur.bold('Estructura creada:'));
-  logger.info(`  .iagentek/config.yaml       — configuración del flow + provider`);
-  logger.info(`  .iagentek/state.json        — tracking de fases y checkpoints`);
-  logger.info(`  .iagentek/specs/            — specs SDD por feature`);
-  logger.info(`  .iagentek/plans/            — plans técnicos por feature`);
-  logger.info(`  .iagentek/stories/          — user stories (iteración 2)`);
-  logger.info(`  .iagentek/tasks/            — tasks atómicas (iteración 2)`);
+  logger.success(`\n✅ Project initialized.\n`);
+  logger.info(kleur.bold('Structure created:'));
+  logger.info(`  .iagentek/config.yaml       — flow + provider configuration`);
+  logger.info(`  .iagentek/state.json        — phase + checkpoint tracking`);
+  logger.info(`  .iagentek/specs/            — SDD specs per feature`);
+  logger.info(`  .iagentek/plans/            — technical plans per feature`);
+  logger.info(`  .iagentek/stories/          — user stories`);
+  logger.info(`  .iagentek/tasks/            — atomic tasks`);
   console.log();
-  logger.info(kleur.bold('Próximo paso:'));
+  logger.info(kleur.bold('Next step:'));
   if (opts.name) {
     logger.info(`  cd ${opts.name}`);
   }
-  logger.info(`  npx @iagentek/cli cycle --idea "describe tu idea aquí"`);
+  logger.info(`  npx @iagentek/cli cycle --idea "describe your idea here"`);
   console.log();
 }
 

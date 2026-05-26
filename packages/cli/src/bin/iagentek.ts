@@ -19,75 +19,75 @@ const program = new Command();
 
 program
   .name('iagentek')
-  .description('Framework de desarrollo autónomo asistido por IA (SDD + BMAD)')
+  .description('Autonomous AI-assisted development framework (SDD + BMAD)')
   .version(version);
 
 program
   .command('init [name]')
-  .description('Bootstrap de un nuevo proyecto IAgentek (.iagentek/ + config)')
-  .option('-p, --provider <id>', 'Provider de IA (claude-cli, anthropic, openai, ...)')
-  .option('-f, --flow <name>', 'Flow inicial (greenfield, brownfield)', 'greenfield')
-  .option('--cwd <dir>', 'Directorio del proyecto', process.cwd())
+  .description('Bootstrap a new IAgentek project (.iagentek/ + config)')
+  .option('-p, --provider <id>', 'AI provider (claude-cli, anthropic, openai, ...)')
+  .option('-f, --flow <name>', 'Initial flow (greenfield, brownfield, bugfix, refactor)', 'greenfield')
+  .option('--cwd <dir>', 'Project directory', process.cwd())
   .action(async (name, options) => {
     try {
       await runInit({ name, ...options });
     } catch (err) {
-      logger.error(`init falló: ${(err as Error).message}`);
+      logger.error(`init failed: ${(err as Error).message}`);
       process.exit(1);
     }
   });
 
 program
   .command('cycle')
-  .description('Ejecuta el ciclo completo del flow configurado con checkpoints')
-  .option('--cwd <dir>', 'Directorio del proyecto', process.cwd())
-  .option('--flow <name>', 'Forzar un flow específico (override config)')
-  .option('--idea <text>', 'Idea inicial del proyecto (para discovery)')
+  .description('Run the full cycle of the configured flow with checkpoints')
+  .option('--cwd <dir>', 'Project directory', process.cwd())
+  .option('--flow <name>', 'Force a specific flow (override config)')
+  .option('--idea <text>', 'Initial project idea (for discovery)')
   .action(async (options) => {
     try {
       await runCycle(options);
     } catch (err) {
-      logger.error(`cycle falló: ${(err as Error).message}`);
+      logger.error(`cycle failed: ${(err as Error).message}`);
       process.exit(1);
     }
   });
 
 program
   .command('status')
-  .description('Muestra la fase actual, checkpoints aprobados y próximos pasos')
-  .option('--cwd <dir>', 'Directorio del proyecto', process.cwd())
+  .description('Show current phase, approved checkpoints, and next steps')
+  .option('--cwd <dir>', 'Project directory', process.cwd())
   .action(async (options) => {
     try {
       await runStatus(options);
     } catch (err) {
-      logger.error(`status falló: ${(err as Error).message}`);
+      logger.error(`status failed: ${(err as Error).message}`);
       process.exit(1);
     }
   });
 
 program
   .command('resume')
-  .description('Retoma el ciclo desde la última fase en curso o pausada')
-  .option('--cwd <dir>', 'Directorio del proyecto', process.cwd())
+  .description('Resume the cycle from the last in-progress or paused phase')
+  .option('--cwd <dir>', 'Project directory', process.cwd())
   .action(async (options) => {
     try {
       await runResume(options);
     } catch (err) {
-      logger.error(`resume falló: ${(err as Error).message}`);
+      logger.error(`resume failed: ${(err as Error).message}`);
       process.exit(1);
     }
   });
 
 program
   .command('agent [role]')
-  .description('Invoca un agente BMAD aislado con el contexto actual (analyst, pm, architect, scrum-master, dev, qa, devops)')
-  .option('--cwd <dir>', 'Directorio del proyecto', process.cwd())
-  .option('--prompt <text>', 'Instrucción adicional para el agente')
+  .description('Invoke a single BMAD agent in isolation with the current project context (analyst, pm, architect, scrum-master, dev, qa, devops, debugger, refactor-architect)')
+  .option('--cwd <dir>', 'Project directory', process.cwd())
+  .option('--prompt <text>', 'Extra instruction for the agent')
   .action(async (role, options) => {
     try {
       await runAgent({ role, ...options });
     } catch (err) {
-      logger.error(`agent falló: ${(err as Error).message}`);
+      logger.error(`agent failed: ${(err as Error).message}`);
       process.exit(1);
     }
   });
