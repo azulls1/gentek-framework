@@ -4,6 +4,17 @@ All notable changes to this project are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.3] — 2026-05-26
+
+### Fixed
+- **Architectural bug: orchestrator was overwriting real code with placeholder comments from the Dev agent.** When `claude -p` runs the Dev agent, the agent has access to native filesystem tools (Write/Edit/Bash). It would write real Python code to disk, run pytest, validate with ruff, then in its final message include `file:path` blocks with only short comment placeholders ("# argparse + main here"). The orchestrator parsed those placeholders and **clobbered the real implementation**.
+- **Two-part fix:**
+  1. `extractAndWriteArtifacts` in the orchestrator now detects placeholder-looking content (short + only comments + specific phrases like "full file already written") and refuses to overwrite an existing file that has meaningfully more content.
+  2. The Dev agent prompt (`assets/agents/dev.md`) now explicitly forbids using native filesystem tools — all code must arrive in `file:path` blocks. Bash is still allowed only for `pytest`/`ruff`/`tsc` verification.
+- Caught by the second real end-to-end smoke test (the first one caught the `claude-cli` stdin bug fixed in 0.3.2). Without these real tests we would have shipped a framework whose Implementation phase silently destroys its own output.
+
+---
+
 ## [0.3.2] — 2026-05-25
 
 ### Fixed

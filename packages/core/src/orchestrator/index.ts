@@ -175,8 +175,11 @@ function buildPhaseContext(
   sections.push('## Instrucciones');
   sections.push(
     `Sigue tu rol y produce los outputs esperados. Para CADA archivo que generes, usa el formato exacto:\n\n` +
-      `\`\`\`file:RUTA/RELATIVA/AL/PROYECTO.md\n[contenido completo del archivo]\n\`\`\`\n\n` +
+      `\`\`\`file:RUTA/RELATIVA/AL/PROYECTO.md\n[contenido COMPLETO del archivo — código real, no placeholders, no comentarios resumen]\n\`\`\`\n\n` +
       `Ejemplo:\n\`\`\`file:.iagentek/project-brief.md\n# Project Brief: ...\n\`\`\`\n\n` +
+      `REGLA CRÍTICA: NO uses herramientas nativas de filesystem (Write, Edit, Bash) para escribir archivos del proyecto. ` +
+      `Todo el contenido debe ir EN tu output como bloques file:path con código completo. ` +
+      `Si solo escribes un comentario placeholder dentro del bloque, el orchestrator escribirá ESE placeholder al disco — perdiendo cualquier trabajo real que hayas hecho con tools.\n\n` +
       `Después de los archivos, escribe un resumen breve de las decisiones clave (máx 5 bullets).`
   );
 
@@ -184,8 +187,37 @@ function buildPhaseContext(
 }
 
 /**
+ * Heuristic: returns true if the content looks like a placeholder/comment
+ * rather than real implementation. Used to avoid overwriting real files
+ * when an agent (e.g. Dev with native tools) wrote substantive content
+ * directly to disk and then reported only a short placeholder in its message.
+ */
+function looksLikePlaceholder(content: string): boolean {
+  const trimmed = content.trim();
+  if (trimmed.length === 0) return false; // empty is intentional (e.g. __init__.py)
+  if (trimmed.length >= 200) return false;
+  // Single comment line (#, //, /*, --, ;, "")
+  const lines = trimmed.split('\n').filter((l) => l.trim().length > 0);
+  if (lines.length <= 2) {
+    const allComments = lines.every((l) => /^\s*(#|\/\/|\/\*|--|;|""")/.test(l));
+    if (allComments) return true;
+  }
+  // Contains placeholder-indicating phrases
+  const lowered = trimmed.toLowerCase();
+  if (/full file already (written|exists)|see above|already in disk/.test(lowered)) {
+    return true;
+  }
+  return false;
+}
+
+/**
  * Parses agent output for ```file:path\ncontent``` blocks and writes them to disk.
  * Returns the absolute paths of files written.
+ *
+ * Safeguard: if the new content looks like a placeholder and the destination
+ * file already exists with substantively more content, skip the write. This
+ * prevents an agent's "summary placeholder" from clobbering real code the
+ * agent wrote earlier with native filesystem tools.
  */
 function extractAndWriteArtifacts(output: string, projectDir: string): string[] {
   const regex = /```file:([^\n`]+)\n([\s\S]*?)```/g;
@@ -195,6 +227,17 @@ function extractAndWriteArtifacts(output: string, projectDir: string): string[] 
     const relativePath = match[1].trim();
     const content = match[2];
     const absPath = resolve(projectDir, relativePath);
+
+    if (looksLikePlaceholder(content) && existsSync(absPath)) {
+      const existing = readFileSync(absPath, 'utf-8');
+      if (existing.length > content.length + 100) {
+        // Existing file is meaningfully larger and the new content is a placeholder.
+        // Keep the existing file and still count it as "written" for reporting.
+        written.push(absPath);
+        continue;
+      }
+    }
+
     writeFile(absPath, content);
     written.push(absPath);
   }

@@ -1,6 +1,6 @@
 {
   "name": "@iagentek/cli",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "CLI npx-ejecutable para el framework IAgentek (SDD + BMAD)",
   "type": "module",
   "main": "./dist/index.js",
@@ -20,8 +20,8 @@
     "prepublishOnly": "node ../../scripts/sync-license.mjs && npm run build"
   },
   "dependencies": {
-    "@iagentek/core": "0.3.2",
-    "@iagentek/method": "0.3.2",
+    "@iagentek/core": "0.3.3",
+    "@iagentek/method": "0.3.3",
     "commander": "^12.0.0",
     "kleur": "^4.1.5",
     "prompts": "^2.4.2"
