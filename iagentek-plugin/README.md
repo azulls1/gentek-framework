@@ -4,14 +4,15 @@ Claude Code plugin that exposes the **IAgentek** method (Spec-Driven Development
 
 ## What's included
 
-### Slash commands
-- `/iagentek-init` — Bootstrap (greenfield/brownfield/bugfix/refactor)
+### 5 slash commands
+- `/iagentek-init` — Bootstrap (greenfield / brownfield / bugfix / refactor)
 - `/iagentek-cycle` — Run the cycle with checkpoints
 - `/iagentek-status` — Project status
 - `/iagentek-resume` — Resume from the last checkpoint
 - `/iagentek-agent` — Invoke a BMAD agent in isolation
 
-### Invocable agents (`@iagentek-*`)
+### 9 invocable agents (`@iagentek-*`)
+
 | Agent | Role |
 |---|---|
 | `iagentek-analyst` | Discovery and problem definition |
@@ -21,24 +22,41 @@ Claude Code plugin that exposes the **IAgentek** method (Spec-Driven Development
 | `iagentek-dev` | Implementation with tests |
 | `iagentek-qa` | AC validation + reports |
 | `iagentek-devops` | CI/CD + infra + runbook |
-| `iagentek-debugger` | Bug + root cause + postmortem |
+| `iagentek-debugger` | Bug reproduction + root cause + postmortem |
 | `iagentek-refactor-architect` | Debt audit + migration plan |
 
-## Install in Claude Code
+## Install in Claude Code (v2+)
 
-```bash
-# From Claude Code, add this plugin pointing to the repo and subpath:
-/plugin add github.com/azulls1/iagentek-framework path:iagentek-plugin
+The repo is a **marketplace** that lists this plugin. Add it with the full HTTPS URL (Claude Code defaults to SSH and will fail without keys configured):
+
+```
+/plugin marketplace add https://github.com/azulls1/iagentek-framework.git
+/plugin install iagentek@iagentek-framework
+/reload-plugins
 ```
 
-(Exact syntax may vary depending on your Claude Code version — check `/plugin --help`.)
+After `/reload-plugins`, the slash commands appear in `/help` and the agents are invocable as `@iagentek-analyst`, `@iagentek-pm`, etc.
 
 ## Prerequisite
-The slash commands invoke `npx @iagentek/cli` under the hood, so you need Node 18+ in your PATH. The agents work independently (they use Claude Code's native tools).
+
+The slash commands invoke `npx @iagentek/cli` under the hood, so you need **Node 18+** in your PATH. The agents themselves work without the CLI (they use Claude Code's native Read/Write/Edit/Bash tools).
 
 ## How the two tracks work
-- **Slash commands** = run the full CLI (with orchestrator, providers, checkpoints, state). Use these when you want to run the cycle end-to-end.
-- **Agents** = run inside Claude Code using native Read/Write/Edit, without going through the CLI. Use these when you want to consult a specific role for a one-off task.
+
+| Aspect | Slash commands | Invocable agents |
+|---|---|---|
+| Execution | Run the full CLI (orchestrator + providers + checkpoints + state) | Run inside Claude Code with native tools |
+| Best for | End-to-end reproducible cycles | One-off consultation with a specific role |
+| File writing | Via the CLI's `file:path` parser | Via Claude Code's Write/Edit |
+| Provider | What `.iagentek/config.yaml` says | The Claude Code session's model |
+
+Both tracks share the **same BMAD prompts** (from `@iagentek/method`).
+
+## Bilingual
+
+Both the CLI (when invoked by slash commands) and the inline agents respect the project's `language` setting (`en` or `es`) from `.iagentek/config.yaml`. The default English version applies if no project config exists yet.
 
 ## More info
-- Full framework: [github.com/azulls1/iagentek-framework](https://github.com/azulls1/iagentek-framework)
+
+- Full framework + docs: [github.com/azulls1/iagentek-framework](https://github.com/azulls1/iagentek-framework)
+- npm packages: [`@iagentek/cli`](https://www.npmjs.com/package/@iagentek/cli) · [`@iagentek/core`](https://www.npmjs.com/package/@iagentek/core) · [`@iagentek/method`](https://www.npmjs.com/package/@iagentek/method)

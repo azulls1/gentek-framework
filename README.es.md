@@ -65,6 +65,13 @@ npx @iagentek/cli init mi-producto
 ```
 Detecta automáticamente el provider disponible. Si necesitas API key y no está en env, te la pide y la guarda en `.env` (con `.gitignore` automático).
 
+Además eliges el **idioma de output** (English o Español) de forma interactiva, o vía flag:
+```bash
+npx @iagentek/cli init mi-producto --lang es      # Output en español
+npx @iagentek/cli init mi-producto --lang en      # Output en inglés (default)
+```
+El framework detecta el locale del sistema (`LANG`/`LC_ALL`) y propone español si tu SO está configurado como `es_*`.
+
 ### 2) Ejecutar el ciclo
 ```bash
 cd mi-producto
@@ -173,18 +180,33 @@ Ver [PUBLISHING.md](./PUBLISHING.md).
 
 ## Estado y roadmap
 
-**v0.3.0 (actual — iteración 3):**
+**v0.4.3 (actual):**
+- ✅ READMEs del monorepo actualizados con la feature bilingüe y versión actual
+- ✅ 70 tests pasando
+
+**v0.4.2:**
+- ✅ Limpieza: strings residuales en español del core traducidos a inglés
+- ✅ `.claude-plugin/marketplace.json` añadido para que el plugin sea instalable vía Claude Code v2+
+- ✅ Los 4 flows validados end-to-end con LLM real (greenfield, brownfield, bugfix, refactor)
+
+**v0.4.0 / v0.4.1:**
+- ✅ **Output bilingüe: English / Español** — el usuario elige en `init` (`--lang en|es`), persiste en `config.yaml`, auto-detección del locale del SO (`LANG`, `LC_ALL`)
+- ✅ Assets reorganizados: `packages/method/assets/{en,es}/{agents,templates,flows}/`
+- ✅ Nombres de fases traducidos en `/es/flows/*.yaml`
+
+**v0.3.x:**
 - ✅ 4 ciclos completos (greenfield, brownfield, bugfix, refactor)
 - ✅ 9 agentes BMAD con prompts completos
 - ✅ 6 providers de IA con auto-detección
 - ✅ Plugin de Claude Code (5 slash commands + 9 agents)
-- ✅ Paquetes preparados para publicación a npm
-- ✅ Analizador automático de codebase para brownfield
+- ✅ Fix crítico: `ClaudeCliProvider` ya no trunca prompts en Windows
+- ✅ Fix crítico: orchestrator ya no sobreescribe código real con placeholders del Dev agent
 
 **Próximas mejoras (no comprometidas):**
 - Streaming de tokens en tiempo real
 - Web UI para visualizar el ciclo
-- Soporte para más providers (Mistral, Groq, Cohere)
+- Soporte para más providers (Mistral, Groq, Cohere, xAI, Bedrock)
+- Más idiomas (Portugués, Francés, Alemán)
 - Loop real por story en la fase de implementación
 - Cache de respuestas para reducir costos de IA
 

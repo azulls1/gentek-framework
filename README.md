@@ -65,6 +65,13 @@ npx @iagentek/cli init my-product
 ```
 Automatically detects the available provider. If you need an API key and it isn't in env, it asks for it and stores it in `.env` (with automatic `.gitignore`).
 
+You also pick the **output language** (English or Español) interactively, or via flag:
+```bash
+npx @iagentek/cli init my-product --lang es      # Spanish output
+npx @iagentek/cli init my-product --lang en      # English output (default)
+```
+The framework auto-detects the system locale (`LANG`/`LC_ALL`) and proposes Spanish if your OS is set to `es_*`.
+
 ### 2) Run the cycle
 ```bash
 cd my-product
@@ -224,25 +231,37 @@ See [PUBLISHING.md](./PUBLISHING.md).
 
 ## Status and roadmap
 
-**v0.3.1 (current):**
-- ✅ Bug fix: `iagentek --version` shows the real package version
-- ✅ Version is now read dynamically from `package.json` at runtime
-- ✅ 61 tests still pass
+**v0.4.3 (current):**
+- ✅ READMEs across the monorepo updated with bilingual feature and current version
+- ✅ 70 tests still pass
 
-**v0.3.0:**
+**v0.4.2:**
+- ✅ Cleanup: residual Spanish strings in `checkpoints/manager.ts` and `state/manager.ts` translated to English
+- ✅ `.claude-plugin/marketplace.json` added so the plugin is installable via Claude Code v2+
+- ✅ All 4 cycle flows validated end-to-end with a real LLM (greenfield, brownfield, bugfix, refactor)
+
+**v0.4.0 / v0.4.1:**
+- ✅ **Bilingual output: English / Español** — user picks at `init` (`--lang en|es`), persists in `config.yaml`, auto-detect of system locale (`LANG`, `LC_ALL`).
+- ✅ Assets reorganized: `packages/method/assets/{en,es}/{agents,templates,flows}/`
+- ✅ Phase names translated in `/es/flows/*.yaml`
+
+**v0.3.x:**
 - ✅ 4 complete cycles (greenfield, brownfield, bugfix, refactor)
 - ✅ 9 BMAD agents with full prompts
-- ✅ 6 AI providers with auto-detection
+- ✅ 6 AI providers with auto-detection (Claude CLI, Anthropic, OpenAI, Gemini, DeepSeek, Ollama)
 - ✅ Claude Code plugin (5 slash commands + 9 agents)
-- ✅ Packages ready for npm publication
-- ✅ Automatic codebase analyzer for brownfield
+- ✅ Critical fix: `ClaudeCliProvider` was passing prompts as shell args (truncated on Windows)
+- ✅ Critical fix: orchestrator no longer clobbers real code with placeholders from Dev agent
+- ✅ `iagentek --version` reads from `package.json` at runtime
 
 **Possible future improvements (not committed):**
 - Real-time token streaming
 - Web UI to visualize the cycle
-- Support for more providers (Mistral, Groq, Cohere)
+- Support for more providers (Mistral, Groq, Cohere, xAI, Bedrock)
+- More languages (Portuguese, French, German)
 - Real per-story loop in the implementation phase
 - Response cache to reduce AI costs
+- Self-improving agents (QA feedback loops into Dev prompts)
 
 ---
 
