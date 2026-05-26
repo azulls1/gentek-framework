@@ -32,7 +32,7 @@ export class StateManager {
   load(): IAgentekState {
     if (this.state) return this.state;
     if (!this.exists()) {
-      throw new Error(`No hay state.json en ${this.path}. ¿Corriste 'iagentek init'?`);
+      throw new Error(`No state.json at ${this.path}. Did you run 'iagentek init'?`);
     }
     this.state = JSON.parse(readFileSync(this.path, 'utf-8')) as IAgentekState;
     return this.state;

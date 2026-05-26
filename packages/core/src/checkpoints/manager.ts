@@ -32,12 +32,12 @@ export class CheckpointManager {
     const mode = this.config.checkpoints[id] ?? 'required';
 
     if (mode === 'skip') {
-      this.state.recordCheckpoint(id, 'skipped por config');
+      this.state.recordCheckpoint(id, 'skipped by config');
       return 'approve';
     }
 
     if (mode === 'auto' && this.config.mode === 'fully-autonomous') {
-      this.state.recordCheckpoint(id, 'auto-aprobado (modo fully-autonomous)');
+      this.state.recordCheckpoint(id, 'auto-approved (fully-autonomous mode)');
       return 'approve';
     }
 
