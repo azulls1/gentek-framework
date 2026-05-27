@@ -118,11 +118,14 @@ export async function runInit(opts: InitOptions): Promise<void> {
     if (apiKey) {
       writeEnvFile(projectDir, envVar, apiKey);
       logger.success(`  ✅ ${envVar} saved at ${projectDir}\\.env`);
-      ensureGitignoreEnv(projectDir);
     } else {
       logger.warn(`  ⚠️  No API key saved. You'll need to export ${envVar} before running 'iagentek cycle'.`);
     }
   }
+
+  // Always ensure the project .gitignore protects framework-local secrets and
+  // runtime state — even when .gitignore already exists from a brownfield repo.
+  ensureGitignoreEntries(projectDir);
 
   // Create config + state
   const cfg = config.defaultConfig(projectName, providerId, opts.flow ?? 'greenfield', language);
@@ -182,16 +185,30 @@ function writeEnvFile(projectDir: string, key: string, value: string): void {
   writeFileSync(envPath, existing, 'utf-8');
 }
 
-function ensureGitignoreEnv(projectDir: string): void {
+/**
+ * Idempotently ensures the project's .gitignore contains every entry that could
+ * leak sensitive runtime data (API keys in .env, prompt transcripts that may
+ * contain user-pasted secrets, machine-local state). Works whether the file
+ * exists or not. Brownfield-safe: never deduplicates or rewrites unrelated
+ * existing entries.
+ */
+export function ensureGitignoreEntries(projectDir: string): void {
   const gitignorePath = resolve(projectDir, '.gitignore');
-  const line = '.env';
-  let content = '';
-  if (existsSync(gitignorePath)) {
-    content = readFileSync(gitignorePath, 'utf-8');
-    if (content.split('\n').some((l) => l.trim() === line)) return;
-    content += (content.endsWith('\n') ? '' : '\n') + `${line}\n`;
-  } else {
-    content = `${line}\n.iagentek/state.json\n.iagentek/.transcripts/\n`;
-  }
-  writeFileSync(gitignorePath, content, 'utf-8');
+  const required = [
+    '.env',
+    '.env.local',
+    '.iagentek/state.json',
+    '.iagentek/.transcripts/',
+    '.iagentek/.cache/',
+  ];
+
+  const existing = existsSync(gitignorePath) ? readFileSync(gitignorePath, 'utf-8') : '';
+  const existingLines = new Set(existing.split('\n').map((l) => l.trim()));
+
+  const missing = required.filter((entry) => !existingLines.has(entry));
+  if (missing.length === 0) return;
+
+  const prefix = existing.length === 0 || existing.endsWith('\n') ? '' : '\n';
+  const block = missing.join('\n') + '\n';
+  writeFileSync(gitignorePath, existing + prefix + block, 'utf-8');
 }

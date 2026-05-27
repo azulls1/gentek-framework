@@ -180,7 +180,16 @@ Ver [PUBLISHING.md](./PUBLISHING.md).
 
 ## Estado y roadmap
 
-**v0.4.3 (actual):**
+**v0.4.4 (actual) — Hardening de seguridad:**
+- ✅ **Path traversal bloqueado.** Los bloques `file:path` emitidos por los agentes se validan contra la raíz del proyecto — paths absolutos, escapes con `..`, paths de Windows con letra de unidad y UNC son rechazados.
+- ✅ **Prompt injection neutralizado.** La idea del usuario, los inputs de archivos y los excerpts de README analizados se envuelven en marcadores `<<<UNTRUSTED_INPUT_*>>>` y el prompt del agente los trata como datos, no como instrucciones.
+- ✅ **`.gitignore` seguro en brownfield.** `init` ahora garantiza idempotentemente que `.env`, `.iagentek/state.json`, `.iagentek/.transcripts/` y `.iagentek/.cache/` queden ignorados aunque el repo ya tuviera su `.gitignore`.
+- ✅ **Allowlist del `.env`.** Solo se importan claves de provider (`*_API_KEY`, `*_TOKEN`, `*_SECRET`, `OLLAMA_HOST`) — un `.env` malicioso no puede secuestrar `PATH`, `LD_PRELOAD`, `NODE_OPTIONS`, etc.
+- ✅ **Scrub de secretos en transcripts.** Tokens de Anthropic/OpenAI/Google/AWS/GitHub/Slack se redactan antes de escribirse a `.iagentek/.transcripts/`.
+- ✅ **Validación del `model` en `claude-cli`.** `provider.model` debe matchear `/^[A-Za-z0-9._:/-]+$/` para prevenir inyección de shell en Windows (`shell:true` necesario para `claude.cmd`).
+- ✅ **98/98 tests** (28 tests de regresión nuevos para los 6 hallazgos) — `npm audit` reporta 0 vulnerabilidades.
+
+**v0.4.3:**
 - ✅ READMEs del monorepo actualizados con la feature bilingüe y versión actual
 - ✅ 70 tests pasando
 

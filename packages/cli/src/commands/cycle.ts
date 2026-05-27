@@ -108,8 +108,33 @@ function alreadyHasBrief(cwd: string): boolean {
 }
 
 /**
+ * Allowlist of environment variable names we are willing to import from a
+ * project-local `.env`. Anything else (PATH, NODE_OPTIONS, LD_PRELOAD, etc.)
+ * is ignored — a malicious `.env` committed to a repo cannot influence the
+ * iagentek process by setting arbitrary env variables.
+ */
+const DOTENV_ALLOWED_EXACT = new Set([
+  'ANTHROPIC_API_KEY',
+  'OPENAI_API_KEY',
+  'GEMINI_API_KEY',
+  'GOOGLE_API_KEY',
+  'DEEPSEEK_API_KEY',
+  'OLLAMA_HOST',
+]);
+const DOTENV_ALLOWED_PATTERN = /^[A-Z][A-Z0-9_]*(?:_API_KEY|_TOKEN|_SECRET)$/;
+
+export function isDotEnvKeyAllowed(key: string): boolean {
+  if (DOTENV_ALLOWED_EXACT.has(key)) return true;
+  return DOTENV_ALLOWED_PATTERN.test(key);
+}
+
+/**
  * Lightweight .env loader: KEY=VALUE per line, no quoting magic.
  * Avoids adding a dotenv dependency.
+ *
+ * Security: only keys matching the allowlist (provider API keys / generic
+ * *_API_KEY / *_TOKEN / *_SECRET / OLLAMA_HOST) are imported. Anything else
+ * is silently skipped — see DOTENV_ALLOWED_*.
  */
 function loadDotEnvFile(cwd: string): void {
   const path = resolve(cwd, '.env');
@@ -122,6 +147,7 @@ function loadDotEnvFile(cwd: string): void {
     if (eq === -1) continue;
     const key = trimmed.slice(0, eq).trim();
     const value = trimmed.slice(eq + 1).trim();
+    if (!isDotEnvKeyAllowed(key)) continue;
     if (!(key in process.env)) {
       process.env[key] = value;
     }

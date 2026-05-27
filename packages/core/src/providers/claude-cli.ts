@@ -17,8 +17,28 @@ export class ClaudeCliProvider implements AIProvider {
 
   async complete(messages: ChatMessage[], options: CompletionOptions = {}): Promise<string> {
     const prompt = buildPrompt(messages, options.system);
-    return runClaudeCli(prompt, options.model ?? this.defaultModel);
+    const model = options.model ?? this.defaultModel;
+    if (!isSafeModelId(model)) {
+      throw new Error(
+        `Refusing to spawn claude CLI: model id "${model}" contains unsafe characters. ` +
+          `Only [A-Za-z0-9._:/-] are permitted (config.yaml provider.model).`
+      );
+    }
+    return runClaudeCli(prompt, model);
   }
+}
+
+/**
+ * On Windows, `claude` resolves to `claude.cmd` and we have to spawn with
+ * shell:true. That means any subsequent argument is interpreted by cmd.exe,
+ * so a hostile `model` value from config.yaml (e.g. `& calc.exe`) would be
+ * a shell-injection vector. Restrict to a strict alphanumeric / dot / slash /
+ * colon / dash / underscore character set — covers every real model id
+ * (claude-opus-4-7, anthropic/claude-3.5-sonnet, gpt-4o, etc.) without
+ * letting punctuation that the shell interprets through.
+ */
+export function isSafeModelId(model: string): boolean {
+  return typeof model === 'string' && model.length > 0 && /^[A-Za-z0-9._:/-]+$/.test(model);
 }
 
 function buildPrompt(messages: ChatMessage[], system?: string): string {

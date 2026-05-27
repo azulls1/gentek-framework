@@ -12,9 +12,10 @@ npm-debug.log*
 .idea/
 *.tsbuildinfo
 
-# Gentek-generated state in user projects
-.gentek/state.json
-.gentek/.cache/
+# IAgentek-generated runtime state (in user projects, not in this monorepo)
+.iagentek/state.json
+.iagentek/.transcripts/
+.iagentek/.cache/
 
 # LICENSE files copied to packages by sync-license.mjs (source of truth: root LICENSE)
 packages/*/LICENSE

@@ -1,6 +1,6 @@
 {
   "name": "iagentek-framework",
-  "version": "0.4.2",
+  "version": "0.4.4",
   "description": "Marketplace for the IAgentek autonomous AI development framework — exposes BMAD agents and SDD slash commands as Claude Code plugins.",
   "owner": {
     "name": "azulls1",
@@ -15,7 +15,7 @@
       "name": "iagentek",
       "source": "./iagentek-plugin",
       "description": "Autonomous AI dev framework (SDD + BMAD): 5 slash commands (/iagentek-init, /iagentek-cycle, /iagentek-status, /iagentek-resume, /iagentek-agent) and 9 invocable BMAD agents (analyst, pm, architect, scrum-master, dev, qa, devops, debugger, refactor-architect). Bilingual output (English/Spanish).",
-      "version": "0.4.2",
+      "version": "0.4.4",
       "keywords": [
         "ai",
         "framework",

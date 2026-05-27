@@ -231,9 +231,18 @@ See [PUBLISHING.md](./PUBLISHING.md).
 
 ## Status and roadmap
 
-**v0.4.3 (current):**
+**v0.4.4 (current) — Security hardening:**
+- ✅ **Path traversal blocked.** `file:path` blocks emitted by agents are validated against the project root — absolute paths, `..` escapes, Windows drive paths and UNC paths are rejected.
+- ✅ **Prompt injection neutralized.** User idea, file inputs and analyzed README excerpts are wrapped in `<<<UNTRUSTED_INPUT_*>>>` markers and the agent prompt treats them as data, not instructions.
+- ✅ **`.gitignore` brownfield-safe.** `init` now idempotently ensures `.env`, `.iagentek/state.json`, `.iagentek/.transcripts/` and `.iagentek/.cache/` are ignored even when the repo already has its own `.gitignore`.
+- ✅ **`.env` allowlist.** Only provider keys (`*_API_KEY`, `*_TOKEN`, `*_SECRET`, `OLLAMA_HOST`) are imported — a malicious `.env` cannot hijack `PATH`, `LD_PRELOAD`, `NODE_OPTIONS`, etc.
+- ✅ **Secret scrubbing in transcripts.** Anthropic/OpenAI/Google/AWS/GitHub/Slack tokens are redacted before being written to `.iagentek/.transcripts/`.
+- ✅ **`claude-cli` `model` validation.** `provider.model` must match `/^[A-Za-z0-9._:/-]+$/` to prevent shell injection on Windows (`shell:true` required for `claude.cmd`).
+- ✅ **98/98 tests** (28 new regression tests for the 6 findings) — `npm audit` reports 0 vulnerabilities.
+
+**v0.4.3:**
 - ✅ READMEs across the monorepo updated with bilingual feature and current version
-- ✅ 70 tests still pass
+- ✅ 70 tests passing
 
 **v0.4.2:**
 - ✅ Cleanup: residual Spanish strings in `checkpoints/manager.ts` and `state/manager.ts` translated to English
