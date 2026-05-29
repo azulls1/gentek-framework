@@ -4,6 +4,36 @@ All notable changes to this project are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.5] — 2026-05-29
+
+### Crash-recovery and durability — foundation for the upcoming memory system
+
+This release ships the persistence and crash-recovery primitives the v0.4.6 / v0.5.0 project-memory system depends on. No new user-facing features yet; what changes is what happens when something interrupts a cycle.
+
+#### Atomic `state.json` writes
+- `StateManager.save()` no longer uses `writeFileSync` directly. It writes to a uniquely-named `.tmp` file (`state.json.<pid>.<6-hex>.tmp`), `fsync`s, then `rename`s to the final path. On POSIX, the parent directory is also `fsync`'d after the rename so the change survives power loss.
+- `renameSync` failures with `EBUSY` / `EPERM` / `EACCES` retry up to 5 times with backoff `[10, 30, 80, 200, 500] ms + jitter` — covers transient Windows locks from antivirus, OneDrive sync, etc.
+- Orphan `.tmp` files from previous crashes are cleaned automatically at the start of every `StateManager.load()` (only files older than 60 s, only files matching the strict tmp pattern). Users never need to delete them by hand.
+
+#### Crash recovery across the approve → completed gap
+- If a process crashed between `recordCheckpoint` and `markPhaseCompleted` (separate writes in v0.4.4 and earlier), state could end up with an approved checkpoint but the phase missing from `completedPhases`. On resume, the orchestrator would re-run the phase and re-spend LLM tokens.
+- The orchestrator now does a single atomic `state.save({ checkpoints, completedPhases, currentPhase: null })` immediately after an approved checkpoint. The two writes can no longer drift.
+- For projects that already crashed on v0.4.4, a new `reconcileState()` step runs at the start of every `Orchestrator.run()`: any approved checkpoint whose phase isn't marked complete is reconciled automatically. No manual command, no token re-spend.
+
+#### Transcript reuse on resume
+- If a phase transcript exists at `.iagentek/.transcripts/<phase>.md` and is fresher than the reuse window (default 24 h, configurable via `transcripts.reuseWindowHours` in `config.yaml`), the orchestrator reuses it instead of calling the LLM again. Logged as `♻ Reusing transcript from Xh ago for '<phase>' (skip LLM call).`
+- Skipped for builtin agents (`__codebase__`) and for tiny placeholder files (<= 200 bytes).
+
+#### Flow validation
+- `loadFlowDefinition` now rejects flows where two phases share the same `checkpoint.id`. The reconcile heuristic assumes each `checkpoint.id` maps to exactly one phase; this guarantees it.
+- All 4 shipped flows (`greenfield`, `brownfield`, `bugfix`, `refactor`) pass validation.
+
+#### Breaking change (internal API)
+- `CheckpointManager.run()` now returns `{ decision: CheckpointDecision; notes?: string }` instead of just `CheckpointDecision`. The notes are needed by the orchestrator (for the unified save above) and by the upcoming `scribe` agent in v0.5.0. The CLI handler signature is unchanged. External consumers of `@iagentek/core` calling `checkpoints.run` directly need to destructure the return value — no known external consumers at time of release.
+
+#### Tests
+- 22 new test cases across `packages/core/test/state.atomic.test.ts`, `orchestrator.reconcile.test.ts`, and `transcripts.reuse.test.ts`. Total suite: 117 passing on Node 18/20/22 × Ubuntu/Windows.
+
 ## [0.4.4] — 2026-05-27
 
 ### Security — Hardening against malicious repos and untrusted input

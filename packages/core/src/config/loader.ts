@@ -18,7 +18,15 @@ export interface IAgentekConfig {
   checkpoints: {
     [phaseId: string]: 'required' | 'auto' | 'skip';
   };
+  transcripts?: {
+    // When resuming a cycle after a crash, reuse the phase transcript on
+    // disk instead of re-calling the LLM if it was written within this
+    // window. Set to 0 to disable reuse entirely.
+    reuseWindowHours?: number;
+  };
 }
+
+export const DEFAULT_TRANSCRIPT_REUSE_WINDOW_HOURS = 24;
 
 export class ConfigManager {
   private path: string;

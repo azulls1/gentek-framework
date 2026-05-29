@@ -26,9 +26,34 @@ export interface FlowDefinition {
 
 export function loadFlowDefinition(flowName: string, lang: Lang = 'en'): FlowDefinition {
   const raw = loadFlow(flowName, lang);
-  return yaml.load(raw) as FlowDefinition;
+  const flow = yaml.load(raw) as FlowDefinition;
+  validateUniqueCheckpointIds(flow);
+  return flow;
 }
 
 export function enabledPhases(flow: FlowDefinition): PhaseDefinition[] {
   return flow.phases.filter((p) => p.enabled !== false);
+}
+
+/**
+ * Ensures no two phases in a flow share the same `checkpoint.id`. The
+ * orchestrator's crash-recovery reconcile (v0.4.5) maps each approved
+ * checkpoint id back to a single phase id, so a duplicate would corrupt that
+ * mapping and mark unrelated phases as completed.
+ *
+ * Exported for unit tests; called automatically by `loadFlowDefinition`.
+ */
+export function validateUniqueCheckpointIds(flow: FlowDefinition): void {
+  const seenBy = new Map<string, string>();
+  for (const phase of flow.phases) {
+    const cp = phase.checkpoint;
+    if (!cp) continue;
+    const prior = seenBy.get(cp.id);
+    if (prior) {
+      throw new Error(
+        `Flow '${flow.name}' has duplicate checkpoint.id '${cp.id}' (phases '${prior}' and '${phase.id}')`
+      );
+    }
+    seenBy.set(cp.id, phase.id);
+  }
 }

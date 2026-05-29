@@ -231,7 +231,15 @@ See [PUBLISHING.md](./PUBLISHING.md).
 
 ## Status and roadmap
 
-**v0.4.4 (current) — Security hardening:**
+**v0.4.5 (current) — Crash-recovery foundation:**
+- ✅ **Atomic `state.json` writes.** Write-to-tmp + `fsync` + `rename` with retry on `EBUSY`/`EPERM`/`EACCES` (Windows antivirus, OneDrive sync). Orphan `.tmp` files auto-cleaned on the next `load()`.
+- ✅ **Crash recovery across the approve↔completed gap.** A new `reconcileState()` runs at the start of every `Orchestrator.run()` and auto-completes phases whose checkpoints were approved but never persisted to `completedPhases`. New cycles use a unified single-write save that eliminates the gap entirely.
+- ✅ **Transcript reuse <24h.** If a phase transcript is on disk from a recent crash, the orchestrator reuses it instead of re-spending LLM tokens. Configurable via `transcripts.reuseWindowHours` in `config.yaml`.
+- ✅ **Flow validation.** `loadFlowDefinition` rejects duplicate `checkpoint.id` across phases — invariant the reconcile logic depends on.
+- ✅ **API:** `CheckpointManager.run()` now returns `{ decision, notes? }` (internal API change documented in CHANGELOG).
+- ✅ **117/117 tests** (22 new for atomic writes, reconcile, transcript reuse) — `npm audit` reports 0 vulnerabilities.
+
+**v0.4.4 — Security hardening:**
 - ✅ **Path traversal blocked.** `file:path` blocks emitted by agents are validated against the project root — absolute paths, `..` escapes, Windows drive paths and UNC paths are rejected.
 - ✅ **Prompt injection neutralized.** User idea, file inputs and analyzed README excerpts are wrapped in `<<<UNTRUSTED_INPUT_*>>>` markers and the agent prompt treats them as data, not instructions.
 - ✅ **`.gitignore` brownfield-safe.** `init` now idempotently ensures `.env`, `.iagentek/state.json`, `.iagentek/.transcripts/` and `.iagentek/.cache/` are ignored even when the repo already has its own `.gitignore`.

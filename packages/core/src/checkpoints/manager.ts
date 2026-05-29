@@ -15,9 +15,20 @@ export interface CheckpointHandler {
   (ctx: CheckpointContext): Promise<{ decision: CheckpointDecision; notes?: string }>;
 }
 
+export interface CheckpointResult {
+  decision: CheckpointDecision;
+  notes?: string;
+}
+
 export class CheckpointManager {
+  // `state` is intentionally kept in the constructor signature for backwards
+  // source-compatibility — call sites that built CheckpointManager with three
+  // args don't break — but as of v0.4.5 this class no longer mutates state.
+  // The orchestrator owns the unified checkpoint+phase save so the two writes
+  // can no longer drift apart on a crash.
   constructor(
     private config: IAgentekConfig,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     private state: StateManager,
     private handler: CheckpointHandler
   ) {}
@@ -28,23 +39,18 @@ export class CheckpointManager {
     prompt: string,
     summary: string,
     outputs: string[] = []
-  ): Promise<CheckpointDecision> {
+  ): Promise<CheckpointResult> {
     const mode = this.config.checkpoints[id] ?? 'required';
 
     if (mode === 'skip') {
-      this.state.recordCheckpoint(id, 'skipped by config');
-      return 'approve';
+      return { decision: 'approve', notes: 'skipped by config' };
     }
 
     if (mode === 'auto' && this.config.mode === 'fully-autonomous') {
-      this.state.recordCheckpoint(id, 'auto-approved (fully-autonomous mode)');
-      return 'approve';
+      return { decision: 'approve', notes: 'auto-approved (fully-autonomous mode)' };
     }
 
     const result = await this.handler({ id, phaseId, prompt, summary, outputs });
-    if (result.decision === 'approve') {
-      this.state.recordCheckpoint(id, result.notes);
-    }
-    return result.decision;
+    return { decision: result.decision, notes: result.notes };
   }
 }

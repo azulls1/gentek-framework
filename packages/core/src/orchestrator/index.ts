@@ -1,10 +1,13 @@
-import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync, existsSync, readFileSync, statSync } from 'node:fs';
 import { dirname, resolve, relative, sep, isAbsolute } from 'node:path';
 import { loadAgent, type AgentRole, type Lang } from '@iagentek/method';
 import type { AIProvider, ChatMessage } from '../providers/types.js';
-import type { IAgentekConfig } from '../config/loader.js';
+import {
+  type IAgentekConfig,
+  DEFAULT_TRANSCRIPT_REUSE_WINDOW_HOURS,
+} from '../config/loader.js';
 import type { PhaseDefinition, FlowDefinition } from '../flow/loader.js';
-import { StateManager } from '../state/manager.js';
+import { StateManager, type IAgentekState } from '../state/manager.js';
 import { CheckpointManager, type CheckpointHandler } from '../checkpoints/manager.js';
 import { analyzeCodebase, summarizeAnalysis } from '../analysis/codebase.js';
 import { logger } from '../util/logger.js';
@@ -29,9 +32,13 @@ export class Orchestrator {
   }
 
   async run(): Promise<void> {
-    const state = this.state.exists()
+    let state = this.state.exists()
       ? this.state.load()
       : this.state.init(this.opts.config.projectName, this.opts.flow.name);
+
+    this.reconcileState(state);
+    // Re-read after reconcile so the loop sees newly-completed phases.
+    state = this.state.load();
 
     const phases = this.opts.flow.phases.filter((p) => p.enabled !== false);
 
@@ -67,33 +74,87 @@ export class Orchestrator {
         );
       }
 
-      // Run checkpoint if defined
+      // Run checkpoint if defined and collect the human's notes for the
+      // unified save below.
+      let approvedCheckpointNotes: string | undefined;
       if (phase.checkpoint) {
         const summary = this.summarize(phase, writtenFiles);
-        const decision = await this.checkpoints.run(
+        const result = await this.checkpoints.run(
           phase.checkpoint.id,
           phase.id,
           phase.checkpoint.prompt,
           summary,
           writtenFiles
         );
-        if (decision !== 'approve') {
-          logger.warn(`\n⏸  Cycle paused at '${phase.name}'. Decision: ${decision}.`);
+        if (result.decision !== 'approve') {
+          logger.warn(`\n⏸  Cycle paused at '${phase.name}'. Decision: ${result.decision}.`);
           logger.info(`Resume with: npx @iagentek/cli resume`);
           return;
         }
+        approvedCheckpointNotes = result.notes;
       }
 
-      this.state.markPhaseCompleted(phase.id);
+      // Unified save: checkpoint approval (if any) and phase completion go
+      // to disk in ONE atomic state.json write. Closes the crash window that
+      // previously existed between recordCheckpoint and markPhaseCompleted.
+      const baseline = this.state.load();
+      const nextCheckpoints = phase.checkpoint
+        ? [
+            ...baseline.checkpoints,
+            {
+              id: phase.checkpoint.id,
+              approvedAt: new Date().toISOString(),
+              notes: approvedCheckpointNotes,
+            },
+          ]
+        : baseline.checkpoints;
+      const nextCompleted = baseline.completedPhases.includes(phase.id)
+        ? baseline.completedPhases
+        : [...baseline.completedPhases, phase.id];
+      this.state.save({
+        checkpoints: nextCheckpoints,
+        completedPhases: nextCompleted,
+        currentPhase: null,
+      });
     }
 
     logger.success('\n✅ Cycle complete. All enabled phases finished.');
+  }
+
+  /**
+   * Crash-recovery reconciliation: if a phase has an approved checkpoint in
+   * state but is missing from `completedPhases`, mark it completed before the
+   * main loop starts. Closes the legacy gap where a crash between approval
+   * and `markPhaseCompleted` would force a re-run of the LLM on resume.
+   *
+   * Safe because `validateUniqueCheckpointIds` (flow loader) guarantees each
+   * `checkpoint.id` maps to exactly one phase.
+   */
+  private reconcileState(state: IAgentekState): void {
+    const approvedIds = new Set(state.checkpoints.map((c) => c.id));
+    for (const phase of this.opts.flow.phases) {
+      if (!phase.checkpoint) continue;
+      if (state.completedPhases.includes(phase.id)) continue;
+      if (approvedIds.has(phase.checkpoint.id)) {
+        logger.dim(
+          `  ⤴  Reconciling '${phase.name}': checkpoint approved but phase was not marked complete (likely crash recovery).`
+        );
+        this.state.markPhaseCompleted(phase.id);
+      }
+    }
   }
 
   private async runPhase(phase: PhaseDefinition): Promise<string> {
     if (phase.agent.startsWith('__') && phase.agent.endsWith('__')) {
       return this.runBuiltinAgent(phase);
     }
+
+    // Transcript reuse: if a recent transcript exists on disk (typically
+    // produced by a previous run that crashed before the checkpoint), reuse
+    // it instead of re-spending tokens on the LLM. The downstream pipeline
+    // (scrubSecrets → write → extractArtifacts → checkpoint) runs unchanged.
+    const reused = this.tryReuseTranscript(phase);
+    if (reused !== null) return reused;
 
     const lang = this.opts.config.language ?? 'en';
     const agent = loadAgent(phase.agent as AgentRole, lang);
@@ -137,6 +198,35 @@ export class Orchestrator {
       }
       default:
         throw new Error(`Unknown builtin agent: ${phase.agent}`);
+    }
+  }
+
+  private tryReuseTranscript(phase: PhaseDefinition): string | null {
+    const windowHours =
+      this.opts.config.transcripts?.reuseWindowHours ?? DEFAULT_TRANSCRIPT_REUSE_WINDOW_HOURS;
+    if (windowHours <= 0) return null;
+
+    const transcriptPath = resolve(
+      this.opts.projectDir,
+      '.iagentek',
+      '.transcripts',
+      `${phase.id}.md`
+    );
+    if (!existsSync(transcriptPath)) return null;
+
+    try {
+      const stat = statSync(transcriptPath);
+      const ageMs = Date.now() - stat.mtimeMs;
+      if (ageMs >= windowHours * 3_600_000) return null;
+      // Skip placeholders / empty transcripts — they have no real LLM output.
+      if (stat.size <= 200) return null;
+      logger.dim(
+        `  ♻  Reusing transcript from ${humanizeAge(ageMs)} for '${phase.name}' (skip LLM call).`
+      );
+      return readFileSync(transcriptPath, 'utf-8');
+    } catch {
+      // Any error → fall back to LLM call.
+      return null;
     }
   }
 
@@ -354,4 +444,15 @@ function extractAndWriteArtifacts(output: string, projectDir: string): string[] 
 function writeFile(path: string, content: string): void {
   mkdirSync(dirname(path), { recursive: true });
   writeFileSync(path, content, 'utf-8');
+}
+
+export function humanizeAge(ageMs: number): string {
+  const sec = Math.floor(ageMs / 1000);
+  if (sec < 60) return `${sec}s ago`;
+  const min = Math.floor(sec / 60);
+  if (min < 60) return `${min}m ago`;
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return `${hr}h ago`;
+  const day = Math.floor(hr / 24);
+  return `${day}d ago`;
 }
